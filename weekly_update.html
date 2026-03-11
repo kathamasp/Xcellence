@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weekly Update — Xcellence ERP Phase 2 | 11 มีนาคม 2569</title>
+  <style>
+    :root {
+      --primary:   #1a237e;
+      --primary-light: #3949ab;
+      --accent:    #00bcd4;
+      --done-bg:   #d4edda; --done-fg:   #155724;
+      --prog-bg:   #fff3cd; --prog-fg:   #856404;
+      --pend-bg:   #f1f3f4; --pend-fg:   #5f6368;
+      --opt-bg:    #e8eaf6; --opt-fg:    #3949ab;
+      --border:    #e0e0e0;
+      --card-bg:   #ffffff;
+      --page-bg:   #f5f6fa;
+      --text:      #212121;
+      --text-muted:#757575;
+      --radius:    10px;
+      --shadow:    0 2px 12px rgba(0,0,0,.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--page-bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    /* ── Page wrapper ─────────────────────────────────── */
+    .page { max-width: 960px; margin: 0 auto; padding: 32px 20px 60px; }
+
+    /* ── Top banner ───────────────────────────────────── */
+    .banner {
+      background: linear-gradient(135deg, var(--primary) 0%, #283593 60%, #1565c0 100%);
+      color: #fff;
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .banner::after {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 220px; height: 220px;
+      background: rgba(255,255,255,.06);
+      border-radius: 50%;
+    }
+    .banner .tag {
+      display: inline-block;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 20px;
+      padding: 3px 14px;
+      font-size: 12px;
+      letter-spacing: .5px;
+      margin-bottom: 10px;
+    }
+    .banner h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+    .banner .sub { font-size: 13px; opacity: .82; }
+    .banner .meta { margin-top: 14px; font-size: 12px; opacity: .7; }
+
+    /* ── Section title ────────────────────────────────── */
+    .section-title {
+      font-size: 16px; font-weight: 700;
+      color: var(--primary);
+      border-left: 4px solid var(--accent);
+      padding-left: 12px;
+      margin: 32px 0 16px;
+    }
+
+    /* ── KPI cards ────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 18px 16px;
+      text-align: center;
+      border-top: 4px solid transparent;
+    }
+    .kpi-card.blue  { border-color: #1a237e; }
+    .kpi-card.green { border-color: #2e7d32; }
+    .kpi-card.amber { border-color: #f57f17; }
+    .kpi-card.teal  { border-color: #00695c; }
+    .kpi-card.red   { border-color: #b71c1c; }
+    .kpi-card .num  { font-size: 32px; font-weight: 800; line-height: 1; }
+    .kpi-card .num.blue  { color: #1a237e; }
+    .kpi-card .num.green { color: #2e7d32; }
+    .kpi-card .num.amber { color: #f57f17; }
+    .kpi-card .num.teal  { color: #00695c; }
+    .kpi-card .num.red   { color: #b71c1c; }
+    .kpi-card .label { font-size: 12px; color: var(--text-muted); margin-top: 5px; }
+
+    /* ── Progress bar ─────────────────────────────────── */
+    .progress-wrap { margin-bottom: 22px; }
+    .progress-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; font-weight: 600; }
+    .progress-bar {
+      width: 100%; height: 12px; background: #e0e0e0;
+      border-radius: 6px; overflow: hidden;
+    }
+    .progress-fill { height: 100%; border-radius: 6px; transition: width .4s; }
+    .fill-done   { background: linear-gradient(90deg,#43a047,#66bb6a); }
+    .fill-prog   { background: linear-gradient(90deg,#f9a825,#ffca28); }
+    .fill-pend   { background: #bdbdbd; }
+
+    /* ── Cards / tiles ────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px 24px;
+      margin-bottom: 18px;
+    }
+    .card-title {
+      font-size: 14px; font-weight: 700;
+      color: var(--primary-light);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Week block ───────────────────────────────────── */
+    .week-block { margin-bottom: 22px; }
+    .week-header {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px 8px 0 0;
+      padding: 10px 16px;
+      font-weight: 700; font-size: 13px;
+    }
+    .week-body { border: 1px solid var(--border); border-top: none; border-radius: 0 0 8px 8px; }
+    .task-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .task-row:last-child { border-bottom: none; }
+    .task-row:nth-child(even) { background: #fafafa; }
+    .task-name { font-weight: 500; }
+    .task-note { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .task-pct { text-align: center; font-weight: 700; }
+
+    /* ── Status badges ────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px; border-radius: 12px;
+      font-size: 11px; font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-done  { background: var(--done-bg); color: var(--done-fg); }
+    .badge-prog  { background: var(--prog-bg); color: var(--prog-fg); }
+    .badge-pend  { background: var(--pend-bg); color: var(--pend-fg); }
+    .badge-opt   { background: var(--opt-bg);  color: var(--opt-fg);  }
+
+    /* ── Endpoint grid ────────────────────────────────── */
+    .endpoint-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: 10px;
+    }
+    .ep-card {
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 14px; background: #fafafa;
+    }
+    .ep-name { font-weight: 600; font-size: 13px; }
+    .ep-module { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .ep-status { margin-top: 8px; }
+
+    /* ── Feature table ────────────────────────────────── */
+    table.feat-table {
+      width: 100%; border-collapse: collapse; font-size: 13px;
+    }
+    .feat-table th {
+      background: var(--primary); color: #fff;
+      padding: 9px 12px; text-align: left; font-weight: 600;
+      font-size: 12px;
+    }
+    .feat-table td {
+      padding: 9px 12px; border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .feat-table tr:nth-child(even) td { background: #fafafa; }
+    .feat-table tr:hover td { background: #f0f4ff; }
+
+    /* ── Phase summary pills ──────────────────────────── */
+    .phase-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .phase-pill {
+      border-radius: 20px; padding: 6px 16px; font-size: 13px;
+      font-weight: 600; border: 2px solid transparent;
+    }
+    .pill-p1 { background: #e8f5e9; color: #1b5e20; border-color: #81c784; }
+    .pill-p2 { background: #fff3e0; color: #e65100; border-color: #ffb74d; }
+    .pill-p3 { background: #e3f2fd; color: #0d47a1; border-color: #64b5f6; }
+    .pill-other { background: #f3e5f5; color: #4a148c; border-color: #ba68c8; }
+
+    /* ── Next steps ───────────────────────────────────── */
+    .next-list { list-style: none; }
+    .next-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .next-list li:last-child { border-bottom: none; }
+    .nl-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .nl-pri { font-weight: 700; font-size: 11px; background: #ffebee; color: #c62828;
+              padding: 2px 8px; border-radius: 10px; margin-top: 3px; }
+    .nl-med { font-weight: 700; font-size: 11px; background: var(--opt-bg); color: var(--opt-fg);
+              padding: 2px 8px; border-radius: 10px; margin-top: 3px; }
+
+    /* ── Footer ───────────────────────────────────────── */
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+
+    @media (max-width: 620px) {
+      .task-row { grid-template-columns: 1fr; }
+      .kpi-card .num { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ──────────────────── BANNER ──────────────────── -->
+  <div class="banner">
+    <span class="tag">📋 WEEKLY UPDATE</span>
+    <h1>Xcellence ERP — Phase 2 Progress Report</h1>
+    <div class="sub">ERP Production Ready: Backend Pagination API + Testing Infrastructure</div>
+    <div class="meta">📅 สัปดาห์ที่รายงาน: 11 มีนาคม 2569 &nbsp;|&nbsp; 🗂️ Phase 2: Week 3–4 (Backend Testing ✅ / Frontend &amp; E2E 🔄)</div>
+  </div>
+
+  <!-- ──────────────────── KPI ──────────────────── -->
+  <p class="section-title">🎯 Key Metrics สัปดาห์นี้</p>
+  <div class="kpi-grid">
+    <div class="kpi-card green">
+      <div class="num green">15/15</div>
+      <div class="label">Endpoints Paginated ✅</div>
+    </div>
+    <div class="kpi-card green">
+      <div class="num green">≥70%</div>
+      <div class="label">Backend Test Coverage</div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="num amber">40%</div>
+      <div class="label">Frontend Tests Progress</div>
+    </div>
+    <div class="kpi-card blue">
+      <div class="num blue">~70%</div>
+      <div class="label">Overall Phase 2 Complete</div>
+    </div>
+    <div class="kpi-card teal">
+      <div class="num teal">3/3</div>
+      <div class="label">CI/CD Pipeline Jobs</div>
+    </div>
+    <div class="kpi-card red">
+      <div class="num red">0/9</div>
+      <div class="label">E2E Test Suites Done</div>
+    </div>
+  </div>
+
+  <!-- ── Overall progress bars ── -->
+  <div class="card" style="margin-top:18px;">
+    <div class="card-title">📊 Overall Phase 2 Progress</div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Phase 2A – Backend Pagination API (15 endpoints)</span>
+        <span style="color:#2e7d32">100%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill fill-done" style="width:100%"></div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Phase 2B Week 3 – Backend Testing Infrastructure</span>
+        <span style="color:#2e7d32">100%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill fill-done" style="width:100%"></div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Phase 2B Week 4 – Frontend Testing</span>
+        <span style="color:#f9a825">40%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill fill-prog" style="width:40%"></div></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Phase 2B Week 4 – E2E Testing</span>
+        <span style="color:#9e9e9e">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill fill-pend" style="width:0%"></div></div>
+    </div>
+
+    <div class="progress-wrap" style="margin-bottom:0">
+      <div class="progress-label">
+        <span><strong>Overall Phase 2</strong></span>
+        <span style="color:#f9a825"><strong>~70%</strong></span>
+      </div>
+      <div class="progress-bar" style="height:16px">
+        <div class="progress-fill fill-prog" style="width:70%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────────────────── WEEK-BY-WEEK ──────────────────── -->
+  <p class="section-title">📆 สรุปความคืบหน้ารายสัปดาห์</p>
+
+  <!-- Week 1 -->
+  <div class="week-block">
+    <div class="week-header">
+      <span>✅</span>
+      <span>Week 1 — Backend Pagination Foundation</span>
+      <span class="badge badge-done" style="margin-left:auto">เสร็จแล้ว (ส่วนหลัก)</span>
+    </div>
+    <div class="week-body">
+      <div class="task-row">
+        <div><div class="task-name">Pagination DTOs &amp; Utilities (1.1)</div><div class="task-note">PaginationQueryDto, PaginatedResponse&lt;T&gt;, buildPaginatedResponse helper</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Products, Customers, Users Endpoints (2–4)</div><div class="task-note">Service.findAll() + Controller updated ทั้ง 3 modules</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Roles &amp; Groups Endpoints (5)</div><div class="task-note">4 Service/Controller files updated พร้อม relation inclusion</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Property Tests สำหรับ Utilities (1.2)*</div><div class="task-note">Optional — ทดสอบ offset calculation, page size limits, default values</div></div>
+        <div class="task-pct" style="color:#3949ab">Optional</div>
+        <div><span class="badge badge-opt">Optional*</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Checkpoint 6 — Manual Testing</div><div class="task-note">Postman/curl verification ยังรอดำเนินการ</div></div>
+        <div class="task-pct" style="color:#9e9e9e">0%</div>
+        <div><span class="badge badge-pend">Pending</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Week 2 -->
+  <div class="week-block">
+    <div class="week-header">
+      <span>✅</span>
+      <span>Week 2 — Remaining Endpoints + Integration Tests</span>
+      <span class="badge badge-done" style="margin-left:auto">เสร็จแล้ว (ส่วนหลัก)</span>
+    </div>
+    <div class="week-body">
+      <div class="task-row">
+        <div><div class="task-name">Remaining 10 Endpoints Pagination (7–16)</div><div class="task-note">Warehouses, AR Invoices, AR Receipts, Sales Orders, PO, Vendors, Stock Moves, Deliveries, GR, Audit Logs</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Integration Tests ทุก Endpoints (17.1–17.6)</div><div class="task-note">Test DB setup, seed data factories, auth tests, relation tests</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">API Documentation — OpenAPI/Swagger (18)</div><div class="task-note">Pagination params, response format, TypeScript examples</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Individual Unit Tests per Service (2.3–16.3)*</div><div class="task-note">Optional — 15 service-specific unit test files</div></div>
+        <div class="task-pct" style="color:#3949ab">Optional</div>
+        <div><span class="badge badge-opt">Optional*</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Checkpoint 19 — Coverage Verification</div><div class="task-note">Backward compatibility + manual testing</div></div>
+        <div class="task-pct" style="color:#9e9e9e">0%</div>
+        <div><span class="badge badge-pend">Pending</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Week 3 -->
+  <div class="week-block">
+    <div class="week-header">
+      <span>✅</span>
+      <span>Week 3 — Backend Testing Infrastructure</span>
+      <span class="badge badge-done" style="margin-left:auto">เสร็จแล้ว ✅</span>
+    </div>
+    <div class="week-body">
+      <div class="task-row">
+        <div><div class="task-name">Jest Configuration + Coverage Setup (20.1)</div><div class="task-note">Thresholds: 70% services, 60% controllers | HTML + lcov reporters</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Test Data Factories (20.2)</div><div class="task-note">faker-based factories สำหรับทุก entity + createMany() support</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Database Seeding Utilities (20.3)</div><div class="task-note">seedTestData(), TRUNCATE CASCADE, edge case data</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Unit Tests ทุก Services (21.1–21.5)</div><div class="task-note">ครอบคลุม 15 services: Products, Customers, Users, Roles, Groups, Warehouses, AR, Sales, PO, Vendors, Stock, Deliveries, GR, Audit</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">DB Transactions + Auth Tests (22.1–22.2)</div><div class="task-note">Rollback tests, JWT auth, RBAC permission checks, 401/403 responses</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Coverage Report Generated (23)</div><div class="task-note">Service layer ≥70% ✓ | Controller layer ≥60% ✓ | HTML report</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Week 4 -->
+  <div class="week-block">
+    <div class="week-header">
+      <span>🔄</span>
+      <span>Week 4 — Frontend Testing + E2E + CI/CD</span>
+      <span class="badge badge-prog" style="margin-left:auto">กำลังดำเนินการ 40%</span>
+    </div>
+    <div class="week-body">
+      <div class="task-row">
+        <div><div class="task-name">Frontend Test Infra Setup (25.1–25.2)</div><div class="task-note">Karma/Jasmine config + Mock data สำหรับทุก entity</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Shared Component Tests (26.1–26.3)</div><div class="task-note">ErpTable, ErpFormField, ErpAdvancedFilter — ครบ 3 components</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">CI/CD Pipeline — GitHub Actions (41.1–41.3)</div><div class="task-note">Backend + Frontend + E2E jobs | Coverage gates | Slack notifications</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Final Documentation (43.1–43.3)</div><div class="task-note">Acceptance criteria verified ✓ | Coverage report | README updated</div></div>
+        <div class="task-pct" style="color:#2e7d32">100%</div>
+        <div><span class="badge badge-done">Done</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Core Service Tests (27.1–27.3)</div><div class="task-note">ApiService, AuthService, PreferencesService — รอดำเนินการ</div></div>
+        <div class="task-pct" style="color:#9e9e9e">0%</div>
+        <div><span class="badge badge-pend">Pending</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Page Component Tests (28.1–28.4)</div><div class="task-note">Products, Customers, Users + all other List components</div></div>
+        <div class="task-pct" style="color:#9e9e9e">0%</div>
+        <div><span class="badge badge-pend">Pending</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Frontend Integration Tests (29.1–29.4)</div><div class="task-note">HttpClient testing module + response normalization property tests</div></div>
+        <div class="task-pct" style="color:#9e9e9e">0%</div>
+        <div><span class="badge badge-pend">Pending</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">E2E Tests — Playwright (31–40)</div><div class="task-note">Login/Logout, Product CRUD, Customer, Sales, Purchase, AR, Shortcuts, Pagination, Filters</div></div>
+        <div class="task-pct" style="color:#9e9e9e">0%</div>
+        <div><span class="badge badge-pend">Pending</span></div>
+      </div>
+      <div class="task-row">
+        <div><div class="task-name">Performance Testing (42)</div><div class="task-note">10,000+ records, &lt;500ms response time, query optimization</div></div>
+        <div class="task-pct" style="color:#9e9e9e">0%</div>
+        <div><span class="badge badge-pend">Pending</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────────────────── ENDPOINTS ──────────────────── -->
+  <p class="section-title">🔌 15 Paginated Endpoints — Status</p>
+  <div class="card">
+    <div class="endpoint-grid">
+      <div class="ep-card">
+        <div class="ep-name">Products</div>
+        <div class="ep-module">Inventory</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Customers</div>
+        <div class="ep-module">AR</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Users</div>
+        <div class="ep-module">System</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Roles</div>
+        <div class="ep-module">System</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Groups</div>
+        <div class="ep-module">System</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Warehouses</div>
+        <div class="ep-module">Inventory</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">AR Invoices</div>
+        <div class="ep-module">AR</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">AR Receipts</div>
+        <div class="ep-module">AR</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Sales Orders</div>
+        <div class="ep-module">Sales</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Purchase Orders</div>
+        <div class="ep-module">Purchase</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Vendors</div>
+        <div class="ep-module">Purchase</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Stock Moves</div>
+        <div class="ep-module">Inventory</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Deliveries</div>
+        <div class="ep-module">Sales</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Goods Receipts</div>
+        <div class="ep-module">Purchase</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+      <div class="ep-card">
+        <div class="ep-name">Audit Logs</div>
+        <div class="ep-module">System</div>
+        <div class="ep-status"><span class="badge badge-done">✅ Done</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────────────────── FEATURE LIST STATUS ──────────────────── -->
+  <p class="section-title">📦 Business Feature Progress (feature_list.xlsx)</p>
+
+  <div class="card">
+    <div class="card-title">Phase Overview — ความคืบหน้า Business Features</div>
+
+    <table class="feat-table">
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>Features Done</th>
+          <th>Total Features</th>
+          <th>Story Points Done</th>
+          <th>Total Points</th>
+          <th>% Complete</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Phase 1</strong></td>
+          <td>26</td><td>34</td><td>193</td><td>243</td>
+          <td><strong>76%</strong></td>
+          <td><span class="badge badge-done">เกือบเสร็จ</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 2</strong></td>
+          <td>12</td><td>46</td><td>91</td><td>352</td>
+          <td><strong>26%</strong></td>
+          <td><span class="badge badge-prog">In Progress</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 3</strong></td>
+          <td>1</td><td>26</td><td>8</td><td>176</td>
+          <td><strong>4%</strong></td>
+          <td><span class="badge badge-pend">Backlog</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 4</strong></td>
+          <td>0</td><td>11</td><td>0</td><td>99</td>
+          <td><strong>0%</strong></td>
+          <td><span class="badge badge-pend">Backlog</span></td>
+        </tr>
+        <tr>
+          <td><strong>Phase 5–6</strong></td>
+          <td>0</td><td>4</td><td>0</td><td>44</td>
+          <td><strong>0%</strong></td>
+          <td><span class="badge badge-pend">Backlog</span></td>
+        </tr>
+        <tr style="background:#f0f4ff">
+          <td><strong>TOTAL</strong></td>
+          <td><strong>39</strong></td><td><strong>121</strong></td>
+          <td><strong>292</strong></td><td><strong>914</strong></td>
+          <td><strong>32%</strong></td>
+          <td><span class="badge badge-prog">In Progress</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Phase 2 Business Features Detail -->
+  <div class="card">
+    <div class="card-title">Phase 2 Business Features — Sprint Breakdown</div>
+    <table class="feat-table">
+      <thead>
+        <tr>
+          <th>Sprint</th>
+          <th>Feature Count</th>
+          <th>Done</th>
+          <th>Backlog</th>
+          <th>Sprint Goal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sprint 4</td><td>4</td>
+          <td><span class="badge badge-done">4 ✅</span></td>
+          <td>0</td>
+          <td>INV-003, AR-003, GL-003, SYS-009</td>
+        </tr>
+        <tr>
+          <td>Sprint 5</td><td>6</td>
+          <td><span class="badge badge-done">4 ✅</span></td>
+          <td>2 (SAL-002, SYS-008)</td>
+          <td>Finance Cycle + Sales Start</td>
+        </tr>
+        <tr>
+          <td>Sprint 6</td><td>7</td>
+          <td><span class="badge badge-done">4 ✅</span></td>
+          <td>3 (INV-006, GL-005, SYS-003)</td>
+          <td>Sales Cycle + Purchase</td>
+        </tr>
+        <tr>
+          <td>Sprint 7</td><td>9</td>
+          <td><span class="badge badge-pend">0</span></td>
+          <td>9</td>
+          <td>Invoice + Matching + Stock Count</td>
+        </tr>
+        <tr>
+          <td>Sprint 8</td><td>14</td>
+          <td><span class="badge badge-pend">0</span></td>
+          <td>14</td>
+          <td>Advanced Features (Promotion, Tax, GL)</td>
+        </tr>
+        <tr>
+          <td>Sprint 9</td><td>4</td>
+          <td><span class="badge badge-pend">0</span></td>
+          <td>4</td>
+          <td>Reports + Multi-Currency</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ──────────────────── NEXT STEPS ──────────────────── -->
+  <p class="section-title">🚀 สิ่งที่ต้องทำสัปดาห์หน้า</p>
+  <div class="card">
+    <ul class="next-list">
+      <li>
+        <span class="nl-icon">⚡</span>
+        <div>
+          <strong>Frontend Core Services Tests (27.1–27.3)</strong>
+          <div style="font-size:12px;color:#757575;margin-top:2px">ApiService, AuthService, PreferencesService — ใช้ jasmine.createSpyObj + HttpClientTestingModule</div>
+          <span class="nl-pri">P1 สูงสุด</span>
+        </div>
+      </li>
+      <li>
+        <span class="nl-icon">⚡</span>
+        <div>
+          <strong>Frontend Page Component Tests (28.1–28.4)</strong>
+          <div style="font-size:12px;color:#757575;margin-top:2px">ProductsListComponent, CustomersListComponent, UsersListComponent + remaining list components</div>
+          <span class="nl-pri">P1 สูงสุด</span>
+        </div>
+      </li>
+      <li>
+        <span class="nl-icon">🔗</span>
+        <div>
+          <strong>Frontend Integration Tests (29.1–29.4)</strong>
+          <div style="font-size:12px;color:#757575;margin-top:2px">HTTP request construction, URL params, response handling + backward compatibility tests</div>
+          <span class="nl-pri">P1 สูงสุด</span>
+        </div>
+      </li>
+      <li>
+        <span class="nl-icon">🎭</span>
+        <div>
+          <strong>Playwright E2E Setup + Auth Flow (31–32)</strong>
+          <div style="font-size:12px;color:#757575;margin-top:2px">playwright.config.ts, helpers, login/logout tests, session timeout</div>
+          <span class="nl-pri">P1 สูงสุด</span>
+        </div>
+      </li>
+      <li>
+        <span class="nl-icon">🔍</span>
+        <div>
+          <strong>Checkpoint 6 &amp; 19 — Manual Testing</strong>
+          <div style="font-size:12px;color:#757575;margin-top:2px">Postman/curl test ทุก endpoint | ตรวจสอบ backward compatibility</div>
+          <span class="nl-med">P2</span>
+        </div>
+      </li>
+      <li>
+        <span class="nl-icon">📈</span>
+        <div>
+          <strong>Frontend Coverage Verification (30)</strong>
+          <div style="font-size:12px;color:#757575;margin-top:2px">ng test --code-coverage | ตรวจสอบ ≥70% coverage threshold</div>
+          <span class="nl-med">P2</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ──────────────────── RISKS ──────────────────── -->
+  <p class="section-title">⚠️ Risks &amp; Blockers</p>
+  <div class="card">
+    <table class="feat-table">
+      <thead>
+        <tr><th>Risk</th><th>Impact</th><th>Probability</th><th>Mitigation</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>E2E tests ยังไม่เริ่ม — อาจกระทบ Timeline</td>
+          <td>🔴 High</td><td>Medium</td>
+          <td>เริ่ม Playwright setup ทันทีใน Week 5</td>
+        </tr>
+        <tr>
+          <td>Frontend coverage ยังไม่ verify (≥70% requirement)</td>
+          <td>🟡 Medium</td><td>Medium</td>
+          <td>Priority: เขียน page component tests ก่อน</td>
+        </tr>
+        <tr>
+          <td>Performance testing ยังไม่ทำ (&lt;500ms requirement)</td>
+          <td>🟡 Medium</td><td>Low</td>
+          <td>DB indexes เตรียมไว้แล้ว — ทดสอบหลัง E2E</td>
+        </tr>
+        <tr>
+          <td>Optional property tests หากต้องการ ≥70% branch coverage</td>
+          <td>🟢 Low</td><td>Low</td>
+          <td>ข้ามได้ตาม MVP strategy (marked *)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ──────────────────── FOOTER ──────────────────── -->
+  <footer>
+    <p>📅 รายงานสัปดาห์ที่: <strong>11 มีนาคม 2569</strong> &nbsp;|&nbsp;
+       🗂️ โปรเจกต์: <strong>Xcellence ERP Digital Transformation</strong> &nbsp;|&nbsp;
+       🔧 Phase 2: Backend Pagination API + Testing Infrastructure</p>
+    <p style="margin-top:6px">Technology Stack: NestJS + Prisma + PostgreSQL (Backend) · Angular 21 + PrimeNG (Frontend) · Flutter (Mobile)</p>
+  </footer>
+
+</div>
+</body>
+</html>
