@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xcellence ERP — Progress Update</title>
+  <style>
+    :root {
+      --primary:   #1e3a5f;
+      --accent:    #2563eb;
+      --success:   #16a34a;
+      --warning:   #d97706;
+      --danger:    #dc2626;
+      --info:      #0891b2;
+      --bg:        #f0f4f8;
+      --card:      #ffffff;
+      --border:    #e2e8f0;
+      --text:      #1e293b;
+      --muted:     #64748b;
+      --done-bg:   #dcfce7;
+      --done-txt:  #15803d;
+      --prog-bg:   #fef3c7;
+      --prog-txt:  #b45309;
+      --pend-bg:   #f1f5f9;
+      --pend-txt:  #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', 'Noto Sans Thai', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+      color: #fff;
+      padding: 32px 40px 24px;
+    }
+    header .logo { font-size: 11px; letter-spacing: 2px; opacity: .7; text-transform: uppercase; }
+    header h1 { font-size: 26px; font-weight: 700; margin: 6px 0 4px; }
+    header p  { opacity: .8; font-size: 13px; }
+    header .meta { display: flex; gap: 24px; margin-top: 16px; }
+    header .meta-item { font-size: 12px; opacity: .75; }
+    header .meta-item strong { display: block; font-size: 15px; opacity: 1; font-weight: 600; }
+
+    /* ── Layout ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 28px 24px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+    .span-2 { grid-column: span 2; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 22px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-title .icon { font-size: 16px; }
+
+    /* ── KPI row ── */
+    .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+    .kpi {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    }
+    .kpi .num { font-size: 32px; font-weight: 800; color: var(--accent); }
+    .kpi .label { font-size: 11px; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
+    .kpi.green .num  { color: var(--success); }
+    .kpi.orange .num { color: var(--warning); }
+    .kpi.red .num    { color: var(--danger); }
+
+    /* ── Progress bar ── */
+    .progress-wrap { margin: 8px 0; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+    .progress-bar { height: 10px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; transition: width .3s; }
+    .fill-green  { background: linear-gradient(90deg, #22c55e, #16a34a); }
+    .fill-blue   { background: linear-gradient(90deg, #60a5fa, #2563eb); }
+    .fill-orange { background: linear-gradient(90deg, #fbbf24, #d97706); }
+    .fill-red    { background: linear-gradient(90deg, #f87171, #dc2626); }
+
+    /* ── Status badge ── */
+    .badge {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-done   { background: var(--done-bg); color: var(--done-txt); }
+    .badge-prog   { background: var(--prog-bg); color: var(--prog-txt); }
+    .badge-pend   { background: var(--pend-bg); color: var(--pend-txt); }
+    .badge-p1     { background: #fee2e2; color: #991b1b; }
+    .badge-p2     { background: #fef3c7; color: #92400e; }
+    .badge-p3     { background: #dbeafe; color: #1e40af; }
+    .badge-p4     { background: #f0fdf4; color: #166534; }
+
+    /* ── Checklist ── */
+    .check-group { margin-bottom: 16px; }
+    .check-group-title {
+      font-size: 12px; font-weight: 700; color: var(--primary);
+      background: #eff6ff; padding: 6px 10px; border-radius: 6px;
+      margin-bottom: 8px; border-left: 3px solid var(--accent);
+    }
+    .check-item {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 5px 6px; border-radius: 6px; font-size: 13px;
+    }
+    .check-item:hover { background: #f8fafc; }
+    .check-icon { flex-shrink: 0; margin-top: 1px; font-size: 14px; }
+    .check-done  { color: var(--text); }
+    .check-todo  { color: var(--muted); }
+
+    /* ── Task table ── */
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    thead th {
+      background: #f1f5f9; padding: 8px 10px;
+      text-align: left; font-weight: 700;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: .5px; border-bottom: 2px solid var(--border);
+    }
+    tbody tr { border-bottom: 1px solid #f1f5f9; }
+    tbody tr:hover { background: #f8fafc; }
+    tbody td { padding: 8px 10px; vertical-align: middle; }
+    .mini-bar { height: 6px; background: #e2e8f0; border-radius: 99px; width: 80px; overflow: hidden; }
+    .mini-fill { height: 100%; border-radius: 99px; }
+
+    /* ── Module summary ── */
+    .module-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .module-card {
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px 14px;
+      transition: box-shadow .2s;
+    }
+    .module-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+    .module-name { font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+    .module-stats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+    .module-phase { font-size: 10px; color: var(--muted); }
+
+    /* ── Phase timeline ── */
+    .timeline { position: relative; padding-left: 24px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 8px; top: 6px; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .tl-item { position: relative; margin-bottom: 18px; }
+    .tl-dot {
+      position: absolute; left: -24px; top: 4px;
+      width: 14px; height: 14px; border-radius: 50%;
+      border: 2px solid var(--border); background: #fff;
+    }
+    .tl-dot.done   { background: var(--success); border-color: var(--success); }
+    .tl-dot.active { background: var(--accent);  border-color: var(--accent); box-shadow: 0 0 0 3px #bfdbfe; }
+    .tl-dot.pend   { background: #e2e8f0; border-color: #cbd5e1; }
+    .tl-label { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
+    .tl-desc  { font-size: 12px; color: var(--muted); }
+
+    /* ── Section heading ── */
+    .section-heading {
+      font-size: 16px; font-weight: 800; color: var(--primary);
+      margin: 28px 0 14px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-heading::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center; padding: 24px;
+      font-size: 11px; color: var(--muted);
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2, .grid-3, .kpi-row, .module-grid { grid-template-columns: 1fr; }
+      .span-2 { grid-column: span 1; }
+      header { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<header>
+  <div class="logo">Xcellence ERP · Digital Transformation</div>
+  <h1>📊 Progress Update Report</h1>
+  <p>Angular + NestJS + PostgreSQL + Flutter&nbsp;&nbsp;|&nbsp;&nbsp;อัพเดต: 16 มีนาคม 2569</p>
+  <div class="meta">
+    <div class="meta-item"><strong>Phase 1</strong>100% Complete ✅</div>
+    <div class="meta-item"><strong>Phase 2A</strong>Pagination 100% ✅</div>
+    <div class="meta-item"><strong>Phase 2B</strong>Testing ~40% 🔄</div>
+    <div class="meta-item"><strong>Overall Ph2</strong>~70% In Progress</div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ══════════════ KPI ROW ══════════════ -->
+  <div class="kpi-row" style="margin-top:0;">
+    <div class="kpi green">
+      <div class="num">100%</div>
+      <div class="label">Phase 1 Complete</div>
+    </div>
+    <div class="kpi green">
+      <div class="num">15/15</div>
+      <div class="label">Pagination Endpoints</div>
+    </div>
+    <div class="kpi">
+      <div class="num">726</div>
+      <div class="label">Tests Passing (BE+FE)</div>
+    </div>
+    <div class="kpi orange">
+      <div class="num">~70%</div>
+      <div class="label">Phase 2 Progress</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ PHASE 2 OVERVIEW ══════════════ -->
+  <div class="section-heading"><span>🎯</span> Phase 2 — Overall Progress</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span>Component Progress</div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Phase 2A — Backend Pagination API</span><strong>100%</strong></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:100%"></div></div>
+      </div>
+
+      <div class="progress-wrap" style="margin-top:12px;">
+        <div class="progress-label"><span>Phase 2B — Backend Testing (Unit + Integration)</span><strong>100%</strong></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:100%"></div></div>
+      </div>
+
+      <div class="progress-wrap" style="margin-top:12px;">
+        <div class="progress-label"><span>Phase 2B — Frontend Testing</span><strong>40%</strong></div>
+        <div class="progress-bar"><div class="progress-fill fill-orange" style="width:40%"></div></div>
+      </div>
+
+      <div class="progress-wrap" style="margin-top:12px;">
+        <div class="progress-label"><span>Phase 2B — E2E Testing (Playwright)</span><strong>0%</strong></div>
+        <div class="progress-bar"><div class="progress-fill fill-red" style="width:2%"></div></div>
+      </div>
+
+      <div class="progress-wrap" style="margin-top:12px;">
+        <div class="progress-label"><span>Phase 2B — CI/CD Pipeline</span><strong>100%</strong></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:100%"></div></div>
+      </div>
+
+      <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border);">
+        <div class="progress-label"><strong>Overall Phase 2</strong><strong style="color:var(--warning);">~70%</strong></div>
+        <div class="progress-bar" style="height:14px;">
+          <div class="progress-fill fill-blue" style="width:70%"></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">35/44 Task Groups Complete</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🧪</span>Test Coverage Summary</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+        <div style="text-align:center;padding:14px;background:#f0fdf4;border-radius:8px;">
+          <div style="font-size:24px;font-weight:800;color:#16a34a;">530</div>
+          <div style="font-size:11px;color:#166534;margin-top:2px;">Backend Unit Tests</div>
+          <div style="font-size:10px;color:var(--muted);">65 suites — ผ่านทั้งหมด</div>
+        </div>
+        <div style="text-align:center;padding:14px;background:#eff6ff;border-radius:8px;">
+          <div style="font-size:24px;font-weight:800;color:#2563eb;">196</div>
+          <div style="font-size:11px;color:#1e40af;margin-top:2px;">Frontend Tests</div>
+          <div style="font-size:10px;color:var(--muted);">13 files — ผ่านทั้งหมด</div>
+        </div>
+      </div>
+
+      <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px;">FRONTEND BREAKDOWN</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Component / Service</th>
+            <th style="text-align:right;">Tests</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>ErpTable (shared)</td><td style="text-align:right;">29</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>ErpFormField (shared)</td><td style="text-align:right;">22</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>ErpAdvancedFilter (shared)</td><td style="text-align:right;">33</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>ApiService (39) + AuthService (12) + PrefsService (16)</td><td style="text-align:right;">67</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>ProductsComponent</td><td style="text-align:right;">11</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>CustomersComponent</td><td style="text-align:right;">7</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>UsersComponent</td><td style="text-align:right;">5</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>ArInvoicesComponent</td><td style="text-align:right;">7</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>WarehousesComponent</td><td style="text-align:right;">6</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>QuotationsComponent</td><td style="text-align:right;">5</td><td><span class="badge badge-done">Done</span></td></tr>
+          <tr><td>E2E Tests (Playwright)</td><td style="text-align:right;">—</td><td><span class="badge badge-pend">Pending</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════ PHASE 2 DETAILED TASKS ══════════════ -->
+  <div class="section-heading"><span>📋</span> Phase 2 — Detailed Task Progress</div>
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Week</th>
+          <th>Task</th>
+          <th>Sub-tasks</th>
+          <th style="width:100px;">Progress</th>
+          <th>%</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Week 1 -->
+        <tr style="background:#f8fafc;">
+          <td colspan="8" style="font-weight:700;color:var(--primary);font-size:11px;padding:6px 10px;letter-spacing:1px;">
+            📅 WEEK 1 — PAGINATION FOUNDATION
+          </td>
+        </tr>
+        <tr><td>1</td><td>Week 1</td><td>Shared Pagination Infrastructure</td><td>1/2</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:50%"></div></div></td><td>50%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">DTOs/Utils Done; Property Tests optional*</td></tr>
+        <tr><td>2</td><td>Week 1</td><td>Products Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">Unit Tests optional*</td></tr>
+        <tr><td>3</td><td>Week 1</td><td>Customers Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">Unit Tests optional*</td></tr>
+        <tr><td>4</td><td>Week 1</td><td>Users Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">Unit Tests optional*</td></tr>
+        <tr><td>5</td><td>Week 1</td><td>Roles &amp; Groups Endpoints Pagination</td><td>4/5</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:80%"></div></div></td><td>80%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">Unit Tests optional*</td></tr>
+        <tr><td>6</td><td>Week 1</td><td>Checkpoint — First 5 Endpoints</td><td>0/1</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">Manual testing with Postman/curl</td></tr>
+
+        <!-- Week 2 -->
+        <tr style="background:#f8fafc;">
+          <td colspan="8" style="font-weight:700;color:var(--primary);font-size:11px;padding:6px 10px;letter-spacing:1px;">
+            📅 WEEK 2 — REMAINING ENDPOINTS + INTEGRATION TESTS
+          </td>
+        </tr>
+        <tr><td>7</td><td>Week 2</td><td>Warehouses Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>8</td><td>Week 2</td><td>AR Invoices Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>9</td><td>Week 2</td><td>AR Receipts Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>10</td><td>Week 2</td><td>Sales Orders Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>11</td><td>Week 2</td><td>Purchase Orders Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>12</td><td>Week 2</td><td>Vendors Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>13</td><td>Week 2</td><td>Stock Moves Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>14</td><td>Week 2</td><td>Deliveries Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>15</td><td>Week 2</td><td>Goods Receipts Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>16</td><td>Week 2</td><td>Audit Logs Endpoint Pagination</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">optional*</td></tr>
+        <tr><td>17</td><td>Week 2</td><td>Backend Integration Tests — All Endpoints</td><td>6/7</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:86%"></div></div></td><td>86%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">Property Tests optional*</td></tr>
+        <tr><td>18</td><td>Week 2</td><td>API Documentation Update</td><td>2/2</td><td><div class="mini-bar"><div class="mini-fill fill-green" style="width:100%"></div></div></td><td>100%</td><td><span class="badge badge-done">Done</span></td><td style="color:var(--muted);font-size:11px;">OpenAPI/Swagger + Code examples</td></tr>
+        <tr><td>19</td><td>Week 2</td><td>Checkpoint — All Endpoints &amp; Tests</td><td>0/1</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">Coverage verification</td></tr>
+
+        <!-- Week 3 -->
+        <tr style="background:#f8fafc;">
+          <td colspan="8" style="font-weight:700;color:var(--primary);font-size:11px;padding:6px 10px;letter-spacing:1px;">
+            📅 WEEK 3 — BACKEND TESTING INFRASTRUCTURE
+          </td>
+        </tr>
+        <tr><td>20</td><td>Week 3</td><td>Backend Test Infrastructure Setup</td><td>3/3</td><td><div class="mini-bar"><div class="mini-fill fill-green" style="width:100%"></div></div></td><td>100%</td><td><span class="badge badge-done">Done</span></td><td style="color:var(--muted);font-size:11px;">Jest config, factories, DB seeding</td></tr>
+        <tr><td>21</td><td>Week 3</td><td>Comprehensive Unit Tests — All Services</td><td>5/5</td><td><div class="mini-bar"><div class="mini-fill fill-green" style="width:100%"></div></div></td><td>100%</td><td><span class="badge badge-done">Done</span></td><td style="color:var(--muted);font-size:11px;">65 suites, 530 tests</td></tr>
+        <tr><td>22</td><td>Week 3</td><td>Additional Integration Tests</td><td>2/3</td><td><div class="mini-bar"><div class="mini-fill fill-orange" style="width:67%"></div></div></td><td>67%</td><td><span class="badge badge-prog">In Progress</span></td><td style="color:var(--muted);font-size:11px;">Property tests optional*</td></tr>
+        <tr><td>23</td><td>Week 3</td><td>Backend Coverage Verification</td><td>1/1</td><td><div class="mini-bar"><div class="mini-fill fill-green" style="width:100%"></div></div></td><td>100%</td><td><span class="badge badge-done">Done</span></td><td style="color:var(--muted);font-size:11px;">≥70% service, ≥60% controller</td></tr>
+        <tr><td>24</td><td>Week 3</td><td>Checkpoint — Backend Testing Complete</td><td>0/1</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">Final sign-off</td></tr>
+
+        <!-- Week 4 -->
+        <tr style="background:#f8fafc;">
+          <td colspan="8" style="font-weight:700;color:var(--primary);font-size:11px;padding:6px 10px;letter-spacing:1px;">
+            📅 WEEK 4 — FRONTEND TESTING + E2E + CI/CD
+          </td>
+        </tr>
+        <tr><td>25</td><td>Week 4</td><td>Frontend Test Infrastructure</td><td>2/2</td><td><div class="mini-bar"><div class="mini-fill fill-green" style="width:100%"></div></div></td><td>100%</td><td><span class="badge badge-done">Done</span></td><td style="color:var(--muted);font-size:11px;">Vitest + mock data 16 entities</td></tr>
+        <tr><td>26</td><td>Week 4</td><td>Frontend Unit Tests — Shared Components</td><td>3/3</td><td><div class="mini-bar"><div class="mini-fill fill-green" style="width:100%"></div></div></td><td>100%</td><td><span class="badge badge-done">Done</span></td><td style="color:var(--muted);font-size:11px;">ErpTable/FormField/AdvFilter: 84 tests</td></tr>
+        <tr><td>27</td><td>Week 4</td><td>Frontend Unit Tests — Core Services</td><td>0/3</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">ApiService, AuthService, PrefsService</td></tr>
+        <tr><td>28</td><td>Week 4</td><td>Frontend Unit Tests — Page Components</td><td>0/4</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">Products, Customers, Users, AR</td></tr>
+        <tr><td>29</td><td>Week 4</td><td>Frontend Integration Tests — ApiService</td><td>0/4</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">HttpClient integration</td></tr>
+        <tr><td>30</td><td>Week 4</td><td>Frontend Coverage Verification (≥70%)</td><td>0/1</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">ng test --code-coverage</td></tr>
+        <tr><td>31</td><td>Week 4</td><td>E2E Testing Infrastructure (Playwright)</td><td>0/2</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">playwright.config + helpers</td></tr>
+        <tr><td>32–40</td><td>Week 4</td><td>E2E Test Suites (Auth, CRUD, Workflows)</td><td>0/9</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">9 suites: Login, Products, Sales…</td></tr>
+        <tr><td>41</td><td>Week 4</td><td>CI/CD Pipeline — GitHub Actions</td><td>3/3</td><td><div class="mini-bar"><div class="mini-fill fill-green" style="width:100%"></div></div></td><td>100%</td><td><span class="badge badge-done">Done</span></td><td style="color:var(--muted);font-size:11px;">Workflow, thresholds, Slack notify</td></tr>
+        <tr><td>42</td><td>Week 4</td><td>Performance Testing (&lt;500ms)</td><td>0/2</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">10,000+ records stress test</td></tr>
+        <tr><td>43</td><td>Week 4</td><td>Final Verification &amp; Documentation</td><td>3/3</td><td><div class="mini-bar"><div class="mini-fill fill-green" style="width:100%"></div></div></td><td>100%</td><td><span class="badge badge-done">Done</span></td><td style="color:var(--muted);font-size:11px;">Acceptance criteria + README</td></tr>
+        <tr><td>44</td><td>Week 4</td><td>Final Checkpoint — Phase 2 Complete</td><td>0/1</td><td><div class="mini-bar"><div class="mini-fill fill-red" style="width:2%"></div></div></td><td>0%</td><td><span class="badge badge-pend">Pending</span></td><td style="color:var(--muted);font-size:11px;">Go/No-Go decision</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;font-size:11px;color:var(--muted);">
+      * Optional items = Property-based tests / Per-endpoint unit tests สามารถทำหลังจาก core tasks เสร็จแล้ว
+    </div>
+  </div>
+
+  <!-- ══════════════ PHASE 1 CHECKLIST ══════════════ -->
+  <div class="section-heading"><span>✅</span> Phase 1 — Completed Checklist</div>
+  <div class="grid-2">
+
+    <div class="card">
+      <!-- Security + Infrastructure -->
+      <div class="check-group">
+        <div class="check-group-title">🔒 Security Hardening</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>ลบ Hardcoded JWT Fallback Secret + startup validation</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>ลบ Hardcoded Database Credentials + .env.example</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>CORS Origin Validation (parseCorsOrigins)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Helmet Middleware (CSP, HSTS)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>CSRF Protection Guard</div>
+      </div>
+      <div class="check-group">
+        <div class="check-group-title">🏗️ Infrastructure</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Environment Configuration Validation</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Health Check Endpoint (GET /api/health + Prisma)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Structured Logging Service (JSON, requestId)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Database Index Optimization</div>
+      </div>
+      <div class="check-group">
+        <div class="check-group-title">🗄️ Schema Changes</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Workflow fields (approvalMode, minAmount, maxAmount)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>SO Tracking fields (qtyDelivered, qtyInvoiced)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>PO Tracking fields (qtyReceived)</div>
+      </div>
+      <div class="check-group">
+        <div class="check-group-title">🔐 SSO &amp; Workflow</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>SSO OAuth2 Authorization Code Flow</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>SSO SAML2 Flow</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Workflow Approval Routing (amount-based + parallel)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="check-group">
+        <div class="check-group-title">📦 Costing &amp; Stock</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>FIFO Cost Layer Consumption (consumeFifo)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Goods Receipt Stock Update + Cancel</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Stock Move Confirmation (FIFO integration)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Delivery Stock Deduction (qtyDelivered + FIFO)</div>
+      </div>
+      <div class="check-group">
+        <div class="check-group-title">🔄 End-to-End Business Flows</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Sales Flow: QT → SO → DO → Sales Invoice → AR Invoice</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Purchase Flow: PR → PO → GR (partial + auto-complete)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>AR Flow: Credit control, aging (dueDate), auto-hold</div>
+      </div>
+      <div class="check-group">
+        <div class="check-group-title">🐛 Cross-Module &amp; Business Logic Fixes</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Period Lock validation (Sales Invoice, AR Invoice)</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>SO status PARTIALLY_DELIVERED / PO status PARTIALLY_RECEIVED</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>AR Advance GL reversal + Credit Note → PAID check</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>avgCost recalculation after FIFO</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Bank Transfer balance validation</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>VAT Closing GL journal lines</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>Three-way match (PO-GR-AP) enforcement</div>
+        <div class="check-item check-done"><span class="check-icon">✅</span>WHT auto-create on AP Invoice posting</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MODULE SUMMARY ══════════════ -->
+  <div class="section-heading"><span>🏢</span> Feature Backlog — Module Summary</div>
+  <div class="card">
+    <div class="module-grid">
+
+      <div class="module-card" style="border-left:3px solid #2563eb;">
+        <div class="module-name">🛒 Sales Management</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 8</span>
+          <span class="badge badge-p2">P2: 7</span>
+          <span class="badge badge-p3">P3: 2</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:100%"></div></div>
+        </div>
+        <div class="module-phase">17 Stories · 2 Sprints · Phase 1 · Web + Mobile</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #7c3aed;">
+        <div class="module-name">📦 Purchase Management</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 12</span>
+          <span class="badge badge-p2">P2: 7</span>
+          <span class="badge badge-p3">P3: 1</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:100%"></div></div>
+        </div>
+        <div class="module-phase">20 Stories · 2 Sprints · Phase 1 · Web + Mobile</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #059669;">
+        <div class="module-name">🏭 Inventory Management</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 10</span>
+          <span class="badge badge-p2">P2: 7</span>
+          <span class="badge badge-p3">P3: 5</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:100%"></div></div>
+        </div>
+        <div class="module-phase">22 Stories · 2 Sprints · Phase 1 · Web + Mobile</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #dc2626;">
+        <div class="module-name">💰 Accounts Receivable (AR)</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 9</span>
+          <span class="badge badge-p2">P2: 8</span>
+          <span class="badge badge-p3">P3: 1</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:100%"></div></div>
+        </div>
+        <div class="module-phase">18 Stories · 2 Sprints · Phase 1 · Web + Mobile</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #d97706;">
+        <div class="module-name">🧾 Accounts Payable (AP)</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 4</span>
+          <span class="badge badge-p2">P2: 5</span>
+          <span class="badge badge-p3">P3: 3</span>
+          <span class="badge badge-p4">P4: 2</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:100%"></div></div>
+        </div>
+        <div class="module-phase">14 Stories · 1 Sprint · Phase 1 · Web + Mobile</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #0891b2;">
+        <div class="module-name">📊 General Ledger</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 13</span>
+          <span class="badge badge-p2">P2: 3</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:100%"></div></div>
+        </div>
+        <div class="module-phase">16 Stories · 2 Sprints · Phase 1 · Web</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #64748b;">
+        <div class="module-name">⚙️ System Administration</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 8</span>
+          <span class="badge badge-p2">P2: 4</span>
+          <span class="badge badge-p3">P3: 1</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-blue" style="width:100%"></div></div>
+        </div>
+        <div class="module-phase">13 Stories · 2 Sprints · Phase 1 · Web</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #f59e0b;opacity:.8;">
+        <div class="module-name">🏢 Fixed Assets</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 3</span>
+          <span class="badge badge-p2">P2: 3</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-orange" style="width:30%"></div></div>
+        </div>
+        <div class="module-phase">6 Stories · 1 Sprint · Phase 3 · Web + Mobile</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #f59e0b;opacity:.8;">
+        <div class="module-name">🏪 POS System</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 4</span>
+          <span class="badge badge-p2">P2: 5</span>
+          <span class="badge badge-p3">P3: 4</span>
+          <span class="badge badge-p4">P4: 2</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-orange" style="width:20%"></div></div>
+        </div>
+        <div class="module-phase">15 Stories · 2 Sprints · Phase 3 · Web + Mobile</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #a855f7;opacity:.7;">
+        <div class="module-name">📱 Mobile App (Flutter)</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 3</span>
+          <span class="badge badge-p2">P2: 2</span>
+          <span class="badge badge-p3">P3: 2</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-orange" style="width:15%"></div></div>
+        </div>
+        <div class="module-phase">7 Stories · 2 Sprints · Phase 4 · Mobile</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #ec4899;opacity:.7;">
+        <div class="module-name">👥 HR &amp; Payroll</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 3</span>
+          <span class="badge badge-p2">P2: 5</span>
+          <span class="badge badge-p3">P3: 5</span>
+          <span class="badge badge-p4">P4: 3</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-red" style="width:5%"></div></div>
+        </div>
+        <div class="module-phase">16 Stories · 2 Sprints · Phase 5 · Web + Mobile</div>
+      </div>
+
+      <div class="module-card" style="border-left:3px solid #6366f1;opacity:.6;">
+        <div class="module-name">🔁 Data Migration</div>
+        <div class="module-stats">
+          <span class="badge badge-p1">P1: 5</span>
+          <span class="badge badge-p2">P2: 3</span>
+          <span class="badge badge-p3">P3: 2</span>
+          <span class="badge badge-p4">P4: 1</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill fill-red" style="width:5%"></div></div>
+        </div>
+        <div class="module-phase">11 Stories · 1 Sprint · Phase 6 · N/A</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════ SPRINT + PENDING ══════════════ -->
+  <div class="grid-2" style="margin-top:20px;">
+
+    <div class="card">
+      <div class="card-title"><span class="icon">🗓️</span>Sprint Plan Overview (16 Sprints · ~38 สัปดาห์)</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-label">Sprint 1–4 · Phase 1</div>
+          <div class="tl-desc">System Foundation, GL Setup, Master Data, Posting Engine, SSO</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-label">Sprint 5–8 · Phase 1–2</div>
+          <div class="tl-desc">Finance Cycle, Sales &amp; Purchase Flows, Invoice Matching, Advanced Features</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot active"></div>
+          <div class="tl-label">Sprint 9 · Phase 2–3 (Current)</div>
+          <div class="tl-desc">Reports, Financial Statements, Assets Start — Phase 2 Backend Pagination + Testing</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pend"></div>
+          <div class="tl-label">Sprint 10 · Phase 3</div>
+          <div class="tl-desc">Fixed Assets, Multi-Company, Multi-Currency, Budget</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pend"></div>
+          <div class="tl-label">Sprint 11–12 · Phase 4</div>
+          <div class="tl-desc">Mobile Foundation (Flutter), Warehouse Scan, Barcode, POS</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pend"></div>
+          <div class="tl-label">Sprint 13–14 · Phase 5</div>
+          <div class="tl-desc">HR &amp; Payroll, Attendance, Expense Claim Mobile</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot pend"></div>
+          <div class="tl-label">Sprint 15–16 · Phase 6</div>
+          <div class="tl-desc">UAT, Data Migration, Cutover &amp; Go-Live</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">⚠️</span>Remaining / Pending Items (Phase 2)</div>
+
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;color:var(--danger);margin-bottom:8px;">🔴 ยังไม่ได้ทำ — ต้องทำก่อน Phase 2 Complete</div>
+        <div class="check-item check-todo"><span class="check-icon" style="color:#dc2626;">⬜</span>Frontend Unit Tests — Core Services (ApiService, AuthService, PrefsService)</div>
+        <div class="check-item check-todo"><span class="check-icon" style="color:#dc2626;">⬜</span>Frontend Unit Tests — Page Components (Products, Customers, Users, AR)</div>
+        <div class="check-item check-todo"><span class="check-icon" style="color:#dc2626;">⬜</span>Frontend Integration Tests — ApiService (HttpClient)</div>
+        <div class="check-item check-todo"><span class="check-icon" style="color:#dc2626;">⬜</span>Frontend Coverage Verification ≥70%</div>
+        <div class="check-item check-todo"><span class="check-icon" style="color:#dc2626;">⬜</span>Checkpoints #6, #19, #24, #44 (Manual sign-offs)</div>
+      </div>
+
+      <div style="margin-bottom:14px;">
+        <div style="font-size:12px;font-weight:700;color:var(--warning);margin-bottom:8px;">🟡 Optional — ดีถ้ามีเวลา</div>
+        <div class="check-item check-todo"><span class="check-icon" style="color:#d97706;">⬜</span>E2E Tests ด้วย Playwright (Tasks 31–40) — 9 suites</div>
+        <div class="check-item check-todo"><span class="check-icon" style="color:#d97706;">⬜</span>Performance Testing — seed 10,000+ records (Task 42)</div>
+        <div class="check-item check-todo"><span class="check-icon" style="color:#d97706;">⬜</span>Property-based Tests ด้วย fast-check (Tasks ที่มี *)</div>
+      </div>
+
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;margin-top:8px;">
+        <div style="font-size:12px;font-weight:700;color:#15803d;margin-bottom:6px;">✅ สรุป — Phase 2 ที่ทำเสร็จแล้ว</div>
+        <div style="font-size:12px;color:#166534;line-height:1.7;">
+          • Backend Pagination: 15/15 endpoints ✅<br>
+          • Backend Unit Tests: 530 tests, 65 suites ✅<br>
+          • Frontend Infrastructure + Shared Components: 196 tests ✅<br>
+          • API Documentation (OpenAPI/Swagger) ✅<br>
+          • CI/CD Pipeline (GitHub Actions) ✅
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /container -->
+
+<footer>
+  Xcellence ERP — Progress Update &nbsp;·&nbsp; Generated 16 มีนาคม 2569 &nbsp;·&nbsp; Angular + NestJS + PostgreSQL + Flutter
+</footer>
+
+</body>
+</html>
