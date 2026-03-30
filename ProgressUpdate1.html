@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Changelog — Product Master Revamp</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #21263a;
+      --border: #2e3352;
+      --accent: #6c8ef7;
+      --accent2: #4fc3f7;
+      --green: #4caf82;
+      --green-bg: #0d2b1e;
+      --yellow: #f5c842;
+      --text: #e2e8f8;
+      --muted: #7a85a3;
+      --tag-schema: #7c5cbf;
+      --tag-backend: #2e86ab;
+      --tag-frontend: #c45c3a;
+      --tag-bug: #b03060;
+      --tag-style: #3a7a4a;
+      --radius: 12px;
+      --radius-sm: 7px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Noto Sans Thai', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      max-width: 900px;
+      margin: 0 auto 2.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+    .header-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      background: linear-gradient(135deg, #6c8ef7 0%, #4fc3f7 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; flex-shrink: 0;
+      box-shadow: 0 4px 18px #6c8ef740;
+    }
+    .header-text h1 {
+      font-size: 1.6rem; font-weight: 700;
+      background: linear-gradient(90deg, #6c8ef7, #4fc3f7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header-text p {
+      font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem;
+    }
+
+    /* ── OVERALL PROGRESS ── */
+    .progress-card {
+      max-width: 900px; margin: 0 auto 2rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.25rem 1.5rem;
+    }
+    .progress-top {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .progress-label { font-size: 0.85rem; font-weight: 600; color: var(--muted); letter-spacing: .04em; }
+    .progress-pct { font-size: 1.4rem; font-weight: 800; color: var(--green); }
+    .bar-track {
+      width: 100%; height: 10px; background: var(--surface2);
+      border-radius: 99px; overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #4caf82, #6c8ef7);
+      transition: width .8s ease;
+    }
+    .progress-stats {
+      display: flex; gap: 1.5rem; margin-top: 0.85rem;
+    }
+    .stat { font-size: 0.8rem; color: var(--muted); }
+    .stat strong { color: var(--text); font-size: 1rem; }
+
+    /* ── SECTION GRID ── */
+    .sections { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.25rem; }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 0.85rem;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    .section-header:hover { background: var(--surface2); }
+    .section-icon { font-size: 1.2rem; }
+    .section-title { font-size: 1rem; font-weight: 700; flex: 1; }
+    .section-tag {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: .06em;
+      padding: 0.2rem 0.6rem; border-radius: 99px; text-transform: uppercase;
+    }
+    .tag-schema  { background: #7c5cbf22; color: #b09cf7; border: 1px solid #7c5cbf55; }
+    .tag-backend { background: #2e86ab22; color: #7ecff7; border: 1px solid #2e86ab55; }
+    .tag-frontend{ background: #c45c3a22; color: #f7a07a; border: 1px solid #c45c3a55; }
+    .tag-bug     { background: #b0306022; color: #f77aaa; border: 1px solid #b0306055; }
+    .tag-style   { background: #3a7a4a22; color: #7af7aa; border: 1px solid #3a7a4a55; }
+
+    .section-progress {
+      display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; color: var(--muted);
+    }
+    .mini-bar { width: 70px; height: 6px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+    .mini-fill { height: 100%; background: var(--green); border-radius: 99px; }
+    .chevron { color: var(--muted); font-size: 0.75rem; transition: transform .25s; }
+    .section-card.open .chevron { transform: rotate(180deg); }
+
+    /* ── ITEMS LIST ── */
+    .section-body { padding: 0.75rem 1.25rem 1rem; }
+    .item {
+      display: flex; align-items: flex-start; gap: 0.65rem;
+      padding: 0.55rem 0; border-bottom: 1px solid var(--border);
+    }
+    .item:last-child { border-bottom: none; }
+    .check-icon {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; margin-top: 2px;
+    }
+    .check-done { background: var(--green-bg); color: var(--green); border: 1.5px solid var(--green); }
+    .check-todo { background: var(--surface2); color: var(--muted); border: 1.5px solid var(--border); }
+    .item-text { font-size: 0.85rem; line-height: 1.55; color: var(--text); }
+    .item-text code {
+      font-family: 'Consolas', 'Fira Mono', monospace;
+      font-size: 0.8rem;
+      background: var(--surface2); color: var(--accent2);
+      padding: 0.1em 0.35em; border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      max-width: 900px; margin: 2.5rem auto 0;
+      text-align: center; font-size: 0.75rem; color: var(--muted);
+    }
+    .footer span { color: var(--accent); }
+
+    /* expand/collapse */
+    .section-body { display: block; }
+    .section-card:not(.open) .section-body { display: none; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ PAGE HEADER ══════════════ -->
+<div class="page-header">
+  <div class="header-icon">📋</div>
+  <div class="header-text">
+    <h1>Changelog — Product Master Revamp</h1>
+    <p>อัปเดตล่าสุด: 30 มีนาคม 2026 &nbsp;·&nbsp; Xcellence POS</p>
+  </div>
+</div>
+
+<!-- ══════════════ OVERALL PROGRESS ══════════════ -->
+<div class="progress-card">
+  <div class="progress-top">
+    <span class="progress-label">Overall Progress</span>
+    <span class="progress-pct">100%</span>
+  </div>
+  <div class="bar-track">
+    <div class="bar-fill" style="width: 100%"></div>
+  </div>
+  <div class="progress-stats">
+    <div class="stat"><strong>35</strong><br>Tasks Done</div>
+    <div class="stat"><strong>0</strong><br>In Progress</div>
+    <div class="stat"><strong>5</strong><br>Sections</div>
+  </div>
+</div>
+
+<!-- ══════════════ SECTIONS ══════════════ -->
+<div class="sections">
+
+  <!-- 1. Schema -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🗄️</span>
+      <span class="section-title">Schema (Prisma)</span>
+      <span class="section-tag tag-schema">Schema</span>
+      <div class="section-progress">
+        <div class="mini-bar"><div class="mini-fill" style="width:100%"></div></div>
+        <span>5/5</span>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>MProduct</code> — เพิ่ม 27 fields ใหม่ (จาก 14 → 41 fields) ตาม spec: vatTypIdx, saleFlag, purFlag, stkFlag, stopSaleFlag, stopPurFlag, prodClassId, prodServTypIdx, prodGrpPict, packId, innerPackId, ctnPackId, acConfigGrpId, finChartId, consContactId ฯลฯ</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>MProdPack</code> — เพิ่ม fields ใหม่ตาม spec (uomId, uomRatio, packFlag, defPackFlag, priceFlag, defPriceFlag, netWgt, grossWgt, refCode, prodGrpPict, defReplenishFlag ฯลฯ)</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>MProdBarcode</code> — เพิ่ม packId, itemNo, uomId, prodLotId, remark, defBarcodeQty, barcodeRatio, stopSaleFlag</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">Unique constraints: <code>(comId, code)</code>, <code>(comId, name)</code> บน MProduct / <code>(comId, barcode)</code> บน MProdBarcode</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>prisma generate</code> + <code>prisma migrate dev</code> — apply migration <code>product_master_v2</code> สำเร็จ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Backend -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">⚙️</span>
+      <span class="section-title">Backend (NestJS)</span>
+      <span class="section-tag tag-backend">Backend</span>
+      <div class="section-progress">
+        <div class="mini-bar"><div class="mini-fill" style="width:100%"></div></div>
+        <span>6/6</span>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>CreateProductDto</code> — เพิ่ม fields ใหม่ทั้งหมด</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>UpdateProductDto</code> — เพิ่ม fields ใหม่ทั้งหมด</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>CreatePackDto</code> — redesign ตาม MProdPack schema ใหม่</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>CreateBarcodeDto</code> — เพิ่ม packId, itemNo, uomId, remark, defBarcodeQty, barcodeRatio, stopSaleFlag</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>ProductsService</code> — แก้ create/update/addPack/addBarcode ให้ strip undefined values ก่อนส่ง Prisma (แก้ TS2322 type error)</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>AppController</code> — เพิ่ม <code>@Public()</code> decorator ให้ <code>GET /</code> ไม่ต้อง JWT</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Frontend ErpTable -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🧩</span>
+      <span class="section-title">Frontend — ErpTable (shared component)</span>
+      <span class="section-tag tag-frontend">Frontend</span>
+      <div class="section-progress">
+        <div class="mini-bar"><div class="mini-fill" style="width:100%"></div></div>
+        <span>7/7</span>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">เพิ่ม <code>visible</code> property ใน <code>ErpTableColumn</code> interface</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">เพิ่ม <code>groupable</code> property ใน <code>ErpTableColumn</code> interface</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">เพิ่ม <code>columnToggle</code> และ <code>groupBy</code> ใน <code>ErpTableConfig</code> interface</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">เพิ่ม Column Visibility Toggle panel (ปุ่ม ⚙ + checkbox panel)</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">เพิ่ม Group By dropdown + group header rows + group count</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text"><code>columnToggleVisible</code> default เป็น <code>true</code> (เปิดแสดงตั้งแต่โหลด)</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">ใช้ <code>visibleColumns</code> getter แทน <code>columns</code> ใน header/body/loading templates</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Frontend Products -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🛒</span>
+      <span class="section-title">Frontend — Products Component</span>
+      <span class="section-tag tag-frontend">Frontend</span>
+      <div class="section-progress">
+        <div class="mini-bar"><div class="mini-fill" style="width:100%"></div></div>
+        <span>8/8</span>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">ออกแบบ Create/Edit form ใหม่ตาม spec: Header (สถานะ/อนุมัติ), two-column layout (fields + image)</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">Fields ครบตาม spec: รหัส, ชื่อ, หมวด, ประเภท, ซื้อ/ขาย/สต๊อก, หยุดซื้อ/หยุดขาย, Def.ตามประเภท, กลุ่มสินค้า, ภาษี, ฝังบัญชี, วันที่สร้าง, UOM, หมายเหตุ, รูปภาพ</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">Sub-tabs 5 แท็บ: หน่วยสินค้า, บาร์โค้ด, ชื่อตามผู้ติดต่อ, คำอธิบาย, สินค้า-หมายเหตุ</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">Tab หน่วยสินค้า — editable table ตาม spec (ลำดับ, หน่วย, อัตราส่วน, หน่วยคลัง, Def.คลัง, หน่วยราคา, Def.ราคา, นน.รวม, หน่วยนน.)</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">Table columns: รหัสสินค้า, ชื่อ, หมวด, ประเภท, UOM, ราคาขาย, ราคาทุน, ภาษี(hidden), Stock(hidden), สถานะ — ทุกคอลัมน์ filterable + groupable</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">Highlight สีเหลืองบน fields รหัส/ชื่อ</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">Checkboxes ทั้งหมดอยู่บรรทัดเดียว (ซื้อ/ขาย/สต๊อก/หยุดซื้อ/หยุดขาย/Def.ตามประเภท)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Bug Fixes -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🐛</span>
+      <span class="section-title">Frontend — Bug Fixes</span>
+      <span class="section-tag tag-bug">Bug Fix</span>
+      <div class="section-progress">
+        <div class="mini-bar"><div class="mini-fill" style="width:100%"></div></div>
+        <span>3/3</span>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">แก้ dialog content ทะลุ modal — root cause: <code>overflow: visible !important</code> ใน <code>_primeng-overrides.scss</code> → เปลี่ยนเป็น <code>overflow: auto</code> + <code>max-height: calc(90vh - 120px)</code></div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">แก้ปุ่มลบ row ใน editable table trigger form submit — เพิ่ม <code>type="button"</code> บน delete button</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">แก้ layout form เพี้ยน — เปลี่ยนจาก utility classes เป็น dedicated CSS classes (<code>prod-dialog-body</code>, <code>prod-form-left</code>, <code>prod-form-right</code>, <code>prod-form-row</code>) ด้วย <code>:host ::ng-deep</code></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Global Styling -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <span class="section-icon">🎨</span>
+      <span class="section-title">Frontend — Global Styling</span>
+      <span class="section-tag tag-style">Styling</span>
+      <div class="section-progress">
+        <div class="mini-bar"><div class="mini-fill" style="width:100%"></div></div>
+        <span>6/6</span>
+      </div>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">ปรับ input/select/datepicker/textarea/checkbox/autocomplete/multiselect ทั้งระบบเป็น small (height 2rem, font 0.8rem)</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">ปรับ button ทั้งระบบเป็น small (height 2rem, font 0.75rem)</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">ลบ unused <code>DatePipe</code>/<code>DecimalPipe</code> imports ใน 7 components (bank-transfers, adjust-vouchers, chart-of-accounts, period-lock, vat-closing, wht, credit-notes)</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">แก้ optional chain warning ใน products component</div>
+      </div>
+      <div class="item">
+        <div class="check-icon check-done">✓</div>
+        <div class="item-text">เพิ่ม <code>allowedCommonJsDependencies</code> ใน angular.json (html2canvas, canvg, core-js, raf, rgbcolor)</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<div class="footer">
+  <p>Generated on <span>30 March 2026</span> &nbsp;·&nbsp; Xcellence POS — Product Master Revamp</p>
+</div>
+
+<script>
+  function toggle(header) {
+    header.closest('.section-card').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
