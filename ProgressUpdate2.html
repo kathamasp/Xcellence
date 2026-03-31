@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AG Grid Migration Changelog</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #21263a;
+      --surface3: #181c2c;
+      --border: #2e3352;
+      --accent: #6c8ef7;
+      --accent2: #4fc3f7;
+      --green: #4caf82;
+      --green-bg: #0d2b1e;
+      --yellow: #f5c842;
+      --orange: #f5924a;
+      --text: #e2e8f8;
+      --muted: #7a85a3;
+      --radius: 12px;
+      --radius-sm: 7px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Noto Sans Thai', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem 5rem;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      max-width: 960px; margin: 0 auto 2rem;
+      display: flex; align-items: flex-start; gap: 1.25rem;
+    }
+    .header-icon {
+      width: 54px; height: 54px; border-radius: 14px;
+      background: linear-gradient(135deg, #f5924a 0%, #f5c842 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.7rem; flex-shrink: 0;
+      box-shadow: 0 4px 20px #f5924a44;
+    }
+    .header-text h1 {
+      font-size: 1.55rem; font-weight: 700;
+      background: linear-gradient(90deg, #f5924a, #f5c842);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header-text p { font-size: 0.84rem; color: var(--muted); margin-top: 0.3rem; }
+
+    /* ── OVERVIEW BANNER ── */
+    .overview-banner {
+      max-width: 960px; margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #1e2238 0%, #1a2130 100%);
+      border: 1px solid #f5924a33;
+      border-radius: var(--radius); padding: 1.1rem 1.4rem;
+      font-size: 0.88rem; line-height: 1.65; color: #c8d4f0;
+    }
+    .overview-banner strong { color: var(--orange); }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      max-width: 960px; margin: 0 auto 2rem;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem;
+    }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1.2rem;
+      text-align: center;
+    }
+    .stat-card .val { font-size: 1.8rem; font-weight: 800; }
+    .stat-card .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+    .val-green { color: var(--green); }
+    .val-blue  { color: var(--accent); }
+    .val-orange{ color: var(--orange); }
+    .val-cyan  { color: var(--accent2); }
+
+    /* ── PROGRESS CARD ── */
+    .progress-card {
+      max-width: 960px; margin: 0 auto 2rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.2rem 1.5rem;
+    }
+    .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem; }
+    .progress-label { font-size: 0.84rem; font-weight: 600; color: var(--muted); letter-spacing: .04em; }
+    .progress-pct { font-size: 1.35rem; font-weight: 800; color: var(--green); }
+    .bar-track { width: 100%; height: 10px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #f5924a, #4caf82, #6c8ef7); }
+
+    /* ── SECTIONS ── */
+    .sections { max-width: 960px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .section-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 0.85rem;
+      padding: 0.95rem 1.25rem; border-bottom: 1px solid var(--border);
+      cursor: pointer; user-select: none;
+    }
+    .section-header:hover { background: var(--surface2); }
+    .section-num {
+      width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700;
+      background: var(--surface2); color: var(--accent);
+      border: 1px solid var(--border);
+    }
+    .section-icon { font-size: 1.1rem; }
+    .section-title { font-size: 0.97rem; font-weight: 700; flex: 1; }
+    .section-badge {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: .05em;
+      padding: 0.18rem 0.6rem; border-radius: 99px; text-transform: uppercase;
+    }
+    .badge-done   { background: #0d2b1e; color: #4caf82; border: 1px solid #4caf8255; }
+    .badge-arch   { background: #1a1530; color: #b09cf7; border: 1px solid #7c5cbf55; }
+    .badge-pages  { background: #0e1e30; color: #7ecff7; border: 1px solid #2e86ab55; }
+    .badge-feat   { background: #2a1a10; color: #f7a07a; border: 1px solid #c45c3a55; }
+    .badge-infra  { background: #1a2010; color: #a0f77a; border: 1px solid #4a8a2a55; }
+
+    .chevron { color: var(--muted); font-size: 0.72rem; transition: transform .25s; }
+    .section-card.open .chevron { transform: rotate(180deg); }
+    .section-body { display: none; padding: 1rem 1.25rem 1.2rem; }
+    .section-card.open .section-body { display: block; }
+
+    /* ── SUB-SECTION ── */
+    .sub-title {
+      font-size: 0.82rem; font-weight: 700; color: var(--accent2);
+      text-transform: uppercase; letter-spacing: .07em;
+      margin: 1rem 0 0.5rem;
+    }
+    .sub-title:first-child { margin-top: 0; }
+
+    /* ── ITEM LIST ── */
+    .item-list { display: flex; flex-direction: column; gap: 0; }
+    .item {
+      display: flex; align-items: flex-start; gap: 0.6rem;
+      padding: 0.5rem 0; border-bottom: 1px solid var(--border);
+    }
+    .item:last-child { border-bottom: none; }
+    .check-icon {
+      width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.68rem; margin-top: 2px;
+      background: var(--green-bg); color: var(--green); border: 1.5px solid var(--green);
+    }
+    .item-text { font-size: 0.84rem; line-height: 1.55; color: var(--text); }
+    .item-text code {
+      font-family: 'Consolas', 'Fira Mono', monospace; font-size: 0.78rem;
+      background: var(--surface2); color: var(--accent2);
+      padding: 0.1em 0.35em; border-radius: 4px; border: 1px solid var(--border);
+    }
+
+    /* ── TABLE ── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 0.5rem; }
+    .data-table th {
+      text-align: left; padding: 0.5rem 0.75rem;
+      background: var(--surface2); color: var(--muted);
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: .06em;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--border);
+      vertical-align: top; line-height: 1.5;
+    }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--surface3); }
+    .data-table td code {
+      font-family: 'Consolas', 'Fira Mono', monospace; font-size: 0.76rem;
+      background: var(--surface2); color: var(--accent2);
+      padding: 0.1em 0.35em; border-radius: 4px; border: 1px solid var(--border);
+    }
+    .done-dot {
+      display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--green); margin-right: 6px; flex-shrink: 0;
+    }
+
+    /* ── PAGE GROUPS ── */
+    .page-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
+    .page-group {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 0.75rem 1rem;
+    }
+    .page-group-title {
+      font-size: 0.75rem; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: .06em; margin-bottom: 0.6rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .page-count {
+      font-size: 0.68rem; background: var(--surface); color: var(--muted);
+      padding: 0.1rem 0.45rem; border-radius: 99px; border: 1px solid var(--border);
+    }
+    .page-item {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      padding: 0.3rem 0; border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+    .page-item:last-child { border-bottom: none; }
+    .page-item .name { color: var(--text); font-weight: 500; }
+    .page-item .path { color: var(--muted); font-size: 0.72rem; margin-top: 0.1rem; }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--surface3); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 0.85rem 1rem;
+      font-family: 'Consolas', 'Fira Mono', monospace; font-size: 0.78rem;
+      color: #c8d8f8; line-height: 1.6; overflow-x: auto; margin-top: 0.5rem;
+    }
+    .code-block .cmt { color: #4a7a6a; }
+    .code-block .key { color: #b09cf7; }
+    .code-block .val { color: #f5c842; }
+    .code-block .str { color: #7ecff7; }
+    .code-block .cmd { color: var(--orange); }
+
+    /* ── INLINE FEATURE TABLE ── */
+    .feat-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 0.5rem; }
+    .feat-table th {
+      text-align: left; padding: 0.45rem 0.75rem;
+      background: var(--surface2); color: var(--muted);
+      font-size: 0.72rem; letter-spacing: .05em; border-bottom: 1px solid var(--border);
+    }
+    .feat-table td { padding: 0.42rem 0.75rem; border-bottom: 1px solid var(--border); line-height: 1.5; }
+    .feat-table tr:last-child td { border-bottom: none; }
+    .feat-table td:first-child { font-weight: 600; color: var(--accent2); white-space: nowrap; }
+
+    /* ── FOOTER ── */
+    .footer { max-width: 960px; margin: 3rem auto 0; text-align: center; font-size: 0.74rem; color: var(--muted); }
+    .footer span { color: var(--orange); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ HEADER ══════════════ -->
+<div class="page-header">
+  <div class="header-icon">⚡</div>
+  <div class="header-text">
+    <h1>AG Grid Migration Changelog</h1>
+    <p>อัปเดตล่าสุด: 31 มีนาคม 2026 &nbsp;·&nbsp; Xcellence POS</p>
+  </div>
+</div>
+
+<!-- ══════════════ OVERVIEW ══════════════ -->
+<div class="overview-banner">
+  ย้ายระบบตารางทั้งหมดจาก <strong>PrimeNG Table (erp-table)</strong> มาใช้ <strong>AG Grid Community (erp-grid)</strong>
+  พร้อมสถาปัตยกรรมที่รองรับการสลับไปใช้ <strong>AG Grid Enterprise</strong> ได้ทันทีโดยไม่ต้อง refactor
+</div>
+
+<!-- ══════════════ STATS ══════════════ -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="val val-green">31</div>
+    <div class="lbl">หน้าที่ย้ายแล้ว</div>
+  </div>
+  <div class="stat-card">
+    <div class="val val-blue">8</div>
+    <div class="lbl">Sections สำเร็จ</div>
+  </div>
+  <div class="stat-card">
+    <div class="val val-orange">2</div>
+    <div class="lbl">Components ใหม่</div>
+  </div>
+  <div class="stat-card">
+    <div class="val val-cyan">100%</div>
+    <div class="lbl">Migration Done</div>
+  </div>
+</div>
+
+<!-- ══════════════ PROGRESS ══════════════ -->
+<div class="progress-card">
+  <div class="progress-top">
+    <span class="progress-label">Migration Progress</span>
+    <span class="progress-pct">100% Complete</span>
+  </div>
+  <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+</div>
+
+<!-- ══════════════ SECTIONS ══════════════ -->
+<div class="sections">
+
+  <!-- 1. Dependencies -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-num">1</div>
+      <span class="section-icon">📦</span>
+      <span class="section-title">Dependencies ที่เพิ่ม</span>
+      <span class="section-badge badge-done">✓ Done</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="sub-title">Frontend — package.json</div>
+      <div class="item-list">
+        <div class="item"><div class="check-icon">✓</div><div class="item-text"><code>ag-grid-community</code> — AG Grid core (MIT license)</div></div>
+        <div class="item"><div class="check-icon">✓</div><div class="item-text"><code>ag-grid-angular</code> — Angular wrapper</div></div>
+        <div class="item"><div class="check-icon">✓</div><div class="item-text"><code>quill</code> — Rich text editor (ใช้กับ PrimeNG Editor)</div></div>
+      </div>
+
+      <div class="sub-title">Config — angular.json</div>
+      <div class="item-list">
+        <div class="item"><div class="check-icon">✓</div><div class="item-text">เพิ่ม Quill CSS: <code>quill.core.css</code>, <code>quill.snow.css</code></div></div>
+        <div class="item"><div class="check-icon">✓</div><div class="item-text">เพิ่ม <code>allowedCommonJsDependencies</code>: <code>quill</code>, <code>quill-delta</code></div></div>
+      </div>
+
+      <div class="sub-title">Backend — pagination.dto.ts</div>
+      <div class="item-list">
+        <div class="item"><div class="check-icon">✓</div><div class="item-text">เปลี่ยน <code>@Max(100)</code> เป็น <code>@Max(10000)</code> ใน <code>PaginationQueryDto</code> เพื่อรองรับ <code>pageSize=9999</code></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Shared Components -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-num">2</div>
+      <span class="section-icon">🧩</span>
+      <span class="section-title">Shared Components ใหม่</span>
+      <span class="section-badge badge-done">✓ Done</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="sub-title">ErpGridComponent — ตารางหลัก</div>
+      <table class="data-table">
+        <thead><tr><th>ไฟล์</th><th>หน้าที่</th></tr></thead>
+        <tbody>
+          <tr><td><code>erp-grid.component.ts</code></td><td>Wrapper component หลัก รองรับ column toggle, loading state, selection events</td></tr>
+          <tr><td><code>erp-grid-theme.ts</code></td><td>Slim theme กลาง (themeQuartz spacing:4, rowHeight:32, fontSize:13)</td></tr>
+          <tr><td><code>grid-config-builder.service.ts</code></td><td>Fluent builder สำหรับ GridOptions พร้อม presets (list/detail/editable/report)</td></tr>
+          <tr><td><code>column-definition.factory.ts</code></td><td>Factory สร้าง ColDef: text, number, currency, date, boolean + enterprise decorators</td></tr>
+          <tr><td><code>grid.service.ts</code></td><td>API layer: export CSV/Excel, quickFilter, selection, resize</td></tr>
+          <tr><td><code>grid-feature-flag.service.ts</code></td><td>ศูนย์กลางตรวจสอบ enterprise flag — ไม่มีไฟล์ไหนอ่าน environment โดยตรง</td></tr>
+          <tr><td><code>grid-module-registration.ts</code></td><td>ลงทะเบียน AG Grid modules ตอน bootstrap, dynamic import enterprise</td></tr>
+          <tr><td><code>index.ts</code></td><td>Barrel exports</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sub-title" style="margin-top:1.2rem">ErpInlineGridComponent — ตารางแก้ไขข้อมูลแบบ inline</div>
+      <table class="feat-table">
+        <thead><tr><th>Feature</th><th>รายละเอียด</th></tr></thead>
+        <tbody>
+          <tr><td>Row Dragging</td><td>ลากแถวเพื่อเรียงลำดับ, auto reindex</td></tr>
+          <tr><td>Cell Editing</td><td>Single-click edit, text cell editor</td></tr>
+          <tr><td>Enter Navigation</td><td>กด Enter → ย้ายไป row ถัดไป, ถ้า row สุดท้ายจะเพิ่มแถวใหม่อัตโนมัติ</td></tr>
+          <tr><td>Add/Delete Row</td><td>ปุ่มเพิ่มแถว + ไอคอนถังขยะในแต่ละแถว</td></tr>
+          <tr><td>Form-safe</td><td><code>stopPropagation()</code> บน Enter เพื่อไม่ให้ trigger form submit</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. Enterprise Architecture -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-num">3</div>
+      <span class="section-icon">🏗️</span>
+      <span class="section-title">Enterprise Toggle Architecture</span>
+      <span class="section-badge badge-arch">Architecture</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="sub-title">Environment Config</div>
+      <div class="code-block"><span class="cmt">// frontend/src/environments/environment.ts</span>
+<span class="key">agGridEnterprise</span>: <span class="val">false</span>,  <span class="cmt">// เปลี่ยนเป็น true เพื่อเปิด enterprise</span>
+<span class="key">agGridLicenseKey</span>: <span class="str">''</span>,     <span class="cmt">// ใส่ license key</span></div>
+
+      <div class="sub-title">วิธี Upgrade เป็น Enterprise (1 Step)</div>
+      <div class="code-block"><span class="cmd">npm install ag-grid-enterprise</span>
+<span class="cmt"># แล้วตั้ง agGridEnterprise: true — ระบบจะ:</span>
+<span class="cmt"># → Dynamic import ag-grid-enterprise (Vite-safe)</span>
+<span class="cmt"># → ลงทะเบียน AllEnterpriseModule</span>
+<span class="cmt"># → เปิด sidebar, row grouping, pivot, range selection, status bar, Excel export อัตโนมัติ</span></div>
+
+      <div class="sub-title">Enterprise-safe Pattern</div>
+      <div class="item-list">
+        <div class="item"><div class="check-icon">✓</div><div class="item-text"><code>GridConfigBuilder</code>: methods เช่น <code>.withSideBar()</code>, <code>.withRowGrouping()</code> จะ no-op เมื่อ enterprise ปิด</div></div>
+        <div class="item"><div class="check-icon">✓</div><div class="item-text"><code>ColumnDefinitionFactory</code>: <code>.groupable()</code>, <code>.pivotable()</code>, <code>.aggregatable()</code> จะคืน colDef เดิมโดยไม่เพิ่ม enterprise props</div></div>
+        <div class="item"><div class="check-icon">✓</div><div class="item-text"><code>GridService</code>: <code>.exportExcel()</code> fallback เป็น CSV เมื่อ enterprise ปิด</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Pages Migrated -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-num">4</div>
+      <span class="section-icon">📄</span>
+      <span class="section-title">หน้าที่ย้ายจาก erp-table → erp-grid <span style="color:var(--accent2);font-size:0.85em">(31 หน้า)</span></span>
+      <span class="section-badge badge-pages">✓ 31/31</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="page-groups">
+
+        <!-- System -->
+        <div class="page-group">
+          <div class="page-group-title">🔧 System <span class="page-count">5 หน้า</span></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Users</div><div class="path">pages/system/users/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Roles</div><div class="path">pages/system/roles/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Groups</div><div class="path">pages/system/groups/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Document Number</div><div class="path">pages/system/docnum/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Audit Log</div><div class="path">pages/system/audit-log/</div></div></div>
+        </div>
+
+        <!-- AR -->
+        <div class="page-group">
+          <div class="page-group-title">💰 AR (Accounts Receivable) <span class="page-count">7 หน้า</span></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Customers</div><div class="path">pages/ar/customers/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">AR Invoices</div><div class="path">pages/ar/invoices/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">AR Receipts</div><div class="path">pages/ar/receipts/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Advances</div><div class="path">pages/ar/advances/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Credit Control</div><div class="path">pages/ar/credit-control/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Aging Report</div><div class="path">pages/ar/aging/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Bank Transfers</div><div class="path">pages/ar/bank-transfers/</div></div></div>
+        </div>
+
+        <!-- Sales -->
+        <div class="page-group">
+          <div class="page-group-title">🛒 Sales <span class="page-count">5 หน้า</span></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Quotations & Orders</div><div class="path">pages/sales/quotations/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Deliveries</div><div class="path">pages/sales/deliveries/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Sales Invoices</div><div class="path">pages/sales/sales-invoices/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Price Lists</div><div class="path">pages/sales/price-lists/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Credit Notes</div><div class="path">pages/sales/credit-notes/</div></div></div>
+        </div>
+
+        <!-- Purchase -->
+        <div class="page-group">
+          <div class="page-group-title">🏭 Purchase <span class="page-count">5 หน้า</span></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Purchase Requests</div><div class="path">pages/purchase/requests/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Purchase Orders</div><div class="path">pages/purchase/orders/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Goods Receipts</div><div class="path">pages/purchase/goods-receipts/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Vendors</div><div class="path">pages/purchase/vendors/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">AP Invoices</div><div class="path">pages/purchase/ap-invoices/</div></div></div>
+        </div>
+
+        <!-- Inventory -->
+        <div class="page-group">
+          <div class="page-group-title">📦 Inventory <span class="page-count">3 หน้า</span></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Products</div><div class="path">pages/inventory/products/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Warehouses</div><div class="path">pages/inventory/warehouses/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Stock Moves</div><div class="path">pages/inventory/stock-moves/</div></div></div>
+        </div>
+
+        <!-- GL -->
+        <div class="page-group">
+          <div class="page-group-title">📊 GL (General Ledger) <span class="page-count">6 หน้า</span></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Chart of Accounts</div><div class="path">pages/gl/chart-of-accounts/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Journal Entries</div><div class="path">pages/gl/journal-entries/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Adjust Vouchers</div><div class="path">pages/gl/adjust-vouchers/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">Period Lock</div><div class="path">pages/gl/period-lock/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">VAT Closing</div><div class="path">pages/gl/vat-closing/</div></div></div>
+          <div class="page-item"><span class="done-dot"></span><div><div class="name">WHT</div><div class="path">pages/gl/wht/</div></div></div>
+        </div>
+
+      </div>
+
+      <!-- Examples -->
+      <div style="margin-top:1rem">
+        <div class="sub-title">Examples</div>
+        <div class="item-list">
+          <div class="item"><div class="check-icon">✓</div><div class="item-text">Grid Demo — <code>pages/examples/grid-demo/grid-demo.component.ts</code></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Products Page -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-num">5</div>
+      <span class="section-icon">🛍️</span>
+      <span class="section-title">Products Page — เปลี่ยนแปลงเพิ่มเติม</span>
+      <span class="section-badge badge-feat">✓ Done</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <table class="data-table">
+        <thead><tr><th>ส่วน</th><th>เปลี่ยนจาก</th><th>เปลี่ยนเป็น</th></tr></thead>
+        <tbody>
+          <tr><td>ตารางหลัก</td><td><code>erp-table</code> (PrimeNG)</td><td><code>erp-grid</code> (AG Grid) + column toggle</td></tr>
+          <tr><td>Tab หน่วยสินค้า</td><td><code>erp-editable-table</code></td><td><code>erp-inline-grid</code> (AG Grid) + row drag + Enter navigation</td></tr>
+          <tr><td>Tab คำอธิบาย</td><td><code>&lt;textarea&gt;</code></td><td>PrimeNG Editor (Quill rich text)</td></tr>
+          <tr><td>Tab หมายเหตุ</td><td><code>&lt;textarea&gt;</code></td><td>PrimeNG Editor (Quill rich text)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 6. Data Loading -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-num">6</div>
+      <span class="section-icon">🔄</span>
+      <span class="section-title">Data Loading Pattern</span>
+      <span class="section-badge badge-done">✓ Done</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item"><div class="check-icon">✓</div><div class="item-text">ทุกหน้าเปลี่ยนจาก <strong>server-side pagination</strong> (PrimeNG lazy load) เป็น client-side</div></div>
+        <div class="item"><div class="check-icon">✓</div><div class="item-text">AG Grid จัดการ pagination, sorting, filtering ฝั่ง client ทั้งหมด</div></div>
+      </div>
+      <div class="code-block"><span class="key">this</span>.api.listXxx({ <span class="key">pageSize</span>: <span class="val">9999</span> }).subscribe({
+  <span class="key">next</span>: (res) => <span class="key">this</span>.records.set(res.data),
+  <span class="key">complete</span>: () => <span class="key">this</span>.loading = <span class="val">false</span>,
+});</div>
+    </div>
+  </div>
+
+  <!-- 7. Slim Theme -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-num">7</div>
+      <span class="section-icon">🎨</span>
+      <span class="section-title">Slim Theme — erpGridTheme</span>
+      <span class="section-badge badge-infra">✓ Done</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item"><div class="check-icon">✓</div><div class="item-text">ทุก grid ใช้ theme เดียวกัน <code>erpGridTheme</code> — ตาม <code>erp-grid-theme.ts</code></div></div>
+      </div>
+      <div class="code-block">themeQuartz.withParams({
+  <span class="key">spacing</span>: <span class="val">4</span>,
+  <span class="key">headerHeight</span>: <span class="val">32</span>,
+  <span class="key">rowHeight</span>: <span class="val">32</span>,
+  <span class="key">fontSize</span>: <span class="val">13</span>,
+  <span class="key">borderRadius</span>: <span class="val">4</span>,
+  <span class="key">wrapperBorderRadius</span>: <span class="val">6</span>,
+});</div>
+    </div>
+  </div>
+
+  <!-- 8. Type Stub -->
+  <div class="section-card open">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="section-num">8</div>
+      <span class="section-icon">📝</span>
+      <span class="section-title">Type Stub — ag-grid-enterprise.d.ts</span>
+      <span class="section-badge badge-infra">✓ Done</span>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item"><div class="check-icon">✓</div><div class="item-text">
+          <strong>Path:</strong> <code>frontend/src/types/ag-grid-enterprise.d.ts</code><br>
+          <span style="color:var(--muted);font-size:0.82rem;margin-top:0.3rem;display:block">
+            Type stub สำหรับ <code>ag-grid-enterprise</code> เพื่อให้ dynamic import compile ได้แม้ไม่ได้ติดตั้ง package — เมื่อติดตั้งจริง types ของ package จะ override stub อัตโนมัติ
+          </span>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<div class="footer">
+  <p>Generated on <span>31 March 2026</span> &nbsp;·&nbsp; Xcellence POS — AG Grid Migration</p>
+</div>
+
+<script>
+  function toggle(header) {
+    header.closest('.section-card').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
