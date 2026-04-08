@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schema Update 07/04 — Progress Update #3</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #21263a;
+      --surface3: #181c2c;
+      --border: #2e3352;
+      --accent: #6c8ef7;
+      --accent2: #4fc3f7;
+      --green: #4caf82;
+      --green-bg: #0d2b1e;
+      --yellow: #f5c842;
+      --orange: #f5924a;
+      --purple: #b07ef5;
+      --text: #e2e8f8;
+      --muted: #7a85a3;
+      --radius: 12px;
+      --radius-sm: 7px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Noto Sans Thai', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem 5rem;
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      max-width: 980px; margin: 0 auto 2rem;
+      display: flex; align-items: flex-start; gap: 1.25rem;
+    }
+    .header-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: linear-gradient(135deg, #6c8ef7 0%, #4fc3f7 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem; flex-shrink: 0;
+      box-shadow: 0 4px 22px #6c8ef755;
+    }
+    .header-text h1 {
+      font-size: 1.6rem; font-weight: 700;
+      background: linear-gradient(90deg, #6c8ef7, #4fc3f7);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header-text p { font-size: 0.84rem; color: var(--muted); margin-top: 0.3rem; }
+    .badge {
+      display: inline-block; font-size: 0.72rem; font-weight: 700;
+      padding: 0.18rem 0.65rem; border-radius: 20px;
+      margin-left: 0.5rem; vertical-align: middle;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge-green { background: var(--green-bg); color: var(--green); border: 1px solid #2a7a5333; }
+    .badge-blue  { background: #1a2545; color: var(--accent); border: 1px solid #6c8ef733; }
+
+    /* ── OVERVIEW BANNER ── */
+    .overview-banner {
+      max-width: 980px; margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #1e2238 0%, #1a2130 100%);
+      border: 1px solid #6c8ef733;
+      border-radius: var(--radius); padding: 1.1rem 1.5rem;
+      font-size: 0.88rem; line-height: 1.7; color: #c8d4f0;
+    }
+    .overview-banner strong { color: var(--accent2); }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      max-width: 980px; margin: 0 auto 2rem;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.85rem;
+    }
+    @media(max-width:700px){ .stats-row { grid-template-columns: repeat(3,1fr); } }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1rem;
+      text-align: center;
+    }
+    .stat-card .val { font-size: 1.85rem; font-weight: 800; line-height: 1; }
+    .stat-card .lbl { font-size: 0.73rem; color: var(--muted); margin-top: 0.35rem; line-height: 1.3; }
+    .val-green  { color: var(--green); }
+    .val-blue   { color: var(--accent); }
+    .val-orange { color: var(--orange); }
+    .val-cyan   { color: var(--accent2); }
+    .val-purple { color: var(--purple); }
+
+    /* ── SECTION ── */
+    .section {
+      max-width: 980px; margin: 0 auto 1.6rem;
+    }
+    .section-title {
+      font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted); margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .section-title::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── CHANGE SUMMARY TABLE ── */
+    .summary-table {
+      width: 100%; border-collapse: collapse;
+      background: var(--surface); border-radius: var(--radius);
+      overflow: hidden; font-size: 0.83rem;
+    }
+    .summary-table th {
+      background: var(--surface2); color: var(--muted);
+      font-weight: 600; text-transform: uppercase; font-size: 0.72rem;
+      letter-spacing: 0.06em; padding: 0.65rem 1rem; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-table td {
+      padding: 0.7rem 1rem; border-bottom: 1px solid var(--border);
+      vertical-align: top; line-height: 1.5;
+    }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:hover td { background: #ffffff06; }
+    .num-cell { color: var(--muted); font-size: 0.75rem; width: 36px; text-align: center; }
+    code {
+      font-family: 'Consolas', 'Fira Mono', monospace;
+      font-size: 0.8em;
+      background: #ffffff12;
+      padding: 0.1em 0.4em; border-radius: 4px;
+      color: var(--accent2);
+    }
+
+    /* ── CARD GRID ── */
+    .card-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.9rem;
+    }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.1rem 1.25rem;
+    }
+    .card-header {
+      display: flex; align-items: center; gap: 0.6rem;
+      margin-bottom: 0.75rem;
+    }
+    .card-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+    }
+    .card-title { font-size: 0.92rem; font-weight: 700; }
+    .card-subtitle { font-size: 0.76rem; color: var(--muted); }
+    .chip-list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+    .chip {
+      font-size: 0.72rem; padding: 0.2rem 0.55rem; border-radius: 20px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .chip.new   { background: #0d2b1e; border-color: #2a7a5333; color: var(--green); }
+    .chip.mod   { background: #1a2545; border-color: #6c8ef733; color: var(--accent); }
+    .chip.revamp{ background: #2a1c10; border-color: #f5924a33; color: var(--orange); }
+    .chip.logic { background: #1e1240; border-color: #b07ef533; color: var(--purple); }
+
+    /* ── PILL TAGS ── */
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .tag {
+      font-size: 0.74rem; padding: 0.22rem 0.65rem;
+      border-radius: 20px; font-weight: 600;
+    }
+    .tag-green  { background: var(--green-bg); color: var(--green); border: 1px solid #2a7a5333; }
+    .tag-blue   { background: #1a2545; color: var(--accent); border: 1px solid #6c8ef733; }
+    .tag-orange { background: #2a1c10; color: var(--orange); border: 1px solid #f5924a33; }
+    .tag-purple { background: #1e1240; color: var(--purple); border: 1px solid #b07ef533; }
+    .tag-cyan   { background: #0d2535; color: var(--accent2); border: 1px solid #4fc3f733; }
+
+    /* ── MODULE TIMELINE ── */
+    .module-list { display: flex; flex-direction: column; gap: 0.55rem; }
+    .module-row {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 0.7rem 1rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.83rem;
+    }
+    .module-row .dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    .dot-green  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+    .dot-blue   { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+    .dot-orange { background: var(--orange); box-shadow: 0 0 6px var(--orange); }
+    .dot-purple { background: var(--purple); box-shadow: 0 0 6px var(--purple); }
+    .module-row .name { font-weight: 600; min-width: 220px; }
+    .module-row .path { font-family: monospace; font-size: 0.76em; color: var(--muted); flex: 1; }
+    .module-row .chips { display: flex; gap: 0.35rem; flex-shrink: 0; }
+
+    /* ── TEST BOX ── */
+    .test-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 0.7rem;
+    }
+    .test-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 0.85rem 1rem;
+    }
+    .test-card .suite { font-size: 0.78rem; color: var(--muted); }
+    .test-card .count { font-size: 1.4rem; font-weight: 800; color: var(--green); margin: 0.25rem 0 0.1rem; }
+    .test-card .label { font-size: 0.72rem; color: var(--muted); }
+
+    /* ── STATUS DONE ── */
+    .done-tag {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.72rem; font-weight: 700;
+      background: var(--green-bg); color: var(--green);
+      padding: 0.18rem 0.55rem; border-radius: 20px;
+      border: 1px solid #2a7a5333;
+    }
+    .done-tag::before { content: '✓'; }
+
+    hr.divider {
+      border: none; border-top: 1px solid var(--border);
+      margin: 0.5rem 0;
+    }
+
+    /* ── SCHEMA TABLE (collapsible) ── */
+    details { margin-bottom: 0.75rem; }
+    details summary {
+      cursor: pointer; font-size: 0.82rem; font-weight: 600;
+      color: var(--accent2); padding: 0.5rem 0;
+      list-style: none; display: flex; align-items: center; gap: 0.5rem;
+    }
+    details summary::before { content: '▶'; font-size: 0.6em; }
+    details[open] summary::before { content: '▼'; }
+    .schema-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 0.78rem; margin-top: 0.4rem;
+    }
+    .schema-table th {
+      background: var(--surface3); color: var(--muted);
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.45rem 0.75rem; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .schema-table td {
+      padding: 0.42rem 0.75rem; border-bottom: 1px solid #ffffff0a;
+      color: var(--text);
+    }
+    .schema-table tr:last-child td { border-bottom: none; }
+    .col-new td:first-child { border-left: 3px solid var(--green); }
+    .col-mod td:first-child { border-left: 3px solid var(--accent); }
+  </style>
+</head>
+<body>
+
+<!-- ════ HEADER ════ -->
+<div class="page-header">
+  <div class="header-icon">🗄️</div>
+  <div class="header-text">
+    <h1>Schema Update 07/04/2026
+      <span class="badge badge-green">✅ Completed</span>
+      <span class="badge badge-blue">#3</span>
+    </h1>
+    <p>อัปเดต: 07 เม.ย. 2026 &nbsp;·&nbsp; Implementation เสร็จ: 08 เม.ย. 2026 &nbsp;·&nbsp; Migration: <code>20260407183822_schema_update_0704</code></p>
+  </div>
+</div>
+
+<!-- ════ OVERVIEW ════ -->
+<div class="overview-banner">
+  การอัปเดต Schema ครั้งนี้ครอบคลุม <strong>3 ตารางที่แก้ไข</strong> + <strong>สร้าง 20 Prisma models ใหม่</strong>
+  แบ่งเป็น Master Sheets 5 หมวด (UoM, Contact, Customer, Supplier, Price) และ Transaction Sheets 16 ชีต
+  รวมถึง <strong>10 Backend Modules</strong> พร้อม Business Logic, <strong>8 Frontend Pages</strong> ใหม่,
+  การ Revamp หน้า Customer / Vendor Form, และ <strong>Unit Tests 32 test cases</strong>
+  ใน 5 test suites — ทุกรายการ Apply สำเร็จผ่าน Prisma Migration
+</div>
+
+<!-- ════ STATS ════ -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="val val-blue">20</div>
+    <div class="lbl">New Prisma Models</div>
+  </div>
+  <div class="stat-card">
+    <div class="val val-orange">10</div>
+    <div class="lbl">Backend Modules ใหม่/Revamp</div>
+  </div>
+  <div class="stat-card">
+    <div class="val val-cyan">8</div>
+    <div class="lbl">Frontend Pages ใหม่</div>
+  </div>
+  <div class="stat-card">
+    <div class="val val-green">32</div>
+    <div class="lbl">Unit Tests (5 Suites)</div>
+  </div>
+  <div class="stat-card">
+    <div class="val val-purple">40+</div>
+    <div class="lbl">API Methods เพิ่มใหม่</div>
+  </div>
+</div>
+
+<!-- ════ CHANGE SUMMARY ════ -->
+<div class="section">
+  <div class="section-title">📋 Change Summary — 10 รายการ</div>
+  <table class="summary-table">
+    <thead>
+      <tr>
+        <th class="num-cell">#</th>
+        <th>ประเภท</th>
+        <th>รายละเอียด</th>
+        <th>สถานะ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="num-cell">1</td>
+        <td><span class="tag tag-blue">✏️ Modified Column</span></td>
+        <td><code>MProduct.Label_Price</code>: <code>NCHAR(10)</code> → <code>NCHAR(20)</code> (ขยาย field size)</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+      <tr>
+        <td class="num-cell">2</td>
+        <td><span class="tag tag-blue">✏️ Modified Column</span></td>
+        <td><code>MProdBarcode.Item_No</code>: <code>NUMERIC(7,2)</code> → <code>NUMERIC</code> (ลบ precision)</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+      <tr>
+        <td class="num-cell">3</td>
+        <td><span class="tag tag-blue">✏️ Modified (9)</span></td>
+        <td><code>MProdPack</code> — NUMERIC types 9 columns ลบ precision ออก</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+      <tr>
+        <td class="num-cell">4</td>
+        <td><span class="tag tag-green">➕ New Columns (7)</span></td>
+        <td><code>MProduct</code> — Pack_Id, Inner_Pack_Id, Ctn_Pack_Id, Ac_Config_Grp_Id, Fin_Chart_Id, Prod_Grp_Pict, Cons_Contact_Id</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+      <tr>
+        <td class="num-cell">5</td>
+        <td><span class="tag tag-green">➕ New Columns (2)</span></td>
+        <td><code>MProdPack</code> — Ref_Code, Prod_Grp_Pict</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+      <tr>
+        <td class="num-cell">6</td>
+        <td><span class="tag tag-green">➕ New Column (1)</span></td>
+        <td><code>MProdBarcode</code> — Pack_Id</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+      <tr>
+        <td class="num-cell">7</td>
+        <td><span class="tag tag-cyan">🆕 New Sub-Table</span></td>
+        <td><code>MProdAttribute</code> (32 columns) — Prisma model + backend upsert/get + DTO</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+      <tr>
+        <td class="num-cell">8</td>
+        <td><span class="tag tag-cyan">🆕 New Sub-Table</span></td>
+        <td><code>MProdLot</code> (15 columns) — Prisma model + backend add/get/remove + DTO</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+      <tr>
+        <td class="num-cell">9</td>
+        <td><span class="tag tag-purple">🆕 Master Sheets (5)</span></td>
+        <td>UoM, Contact, Customer, Supplier, Price — 3 modules ใหม่ + revamp 2 ตัวเดิม + frontend ทั้งหมด</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+      <tr>
+        <td class="num-cell">10</td>
+        <td><span class="tag tag-orange">🆕 Transaction Sheets (16)</span></td>
+        <td>Sale Quotation, Sales Order, PO, Invoices, Payments ฯลฯ — 5 modules ใหม่ + revamp 5 ตัวเดิม + business logic + frontend</td>
+        <td><span class="done-tag">Done</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════ MODIFIED TABLES ════ -->
+<div class="section">
+  <div class="section-title">✏️ Modified Tables (3)</div>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#1a254599;">🏭</div>
+        <div>
+          <div class="card-title">MProduct</div>
+          <div class="card-subtitle">Product Master — 7 new cols + 1 modified</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip mod">Label_Price: NCHAR(10→20)</span>
+        <span class="chip new">+Pack_Id</span>
+        <span class="chip new">+Inner_Pack_Id</span>
+        <span class="chip new">+Ctn_Pack_Id</span>
+        <span class="chip new">+Ac_Config_Grp_Id</span>
+        <span class="chip new">+Fin_Chart_Id</span>
+        <span class="chip new">+Prod_Grp_Pict</span>
+        <span class="chip new">+Cons_Contact_Id</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#1a254599;">📦</div>
+        <div>
+          <div class="card-title">MProdPack</div>
+          <div class="card-subtitle">Product Pack — 9 NUMERIC precision removed + 2 new cols</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip mod">Item_No, Uom_Ratio, Net_Wgt, Gross_Wgt, Wdt, Lgth, Height, Vlm, Diameter → NUMERIC</span>
+        <span class="chip new">+Ref_Code</span>
+        <span class="chip new">+Prod_Grp_Pict</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#1a254599;">🔢</div>
+        <div>
+          <div class="card-title">MProdBarcode</div>
+          <div class="card-subtitle">Product Barcode — 1 modified + 1 new col</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip mod">Item_No: NUMERIC(7,2) → NUMERIC</span>
+        <span class="chip new">+Pack_Id</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ NEW SUB-TABLES ════ -->
+<div class="section">
+  <div class="section-title">🆕 New Sub-Tables in Product Master (2)</div>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#0d2b1e99;">🏷️</div>
+        <div>
+          <div class="card-title">MProdAttribute</div>
+          <div class="card-subtitle">32 columns — Product attributes (Brand, Group, Color, Grade…)</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">Brand_Id</span>
+        <span class="chip new">Prod_Typ/Grp/Cat_Id</span>
+        <span class="chip new">Color_Id / Gender_Id / Age_Id</span>
+        <span class="chip new">Sale/Pur/Prodtn_Idx</span>
+        <span class="chip new">Sale Grade (6 periods)</span>
+        <span class="chip new">Prisma Model</span>
+        <span class="chip new">upsert/get endpoints</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#0d2b1e99;">🔬</div>
+        <div>
+          <div class="card-title">MProdLot</div>
+          <div class="card-subtitle">15 columns — Lot/Serial tracking</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">Prod_Lot_Code</span>
+        <span class="chip new">Mfg_Date / Expire_Date / Warranty_Date</span>
+        <span class="chip new">Ref_Sup_Lot_Code</span>
+        <span class="chip new">Net_Wgt / Gross_Wgt</span>
+        <span class="chip new">Prisma Model</span>
+        <span class="chip new">add/get/remove endpoints</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ NEW MASTER SHEETS ════ -->
+<div class="section">
+  <div class="section-title">📚 New Master Sheets (5)</div>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#1e124099;">📏</div>
+        <div>
+          <div class="card-title">Master UoM</div>
+          <div class="card-subtitle">หน่วยวัดสินค้า — 2 tables</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">MUom (11 cols)</span>
+        <span class="chip new">MUomPack (15 cols)</span>
+        <span class="chip logic">UoM Module + CRUD + Pack sub</span>
+        <span class="chip logic">frontend/pages/uom</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#0d2b1e99;">👥</div>
+        <div>
+          <div class="card-title">Master Contact</div>
+          <div class="card-subtitle">ผู้ติดต่อ — 3 tables</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">MContact (27 cols)</span>
+        <span class="chip new">MContactName (9 cols)</span>
+        <span class="chip new">MContactAddr (34 cols)</span>
+        <span class="chip logic">Contacts Module + CRUD + Names/Addresses</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#2a1c1099;">🤝</div>
+        <div>
+          <div class="card-title">Master Customer</div>
+          <div class="card-subtitle">ลูกค้า — Revamp ~47 fields</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip revamp">MCustomer ~47 cols (ArCustomer)</span>
+        <span class="chip revamp">Credit / Ship / Group settings</span>
+        <span class="chip revamp">Frontend: 4-tab form</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#2a1c1099;">🏭</div>
+        <div>
+          <div class="card-title">Master Supplier</div>
+          <div class="card-subtitle">ผู้จำหน่าย — Revamp ~40 fields</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip revamp">MSupplier ~40 cols (PurVendor)</span>
+        <span class="chip revamp">Finance / Ship / Group settings</span>
+        <span class="chip revamp">Frontend: 4-tab form</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#1a254599;">💲</div>
+        <div>
+          <div class="card-title">Master Price</div>
+          <div class="card-subtitle">ราคาสินค้า — 3 ระดับ</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">MProdPriceCom (Company level)</span>
+        <span class="chip new">MProdPricePricetyp (Price Type level)</span>
+        <span class="chip new">MProdPriceCus (Customer level)</span>
+        <span class="chip logic">Price Master Module + frontend page</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ NEW TRANSACTION SHEETS ════ -->
+<div class="section">
+  <div class="section-title">🔄 New Transaction Sheets (16)</div>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#0d2b1e99;">🛒</div>
+        <div>
+          <div class="card-title">Sale Quotation</div>
+          <div class="card-subtitle">TSaleQuot — 101 columns</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">Header: Cus, Prices, Ship, VAT</span>
+        <span class="chip new">Line Items: Products, Qty, Disc</span>
+        <span class="chip logic">Supplier Quotation Module</span>
+        <span class="chip logic">CRUD + Confirm + Convert-to-PO</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#0d2b1e99;">📋</div>
+        <div>
+          <div class="card-title">Sales Order</div>
+          <div class="card-subtitle">TSaleOrd — New module</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">Sale Order Module</span>
+        <span class="chip logic">CRUD + Confirm / Close / Cancel</span>
+        <span class="chip logic">Status management</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#2a1c1099;">📦</div>
+        <div>
+          <div class="card-title">Purchase Order</div>
+          <div class="card-subtitle">PurOrder — Revamp ~40 fields</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip revamp">PurOrder schema ~40 new fields (TPurOrd)</span>
+        <span class="chip logic">Confirm PO Module</span>
+        <span class="chip logic">Update status + adjust qty</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#1e124099;">🏪</div>
+        <div>
+          <div class="card-title">Issue Warehouse</div>
+          <div class="card-subtitle">TIsu — Stock management</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">Issue Warehouse Module</span>
+        <span class="chip logic">CRUD + Confirm (stock deduction)</span>
+        <span class="chip logic">Cancel (stock reversal)</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#1a254599;">🚚</div>
+        <div>
+          <div class="card-title">Ship Confirm</div>
+          <div class="card-subtitle">TShipCfm — Delivery</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">Ship Confirm Module</span>
+        <span class="chip logic">CRUD + Confirm (update delivery status)</span>
+        <span class="chip revamp">SalDelivery revamp ~15 fields</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#2a1c1099;">💰</div>
+        <div>
+          <div class="card-title">Invoices (4 revamps)</div>
+          <div class="card-subtitle">Sales / AP / Receipt / Delivery</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip revamp">SalInvoice ~30 fields (TSaleInv)</span>
+        <span class="chip revamp">PurApInvoice ~30 fields (TSupInv)</span>
+        <span class="chip revamp">PurReceipt Lot tracking (TRcv)</span>
+        <span class="chip revamp">SalDelivery ~15 fields (TShip)</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ BACKEND MODULES ════ -->
+<div class="section">
+  <div class="section-title">⚙️ Backend Modules</div>
+  <div class="module-list">
+    <div class="module-row">
+      <div class="dot dot-green"></div>
+      <div class="name">UoM Module</div>
+      <div class="path">backend/src/uom/</div>
+      <div class="chips">
+        <span class="chip new">Module</span><span class="chip new">CRUD</span><span class="chip new">Packs</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="dot dot-green"></div>
+      <div class="name">Contacts Module</div>
+      <div class="path">backend/src/contacts/</div>
+      <div class="chips">
+        <span class="chip new">Module</span><span class="chip new">CRUD</span><span class="chip new">Names</span><span class="chip new">Addresses</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="dot dot-green"></div>
+      <div class="name">Price Master Module</div>
+      <div class="path">backend/src/price-master/</div>
+      <div class="chips">
+        <span class="chip new">3 Levels</span><span class="chip new">Company / PriceType / Customer</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="dot dot-blue"></div>
+      <div class="name">Supplier Quotation Module</div>
+      <div class="path">backend/src/supplier-quotation/</div>
+      <div class="chips">
+        <span class="chip new">CRUD</span><span class="chip logic">Confirm</span><span class="chip logic">Convert-to-PO</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="dot dot-blue"></div>
+      <div class="name">Sale Order Module</div>
+      <div class="path">backend/src/sale-order/</div>
+      <div class="chips">
+        <span class="chip new">CRUD</span><span class="chip logic">Confirm</span><span class="chip logic">Close</span><span class="chip logic">Cancel</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="dot dot-purple"></div>
+      <div class="name">Confirm PO Module</div>
+      <div class="path">backend/src/confirm-po/</div>
+      <div class="chips">
+        <span class="chip new">CRUD</span><span class="chip logic">Confirm (PO status + adjust qty)</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="dot dot-orange"></div>
+      <div class="name">Issue Warehouse Module</div>
+      <div class="path">backend/src/issue/</div>
+      <div class="chips">
+        <span class="chip new">CRUD</span><span class="chip logic">Confirm (stock deduction)</span><span class="chip logic">Cancel (reversal)</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="dot dot-orange"></div>
+      <div class="name">Ship Confirm Module</div>
+      <div class="path">backend/src/ship-confirm/</div>
+      <div class="chips">
+        <span class="chip new">CRUD</span><span class="chip logic">Confirm (delivery status)</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="dot dot-green"></div>
+      <div class="name">Product Attribute (in Products)</div>
+      <div class="path">backend/src/products/</div>
+      <div class="chips">
+        <span class="chip new">Upsert</span><span class="chip new">Get endpoints</span>
+      </div>
+    </div>
+    <div class="module-row">
+      <div class="dot dot-green"></div>
+      <div class="name">Product Lot (in Products)</div>
+      <div class="path">backend/src/products/</div>
+      <div class="chips">
+        <span class="chip new">Add</span><span class="chip new">Get</span><span class="chip new">Remove</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FRONTEND ════ -->
+<div class="section">
+  <div class="section-title">🖥️ Frontend Changes</div>
+  <div class="card-grid">
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#0d2b1e99;">📄</div>
+        <div>
+          <div class="card-title">8 หน้าใหม่</div>
+          <div class="card-subtitle">frontend/src/app/pages/</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">UoM</span>
+        <span class="chip new">Contacts</span>
+        <span class="chip new">Prices</span>
+        <span class="chip new">Sale Orders</span>
+        <span class="chip new">Supplier Quotations</span>
+        <span class="chip new">Confirm PO</span>
+        <span class="chip new">Issues</span>
+        <span class="chip new">Ship Confirms</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#2a1c1099;">🧾</div>
+        <div>
+          <div class="card-title">Customer Form Revamp</div>
+          <div class="card-subtitle">frontend/src/app/pages/ar/customers/</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip revamp">Tab 1: ทั่วไป</span>
+        <span class="chip revamp">Tab 2: เครดิต</span>
+        <span class="chip revamp">Tab 3: จัดส่ง</span>
+        <span class="chip revamp">Tab 4: จัดกลุ่ม</span>
+        <span class="chip revamp">+ Dropdowns</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#2a1c1099;">🏭</div>
+        <div>
+          <div class="card-title">Vendor Form Revamp</div>
+          <div class="card-subtitle">frontend/src/app/pages/purchase/vendors/</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip revamp">Tab 1: ทั่วไป</span>
+        <span class="chip revamp">Tab 2: การเงิน</span>
+        <span class="chip revamp">Tab 3: จัดส่ง</span>
+        <span class="chip revamp">Tab 4: จัดกลุ่ม</span>
+        <span class="chip revamp">+ Dropdowns</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#1a254599;">⚡</div>
+        <div>
+          <div class="card-title">Action Buttons</div>
+          <div class="card-subtitle">Issue, SO, Supplier Quotation pages</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip logic">ยืนยัน / ยกเลิก / ปิด / สร้าง PO</span>
+        <span class="chip logic">In-grid actions</span>
+        <span class="chip logic">Status formatting</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon" style="background:#1e124099;">🔌</div>
+        <div>
+          <div class="card-title">API Methods & Routes</div>
+          <div class="card-subtitle">api.service.ts + app.routes.ts</div>
+        </div>
+      </div>
+      <div class="chip-list">
+        <span class="chip new">~40 API methods เพิ่มใหม่</span>
+        <span class="chip new">8 Routes ใหม่</span>
+        <span class="chip new">Menu Group "MASTER"</span>
+        <span class="chip new">Items ใน SALES / PURCHASE / INVENTORY</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════ UNIT TESTS ════ -->
+<div class="section">
+  <div class="section-title">🧪 Unit Tests — 5 Suites / 32 Tests</div>
+  <div class="test-grid">
+    <div class="test-card">
+      <div class="suite">ConfirmPo</div>
+      <div class="count">✓</div>
+      <div class="label">backend/src/confirm-po/*.spec.ts</div>
+    </div>
+    <div class="test-card">
+      <div class="suite">Issue Warehouse</div>
+      <div class="count">✓</div>
+      <div class="label">backend/src/issue/*.spec.ts</div>
+    </div>
+    <div class="test-card">
+      <div class="suite">Sale Order</div>
+      <div class="count">✓</div>
+      <div class="label">backend/src/sale-order/*.spec.ts</div>
+    </div>
+    <div class="test-card">
+      <div class="suite">UoM</div>
+      <div class="count">✓</div>
+      <div class="label">backend/src/uom/*.spec.ts</div>
+    </div>
+    <div class="test-card">
+      <div class="suite">Contacts</div>
+      <div class="count">✓</div>
+      <div class="label">backend/src/contacts/*.spec.ts</div>
+    </div>
+    <div class="test-card" style="background:var(--green-bg);border-color:#2a7a5344;">
+      <div class="suite" style="color:var(--green);">Total</div>
+      <div class="count" style="font-size:2rem;">32</div>
+      <div class="label" style="color:var(--green);">Tests Passed ✅</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ PRISMA MIGRATION ════ -->
+<div class="section">
+  <div class="section-title">🗃️ Prisma Schema & Migration</div>
+  <div class="card" style="max-width:980px;">
+    <div style="font-size:0.84rem;line-height:1.75;color:#c8d4f0;">
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <div style="flex:1;min-width:250px;">
+          <div style="font-weight:700;color:var(--accent2);margin-bottom:0.5rem;">Schema File</div>
+          <code>backend/prisma/schema.prisma</code><br>
+          แก้ไข 3 ตารางเดิม + สร้าง 20 models ใหม่
+        </div>
+        <div style="flex:1;min-width:250px;">
+          <div style="font-weight:700;color:var(--accent2);margin-bottom:0.5rem;">Migration Applied</div>
+          <code>20260407183822_schema_update_0704</code><br>
+          Status: <span class="done-tag">Applied สำเร็จ</span>
+        </div>
+        <div style="flex:1;min-width:250px;">
+          <div style="font-weight:700;color:var(--accent2);margin-bottom:0.5rem;">Migration Path</div>
+          <code>backend/prisma/migrations/</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FOOTER ════ -->
+<div style="max-width:980px;margin:2.5rem auto 0;text-align:center;font-size:0.75rem;color:var(--muted);">
+  Xcellence POS · Schema Update 07/04/2026 · Implementation Completed 08/04/2026 · Progress Update #3
+</div>
+
+</body>
+</html>
