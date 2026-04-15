@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progress Update #4 — Xcellence ERP</title>
+  <style>
+    :root {
+      --green:   #22c55e;
+      --amber:   #f59e0b;
+      --blue:    #3b82f6;
+      --indigo:  #6366f1;
+      --purple:  #a855f7;
+      --pink:    #ec4899;
+      --slate:   #64748b;
+      --dark:    #0f172a;
+      --card-bg: #1e293b;
+      --border:  #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--dark);
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ─── Header ─── */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .header .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    .header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .header .sub {
+      color: var(--slate);
+      font-size: 0.95rem;
+    }
+
+    /* ─── Global Stats ─── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      max-width: 1000px;
+      margin: 0 auto 3rem;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 16px 16px 0 0;
+    }
+    .stat-card.green::before  { background: var(--green); }
+    .stat-card.blue::before   { background: var(--blue); }
+    .stat-card.amber::before  { background: var(--amber); }
+    .stat-card.purple::before { background: var(--purple); }
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--slate);
+      margin-bottom: 0.5rem;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+    .stat-card.green  .stat-value { color: var(--green); }
+    .stat-card.blue   .stat-value { color: var(--blue); }
+    .stat-card.amber  .stat-value { color: var(--amber); }
+    .stat-card.purple .stat-value { color: var(--purple); }
+    .stat-desc { font-size: 0.8rem; color: var(--slate); }
+
+    /* ─── Test Banner ─── */
+    .test-banner {
+      max-width: 1000px;
+      margin: 0 auto 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .test-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .test-icon { font-size: 1.6rem; }
+    .test-info .test-title { font-weight: 700; font-size: 0.9rem; }
+    .test-info .test-count { font-size: 0.8rem; color: var(--green); font-weight: 600; }
+
+    /* ─── Master Progress Bar ─── */
+    .master-bar-wrap {
+      max-width: 1000px;
+      margin: 0 auto 3rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.6rem 2rem;
+    }
+    .master-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .master-bar-title { font-weight: 700; font-size: 1rem; }
+    .master-bar-pct {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--green);
+    }
+    .progress-track {
+      background: #0f172a;
+      border-radius: 999px;
+      height: 14px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      transition: width 1s ease;
+    }
+    .progress-legend {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
+      color: var(--slate);
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+
+    /* ─── Sections ─── */
+    .sections { max-width: 1000px; margin: 0 auto; display: grid; gap: 1.5rem; }
+
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 1.6rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    .section-header:hover { background: rgba(255,255,255,0.02); }
+    .sec-left { display: flex; align-items: center; gap: 0.8rem; }
+    .sec-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .sec-title { font-weight: 700; font-size: 0.95rem; }
+    .sec-sub   { font-size: 0.75rem; color: var(--slate); }
+    .sec-right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+    .sec-pct {
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+    .sec-mini-bar {
+      width: 80px;
+      background: #0f172a;
+      border-radius: 999px;
+      height: 6px;
+    }
+    .sec-mini-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    /* ─── Items Table ─── */
+    .section-body { padding: 1rem 1.6rem 1.4rem; display: none; }
+    .section-body.open { display: block; }
+    .subsection-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--slate);
+      margin: 1rem 0 0.5rem;
+    }
+    .subsection-title:first-child { margin-top: 0; }
+    .item-list { display: grid; gap: 0.35rem; }
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+    .item:hover { background: rgba(255,255,255,0.03); }
+    .item-status { flex-shrink: 0; font-size: 0.9rem; }
+    .item-text { flex: 1; }
+    .item-file { font-size: 0.72rem; color: #475569; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+    .chip-done     { background: rgba(34,197,94,0.12); border-left: 3px solid var(--green); }
+    .chip-existing { background: rgba(245,158,11,0.08); border-left: 3px solid var(--amber); }
+
+    /* ─── GL Mapping ─── */
+    .gl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+      padding: 1rem 1.6rem 1.4rem;
+    }
+    .gl-item {
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-start;
+      padding: 0.5rem 0.7rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+    .gl-code { font-weight: 700; color: var(--blue); font-family: monospace; flex-shrink: 0; }
+    .gl-name { color: #94a3b8; }
+    .gl-use  { font-size: 0.7rem; color: #475569; }
+
+    /* ─── Status Flow ─── */
+    .flow-box {
+      padding: 1rem 1.6rem 1.4rem;
+    }
+    .flow-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 0.6rem;
+      font-size: 0.8rem;
+    }
+    .flow-label { font-weight: 700; color: var(--slate); width: 100px; flex-shrink: 0; font-size: 0.75rem; }
+    .flow-node {
+      background: rgba(99,102,241,0.15);
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 6px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #a5b4fc;
+    }
+    .flow-arrow { color: var(--slate); font-size: 0.8rem; }
+
+    /* ─── Footer ─── */
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: #334155;
+      font-size: 0.78rem;
+    }
+
+    /* ─── Color helpers ─── */
+    .c-sale    { background: rgba(59,130,246,0.15); color: #93c5fd; }
+    .c-pur     { background: rgba(168,85,247,0.15); color: #d8b4fe; }
+    .c-ar      { background: rgba(34,197,94,0.15);  color: #86efac; }
+    .c-ap      { background: rgba(236,72,153,0.15); color: #f9a8d4; }
+    .c-inv     { background: rgba(245,158,11,0.15); color: #fcd34d; }
+    .c-db      { background: rgba(20,184,166,0.15); color: #5eead4; }
+    .c-fe      { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+    .c-perf    { background: rgba(239,68,68,0.15);  color: #fca5a5; }
+    .c-gl      { background: rgba(148,163,184,0.15);color: #cbd5e1; }
+
+    .bar-sale  { background: #3b82f6; }
+    .bar-pur   { background: #a855f7; }
+    .bar-ar    { background: #22c55e; }
+    .bar-ap    { background: #ec4899; }
+    .bar-inv   { background: #f59e0b; }
+    .bar-db    { background: #14b8a6; }
+    .bar-fe    { background: #6366f1; }
+    .bar-perf  { background: #ef4444; }
+    .bar-gl    { background: #94a3b8; }
+
+    @media (max-width: 600px) {
+      .test-banner { grid-template-columns: 1fr; }
+      .item-file { display: none; }
+      .sec-mini-bar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Header ─── -->
+<div class="header">
+  <div class="badge">Xcellence ERP · Progress Update #4</div>
+  <h1>ERP Flow Implementation</h1>
+  <p class="sub">อ้างอิงจาก ERP_Flow_Checklist.md &nbsp;|&nbsp; Updated: 2026-04-15</p>
+</div>
+
+<!-- ─── Global Stats ─── -->
+<div class="stats-grid">
+  <div class="stat-card green">
+    <div class="stat-label">Items Completed</div>
+    <div class="stat-value">70</div>
+    <div class="stat-desc">✅ ทำแล้ว (verified)</div>
+  </div>
+  <div class="stat-card amber">
+    <div class="stat-label">Pre-existing / Pending</div>
+    <div class="stat-value">39</div>
+    <div class="stat-desc">🔶 มีอยู่แล้ว / ยังไม่เพิ่ม</div>
+  </div>
+  <div class="stat-card blue">
+    <div class="stat-label">Total Items Tracked</div>
+    <div class="stat-value">109</div>
+    <div class="stat-desc">ทุก flow รวมกัน</div>
+  </div>
+  <div class="stat-card purple">
+    <div class="stat-label">Overall Progress</div>
+    <div class="stat-value">64%</div>
+    <div class="stat-desc">completion rate</div>
+  </div>
+</div>
+
+<!-- ─── Test Results ─── -->
+<div class="test-banner">
+  <div class="test-pill">
+    <div class="test-icon">🖥️</div>
+    <div class="test-info">
+      <div class="test-title">Backend Tests</div>
+      <div class="test-count">✅ 70/70 suites · 562/562 tests — Clean</div>
+    </div>
+  </div>
+  <div class="test-pill">
+    <div class="test-icon">🌐</div>
+    <div class="test-info">
+      <div class="test-title">Frontend Tests</div>
+      <div class="test-count">✅ 13/13 suites · 191/191 tests — Clean</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Master Bar ─── -->
+<div class="master-bar-wrap">
+  <div class="master-bar-header">
+    <span class="master-bar-title">Overall Completion</span>
+    <span class="master-bar-pct">64%</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" style="width: 64%"></div>
+  </div>
+  <div class="progress-legend">
+    <span><span class="legend-dot" style="background:var(--green)"></span>Completed (70 items)</span>
+    <span><span class="legend-dot" style="background:var(--amber)"></span>Pre-existing / Pending (39 items)</span>
+  </div>
+</div>
+
+<!-- ─── Section Cards ─── -->
+<div class="sections">
+
+  <!-- 1. Sale Flow -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-sale">🛒</div>
+        <div>
+          <div class="sec-title">1. Sale Flow: Quotation → AR</div>
+          <div class="sec-sub">QT → SO → Delivery → Sales Invoice → AR</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span class="sec-pct" style="color:#60a5fa">45%</span>
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-sale" style="width:45%"></div></div>
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="subsection-title">1.1 Sales Quotation (sal_quotation)</div>
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">CRUD + Pagination (findAll)</span><span class="item-file">sales.service.ts</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">docType QT/SO แยก tab</span><span class="item-file">quotations.component.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Customer relation บน SalQuotation</span><span class="item-file">schema.prisma</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">findAll include customer name</span><span class="item-file">sales.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Search by customer name</span><span class="item-file">sales.service.ts</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Price List integration</span><span class="item-file">sal_price_list model</span></div>
+      </div>
+
+      <div class="subsection-title">1.2 Sales Order (SO)</div>
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Convert QT → SO</span><span class="item-file">sales.service.ts → convertToSo()</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Credit Control check ก่อนสร้าง SO</span><span class="item-file">creditControl.checkCredit()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Stock Reservation เมื่อสร้าง SO</span><span class="item-file">sales.service.ts → reserveStock()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">warehouseId ใน ConvertToSoDto</span><span class="item-file">create-sales.dto.ts</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">So_Ref (sourceDocId อ้างอิง QT)</span><span class="item-file">sourceDocId field</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">TSaleOrd model (standalone SO)</span><span class="item-file">t_sale_ord model + module</span></div>
+      </div>
+
+      <div class="subsection-title">1.3 Issue from Warehouse (TIsu)</div>
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Issue CRUD + products</span><span class="item-file">issue.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">confirmIssue — stock deduction</span><span class="item-file">issue.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">confirmIssue — stock move creation</span><span class="item-file">invStockMove type=ISSUE</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">confirmIssue — FIFO consumption</span><span class="item-file">costingService.consumeFifo()</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">cancelIssue — reverse stock</span><span class="item-file">issue.service.ts → cancelIssue()</span></div>
+      </div>
+
+      <div class="subsection-title">1.4 Ship Delivery Order (sal_delivery)</div>
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Create DO from SO</span><span class="item-file">delivery.service.ts → createFromSo()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">confirmShip — race condition fix</span><span class="item-file">delivery.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">confirmShip — GL pre-fetch</span><span class="item-file">COGS(5100) + Inventory(1200)</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">confirmShip — batch balance load</span><span class="item-file">findMany แทน N ครั้ง findFirst</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">confirmShip — COGS Journal</span><span class="item-file">Dr.5100 / Cr.1200 auto-create</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">FIFO consumption</span><span class="item-file">costingService.consumeFifo()</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">SO auto-complete tracking</span><span class="item-file">qtyDelivered</span></div>
+      </div>
+
+      <div class="subsection-title">1.5 Sales Invoice + A/R Invoice</div>
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Sales Invoice CRUD</span><span class="item-file">sales-invoice module</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">AR Invoice post — GL pre-fetch</span><span class="item-file">AR(1100)+Revenue(4100)+VAT(2200)</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">GL Journal: Dr.AR, Cr.Revenue, Cr.VAT</span><span class="item-file">ar-invoice.service.ts → post()</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Credit control update + auto-hold</span><span class="item-file">updateCreditUsed() + hold()</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Period lock validation</span><span class="item-file">periodLockService.validatePeriod()</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2. Purchase Flow -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-pur">📦</div>
+        <div>
+          <div class="sec-title">2. Purchase Flow: Quotation → AP</div>
+          <div class="sec-sub">Sup.Quot → PO → GR → AP Invoice → Settlement</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span class="sec-pct" style="color:#c084fc">45%</span>
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-pur" style="width:45%"></div></div>
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="subsection-title">2.1 Supplier Quotation (TSupQuot)</div>
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">CRUD + confirm</span><span class="item-file">supplier-quotation module</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Convert to PO</span><span class="item-file">convertToPo()</span></div>
+      </div>
+
+      <div class="subsection-title">2.2 Purchase Order (pur_order)</div>
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">findAll — pagination</span><span class="item-file">purchase-order.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Controller — query params (page, search, sort, filter)</span><span class="item-file">purchase-order.controller.ts</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Create PO from PR</span><span class="item-file">createFromPr()</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Confirm PO (TChngPo)</span><span class="item-file">confirm-po module</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">PO Settlement (ปรับต้นทุน)</span><span class="item-file">settle() — avg cost + GL journal</span></div>
+      </div>
+
+      <div class="subsection-title">2.3 Receive to Warehouse (pur_receipt)</div>
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Create GR from PO + partial receive</span><span class="item-file">createFromPo()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">GR post — GL pre-fetch</span><span class="item-file">Inventory(1200)+Purchase(5200)</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">GR post — balance load inside tx (race condition)</span><span class="item-file">goods-receipt.service.ts</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Avg cost recalculation</span><span class="item-file">weighted avg cost</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">FIFO cost layer creation</span><span class="item-file">glInvCostLayer.create()</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">PO auto-complete tracking</span><span class="item-file">qtyReceived</span></div>
+      </div>
+
+      <div class="subsection-title">2.4 Supplier Invoice / AP Invoice</div>
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">AP Invoice CRUD + post</span><span class="item-file">ap-invoice module</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">GL Journal: Dr.Inventory/Expense, Cr.AP(2100)</span><span class="item-file">ap-invoice.service.ts</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Three-way match (PO+GR required)</span><span class="item-file">enforced in create()</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Auto WHT transaction</span><span class="item-file">whtService.createTransaction()</span></div>
+      </div>
+
+      <div class="subsection-title">2.5 PO Settlement — ✅ 100% Complete</div>
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">settle() method</span><span class="item-file">purchase-order.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">ปรับ avg cost บน inv_stock_balance</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">ปรับ unit cost บน gl_inv_cost_layer</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">GL journal (Inventory 1200 ↔ Purchase 5200)</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">API endpoint POST :id/settle</span><span class="item-file">purchase-order.controller.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Frontend API method settlePurchaseOrder()</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. AR Receipt -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-ar">💰</div>
+        <div>
+          <div class="sec-title">3. Payment Receive Flow: AR → Receipt</div>
+          <div class="sec-sub">AR Invoice → AR Receipt → Cash GL</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span class="sec-pct" style="color:#86efac">43%</span>
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-ar" style="width:43%"></div></div>
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">AR Receipt CRUD</span><span class="item-file">ar-receipt module</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Post — GL pre-fetch</span><span class="item-file">Cash(1300)+AR(1100)</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Post — batch invoice paid check</span><span class="item-file">findMany + updateMany</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Invoice auto-mark PAID</span><span class="item-file">paidAmount ≥ totalAmount</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Credit control reduce + auto-unhold</span><span class="item-file">updateCreditUsed(-amount)</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Cancel — reverse paid amounts</span><span class="item-file">cancel()</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Period lock validation</span><span class="item-file">validatePeriod(receiptDate,'AR')</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. AP Payment -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-ap">💳</div>
+        <div>
+          <div class="sec-title">4. Payment Paid Flow: AP → Paid</div>
+          <div class="sec-sub">AP Invoice → AP Payment → GL</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span class="sec-pct" style="color:#f9a8d4">100%</span>
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-ap" style="width:100%"></div></div>
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">PurApPayment schema model</span><span class="item-file">schema.prisma</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">AP Payment service (create/findAll/post/cancel)</span><span class="item-file">ap-payment.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">GL Journal: Dr.AP(2100), Cr.Cash(1300)</span><span class="item-file">post()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Batch update invoice paidAmount</span><span class="item-file">findMany + updateMany → PAID</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Cancel — reverse paid amounts</span><span class="item-file">cancel()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Period lock validation</span><span class="item-file">validatePeriod(paymentDate,'AP')</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Controller + API endpoints</span><span class="item-file">ap-payment.controller.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Frontend page + route + sidebar</span><span class="item-file">ApPaymentsComponent</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Frontend API methods (list/create/post/cancel)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Inventory -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-inv">🏭</div>
+        <div>
+          <div class="sec-title">5. Inventory Module</div>
+          <div class="sec-sub">Stock Move, Reservation, FIFO</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span class="sec-pct" style="color:#fcd34d">57%</span>
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-inv" style="width:57%"></div></div>
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Warehouse + Location CRUD</span><span class="item-file">warehouses module</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Stock Move confirm — race condition fix</span><span class="item-file">stock-move.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Stock Move confirm — N+1 fix (batch findMany)</span><span class="item-file">stock-move.service.ts</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">Stock Balance tracking</span><span class="item-file">inv_stock_balance unique constraint</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">FIFO consumption (ISSUE/SHIP)</span><span class="item-file">costingService.consumeFifo()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Stock Reservation — reserveStock()</span><span class="item-file">stock-move.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Stock Reservation — unreserveStock()</span><span class="item-file">stock-move.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Stock Reservation — validate available qty</span><span class="item-file">qtyOnHand - qtyReserved</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Database -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-db">🗄️</div>
+        <div>
+          <div class="sec-title">6. Database / Schema</div>
+          <div class="sec-sub">Prisma Schema, Indexes, Relations</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span class="sec-pct" style="color:#5eead4">43%</span>
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-db" style="width:43%"></div></div>
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">MProduct — indexes (isActive+code, category)</span><span class="item-file">schema.prisma</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">SalQuotation — customer relation</span><span class="item-file">schema.prisma</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">PurApPayment + PurApPaymentAlloc models</span><span class="item-file">schema.prisma</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">ArInvoice indexes (customerId, docType+status, dates)</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">SalQuotation indexes</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">PurOrder indexes (vendorId, orderDate, status)</span></div>
+        <div class="item chip-existing"><span class="item-status">🔶</span><span class="item-text">InvStockBalance unique(productId, warehouseId, locationId)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Frontend -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-fe">🖥️</div>
+        <div>
+          <div class="sec-title">7. Frontend</div>
+          <div class="sec-sub">API Consistency, UX Fixes, Test Suite</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span class="sec-pct" style="color:#a5b4fc">100%</span>
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-fe" style="width:100%"></div></div>
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <div class="subsection-title">API Consistency (Paginated Response Unwrap) — 14/14</div>
+      <div class="item-list" style="display:grid;grid-template-columns:1fr 1fr;gap:0.35rem">
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getPurchaseOrders()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getProducts()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getCustomers()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getVendors()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getWarehouses()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getQuotations()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getArInvoices()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getArReceipts()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getDeliveries()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getSalesInvoices()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getGoodsReceipts()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getStockMoves()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getArAdvances()</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">getPurchaseRequests()</span></div>
+      </div>
+
+      <div class="subsection-title" style="margin-top:1rem">UX Fixes — 4/4</div>
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Form gap — global styles (form-grid/field/row)</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Dropdown ซ่อนใต้ modal — appendTo="body" (104 จุด)</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Breadcrumb ↔ title gap</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Dialog overflow — content scrollable, dropdown visible</span></div>
+      </div>
+
+      <div class="subsection-title" style="margin-top:1rem">Test Suite — 4/4</div>
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">vitest setup (test-setup.ts)</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">แก้ stale spec references (5 files)</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">แก้ products PUT mock (expectOne)</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">13/13 suites · 191/191 tests passing</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 8. Performance -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-perf">⚡</div>
+        <div>
+          <div class="sec-title">8. Performance Improvements (Round 1)</div>
+          <div class="sec-sub">GL pre-fetch, Race condition fixes, N+1 elimination</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span class="sec-pct" style="color:#fca5a5">100%</span>
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-perf" style="width:100%"></div></div>
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">AR Invoice post — GL pre-fetch outside tx</span><span class="item-file">ar-invoice.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">AR Receipt post — GL pre-fetch + batch update</span><span class="item-file">ar-receipt.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Delivery confirmShip — race condition + GL pre-fetch + batch</span><span class="item-file">delivery.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">GR post — GL pre-fetch + balance inside tx</span><span class="item-file">goods-receipt.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">Stock Move confirm — race condition + N+1 fix</span><span class="item-file">stock-move.service.ts</span></div>
+        <div class="item chip-done"><span class="item-status">✅</span><span class="item-text">PO findAll — pagination</span><span class="item-file">purchase-order.service.ts</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GL Mapping -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-gl">📊</div>
+        <div>
+          <div class="sec-title">GL Account Mapping</div>
+          <div class="sec-sub">Chart of accounts ที่ใช้ในระบบ</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body" style="padding:0">
+      <div class="gl-grid">
+        <div class="gl-item"><span class="gl-code">1100</span><div><div class="gl-name">Accounts Receivable</div><div class="gl-use">AR Invoice, AR Receipt</div></div></div>
+        <div class="gl-item"><span class="gl-code">1200</span><div><div class="gl-name">Inventory</div><div class="gl-use">GR, Delivery COGS, PO Settlement</div></div></div>
+        <div class="gl-item"><span class="gl-code">1300</span><div><div class="gl-name">Cash / Bank</div><div class="gl-use">AR Receipt, AP Payment</div></div></div>
+        <div class="gl-item"><span class="gl-code">2100</span><div><div class="gl-name">Accounts Payable</div><div class="gl-use">AP Invoice, AP Payment</div></div></div>
+        <div class="gl-item"><span class="gl-code">2200</span><div><div class="gl-name">VAT Payable (Output)</div><div class="gl-use">AR Invoice post</div></div></div>
+        <div class="gl-item"><span class="gl-code">2210</span><div><div class="gl-name">VAT Input</div><div class="gl-use">AP Invoice post</div></div></div>
+        <div class="gl-item"><span class="gl-code">4100</span><div><div class="gl-name">Revenue</div><div class="gl-use">AR Invoice post</div></div></div>
+        <div class="gl-item"><span class="gl-code">5100</span><div><div class="gl-name">COGS</div><div class="gl-use">Delivery confirmShip</div></div></div>
+        <div class="gl-item"><span class="gl-code">5200</span><div><div class="gl-name">Purchase Expense</div><div class="gl-use">GR, AP Invoice, PO Settlement</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Flow -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-fe">🔄</div>
+        <div>
+          <div class="sec-title">Status Flow Summary</div>
+          <div class="sec-sub">Document lifecycle ของทุก flow</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <span style="color:var(--slate);font-size:0.8rem">▼</span>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="flow-box" style="padding:0">
+        <div class="flow-line">
+          <span class="flow-label">SALE</span>
+          <span class="flow-node">QT DRAFT</span><span class="flow-arrow">→</span>
+          <span class="flow-node">QT CONFIRMED</span><span class="flow-arrow">→</span>
+          <span class="flow-node">SO CONFIRMED</span><span class="flow-arrow">→</span>
+          <span class="flow-node">PARTLY DELIVERED</span><span class="flow-arrow">→</span>
+          <span class="flow-node">COMPLETED</span>
+        </div>
+        <div class="flow-line">
+          <span class="flow-label"></span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-node">DO DRAFT</span><span class="flow-arrow">→</span>
+          <span class="flow-node">DO SHIPPED</span><span class="flow-arrow">→</span>
+          <span class="flow-node">AR DRAFT</span><span class="flow-arrow">→</span>
+          <span class="flow-node">AR POSTED</span><span class="flow-arrow">→</span>
+          <span class="flow-node">AR PAID</span><span class="flow-arrow">→</span>
+          <span class="flow-node">RECEIPT POSTED</span>
+        </div>
+        <div class="flow-line" style="margin-top:0.8rem">
+          <span class="flow-label">PURCHASE</span>
+          <span class="flow-node">Sup.Quot</span><span class="flow-arrow">→</span>
+          <span class="flow-node">PO DRAFT</span><span class="flow-arrow">→</span>
+          <span class="flow-node">PO CONFIRMED</span><span class="flow-arrow">→</span>
+          <span class="flow-node">PARTLY RECEIVED</span><span class="flow-arrow">→</span>
+          <span class="flow-node">RECEIVED</span>
+        </div>
+        <div class="flow-line">
+          <span class="flow-label"></span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-node">GR DRAFT</span><span class="flow-arrow">→</span>
+          <span class="flow-node">GR POSTED</span><span class="flow-arrow">→</span>
+          <span class="flow-node">AP DRAFT</span><span class="flow-arrow">→</span>
+          <span class="flow-node">AP POSTED</span><span class="flow-arrow">→</span>
+          <span class="flow-node">AP PAID</span><span class="flow-arrow">→</span>
+          <span class="flow-node">PAYMENT POSTED</span>
+        </div>
+        <div class="flow-line" style="margin-top:0.8rem">
+          <span class="flow-label">INVENTORY</span>
+          <span class="flow-node">Stock Move DRAFT</span><span class="flow-arrow">→</span>
+          <span class="flow-node">DONE</span>
+          <span style="margin-left:1rem; color:var(--slate)">|</span>
+          <span class="flow-node">Issue 1</span><span class="flow-arrow">→</span>
+          <span class="flow-node">Issue 2 (Confirmed)</span><span class="flow-arrow">→</span>
+          <span class="flow-node">Issue 3 (Cancelled)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Xcellence POS · ERP Progress Update #4 &nbsp;|&nbsp; 2026-04-15 &nbsp;|&nbsp; The Dreamcatcher Co., Ltd.
+</footer>
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const arrow = header.querySelector('span[style*="▼"], span[style*="▲"]');
+    if (body.classList.contains('open')) {
+      body.classList.remove('open');
+      if (arrow) arrow.textContent = '▼';
+    } else {
+      body.classList.add('open');
+      if (arrow) arrow.textContent = '▲';
+    }
+  }
+
+  // Auto-open all sections on load
+  document.querySelectorAll('.section-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('.section-header span[style*="▼"]').forEach(a => a.textContent = '▲');
+</script>
+</body>
+</html>
