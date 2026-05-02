@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Progress Update #5 — Xcellence ERP</title>
+  <style>
+    :root {
+      --green:   #22c55e;
+      --amber:   #f59e0b;
+      --blue:    #3b82f6;
+      --indigo:  #6366f1;
+      --purple:  #a855f7;
+      --pink:    #ec4899;
+      --teal:    #14b8a6;
+      --slate:   #64748b;
+      --dark:    #0f172a;
+      --card-bg: #1e293b;
+      --border:  #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--dark);
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ─── Header ─── */
+    .header { text-align: center; margin-bottom: 3rem; }
+    .header .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+    .header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    .header .sub { color: var(--slate); font-size: 0.95rem; }
+    .header .release-tag {
+      display: inline-block;
+      margin-top: 0.6rem;
+      padding: 0.25rem 0.8rem;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.3);
+      border-radius: 6px;
+      color: #86efac;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    /* ─── Highlight Banner ─── */
+    .highlight-banner {
+      max-width: 1000px;
+      margin: 0 auto 2.5rem;
+      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(168,85,247,0.15));
+      border: 1px solid rgba(99,102,241,0.3);
+      border-radius: 16px;
+      padding: 1.4rem 1.8rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.2rem;
+      align-items: center;
+    }
+    .highlight-icon { font-size: 2.4rem; }
+    .highlight-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 0.3rem; color: #c4b5fd; }
+    .highlight-text  { font-size: 0.88rem; color: #cbd5e1; line-height: 1.5; }
+
+    /* ─── Global Stats ─── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      max-width: 1000px;
+      margin: 0 auto 3rem;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.4rem 1.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 16px 16px 0 0;
+    }
+    .stat-card.green::before  { background: var(--green); }
+    .stat-card.blue::before   { background: var(--blue); }
+    .stat-card.amber::before  { background: var(--amber); }
+    .stat-card.purple::before { background: var(--purple); }
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--slate);
+      margin-bottom: 0.5rem;
+    }
+    .stat-value { font-size: 2rem; font-weight: 800; line-height: 1; margin-bottom: 0.25rem; }
+    .stat-card.green  .stat-value { color: var(--green); }
+    .stat-card.blue   .stat-value { color: var(--blue); }
+    .stat-card.amber  .stat-value { color: var(--amber); }
+    .stat-card.purple .stat-value { color: var(--purple); }
+    .stat-desc { font-size: 0.8rem; color: var(--slate); }
+
+    /* ─── Test Banner ─── */
+    .test-banner {
+      max-width: 1000px;
+      margin: 0 auto 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .test-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .test-icon { font-size: 1.6rem; }
+    .test-info .test-title { font-weight: 700; font-size: 0.9rem; }
+    .test-info .test-count { font-size: 0.8rem; color: var(--green); font-weight: 600; }
+    .test-info .test-delta { font-size: 0.72rem; color: var(--slate); margin-top: 0.15rem; }
+
+    /* ─── Master Progress Bar ─── */
+    .master-bar-wrap {
+      max-width: 1000px;
+      margin: 0 auto 3rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.6rem 2rem;
+    }
+    .master-bar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .master-bar-title { font-weight: 700; font-size: 1rem; }
+    .master-bar-pct { font-size: 1.6rem; font-weight: 800; color: var(--green); }
+    .progress-track { background: #0f172a; border-radius: 999px; height: 14px; overflow: hidden; }
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      transition: width 1s ease;
+    }
+    .progress-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-top: 0.8rem;
+      font-size: 0.8rem;
+      color: var(--slate);
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+
+    /* ─── Sections ─── */
+    .sections { max-width: 1000px; margin: 0 auto; display: grid; gap: 1.5rem; }
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .section-card.featured { border: 1px solid rgba(99,102,241,0.4); box-shadow: 0 0 0 1px rgba(99,102,241,0.15); }
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 1.6rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+    }
+    .section-header:hover { background: rgba(255,255,255,0.02); }
+    .sec-left { display: flex; align-items: center; gap: 0.8rem; }
+    .sec-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .sec-title { font-weight: 700; font-size: 0.95rem; }
+    .sec-sub   { font-size: 0.75rem; color: var(--slate); }
+    .sec-right { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+    .sec-pct { font-size: 1.1rem; font-weight: 800; }
+    .sec-mini-bar { width: 80px; background: #0f172a; border-radius: 999px; height: 6px; }
+    .sec-mini-fill { height: 100%; border-radius: 999px; }
+    .sec-new-badge {
+      background: linear-gradient(135deg, #6366f1, #a855f7);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-left: 0.4rem;
+    }
+
+    /* ─── Body ─── */
+    .section-body { padding: 1rem 1.6rem 1.4rem; display: none; }
+    .section-body.open { display: block; }
+    .subsection-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--slate);
+      margin: 1rem 0 0.5rem;
+    }
+    .subsection-title:first-child { margin-top: 0; }
+    .item-list { display: grid; gap: 0.35rem; }
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+    }
+    .item:hover { background: rgba(255,255,255,0.03); }
+    .item-status { flex-shrink: 0; font-size: 0.9rem; }
+    .item-text { flex: 1; }
+    .item-file { font-size: 0.72rem; color: #475569; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+    .chip-done     { background: rgba(34,197,94,0.12); border-left: 3px solid var(--green); }
+    .chip-existing { background: rgba(245,158,11,0.08); border-left: 3px solid var(--amber); }
+    .chip-new      { background: rgba(99,102,241,0.10); border-left: 3px solid var(--indigo); }
+    .new-tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      color: #c4b5fd;
+      background: rgba(99,102,241,0.18);
+      padding: 0.05rem 0.35rem;
+      border-radius: 3px;
+      margin-right: 0.35rem;
+      letter-spacing: 0.06em;
+      vertical-align: middle;
+    }
+
+    /* ─── Highlights cards (Top of body) ─── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.8rem;
+      margin: 0.4rem 0 1rem;
+    }
+    .feat-card {
+      background: rgba(99,102,241,0.06);
+      border: 1px solid rgba(99,102,241,0.18);
+      border-radius: 10px;
+      padding: 0.8rem 0.9rem;
+    }
+    .feat-icon { font-size: 1.2rem; margin-bottom: 0.4rem; }
+    .feat-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 0.25rem; }
+    .feat-desc  { font-size: 0.75rem; color: #94a3b8; line-height: 1.45; }
+
+    /* ─── Phase grid for PATCH ─── */
+    .phase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.5rem;
+      margin: 0.6rem 0 0.4rem;
+    }
+    .phase-pill {
+      background: rgba(34,197,94,0.06);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 8px;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.78rem;
+    }
+    .phase-num {
+      display: inline-block;
+      background: var(--green);
+      color: #052e10;
+      font-weight: 800;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      text-align: center; line-height: 22px;
+      font-size: 0.72rem;
+      margin-right: 0.4rem;
+    }
+    .phase-name { font-weight: 700; font-size: 0.78rem; }
+    .phase-modules { font-size: 0.7rem; color: #94a3b8; margin-top: 0.25rem; line-height: 1.4; }
+
+    /* ─── Footer ─── */
+    footer { text-align: center; margin-top: 3rem; color: #334155; font-size: 0.78rem; }
+
+    /* ─── Color helpers ─── */
+    .c-sale    { background: rgba(59,130,246,0.15); color: #93c5fd; }
+    .c-pur     { background: rgba(168,85,247,0.15); color: #d8b4fe; }
+    .c-patch   { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+    .c-auto    { background: rgba(20,184,166,0.15); color: #5eead4; }
+    .c-bug     { background: rgba(239,68,68,0.15);  color: #fca5a5; }
+    .c-rich    { background: rgba(236,72,153,0.15); color: #f9a8d4; }
+    .c-test    { background: rgba(34,197,94,0.15);  color: #86efac; }
+    .c-stack   { background: rgba(245,158,11,0.15); color: #fcd34d; }
+
+    .bar-sale  { background: #3b82f6; }
+    .bar-pur   { background: #a855f7; }
+    .bar-patch { background: #6366f1; }
+    .bar-auto  { background: #14b8a6; }
+    .bar-bug   { background: #ef4444; }
+    .bar-rich  { background: #ec4899; }
+    .bar-test  { background: #22c55e; }
+    .bar-stack { background: #f59e0b; }
+
+    @media (max-width: 600px) {
+      .test-banner { grid-template-columns: 1fr; }
+      .item-file { display: none; }
+      .sec-mini-bar { display: none; }
+      .highlight-banner { grid-template-columns: 1fr; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Header ─── -->
+<div class="header">
+  <div class="badge">Xcellence ERP · Progress Update #5</div>
+  <h1>Partial Update + UX Polish Release</h1>
+  <p class="sub">อ้างอิงจาก ERP_Flow_Checklist.md &nbsp;|&nbsp; Updated: 2026-05-02</p>
+  <div class="release-tag">RELEASE — PATCH ทั้งระบบ + Document Lock + Rich Text + Bug Fixes</div>
+</div>
+
+<!-- ─── Highlight Banner ─── -->
+<div class="highlight-banner">
+  <div class="highlight-icon">🚀</div>
+  <div>
+    <div class="highlight-title">รอบนี้คืออะไร? — Hybrid Partial Update + Form UX Hardening</div>
+    <div class="highlight-text">
+      ยกเครื่องระบบ <b>Update API</b> ทั้ง 35+ โมดูลจาก PUT → PATCH (ส่งเฉพาะฟิลด์ที่เปลี่ยน) พร้อม
+      <b>Optimistic Locking</b> และ <b>Audit Log แบบ field-level</b> +
+      เสริม <b>Product Autofill</b>, <b>Document Status Lock</b>, <b>Rich Text Editor</b> ในเอกสารขาย
+      และแก้ Bug รายการ inline grid / FOC / Status revert ที่เกาะเกี่ยวกันมาตั้งแต่รอบที่แล้ว
+    </div>
+  </div>
+</div>
+
+<!-- ─── Global Stats ─── -->
+<div class="stats-grid">
+  <div class="stat-card green">
+    <div class="stat-label">New Items This Release</div>
+    <div class="stat-value">75</div>
+    <div class="stat-desc">🆕 ✅ เพิ่มในรอบ #5</div>
+  </div>
+  <div class="stat-card blue">
+    <div class="stat-label">Cumulative ✅ Total</div>
+    <div class="stat-value">145</div>
+    <div class="stat-desc">verified items ทั้งระบบ</div>
+  </div>
+  <div class="stat-card amber">
+    <div class="stat-label">Pre-existing / Pending</div>
+    <div class="stat-value">39</div>
+    <div class="stat-desc">🔶 ยังไม่ได้แตะในรอบนี้</div>
+  </div>
+  <div class="stat-card purple">
+    <div class="stat-label">Modules touched (PATCH)</div>
+    <div class="stat-value">35+</div>
+    <div class="stat-desc">8 phases — ครอบคลุมทั้ง ERP</div>
+  </div>
+</div>
+
+<!-- ─── Test Results ─── -->
+<div class="test-banner">
+  <div class="test-pill">
+    <div class="test-icon">🖥️</div>
+    <div class="test-info">
+      <div class="test-title">Backend Tests</div>
+      <div class="test-count">✅ 71/71 suites · 589/589 tests — Clean</div>
+      <div class="test-delta">Δ +1 suite, +27 tests vs. #4</div>
+    </div>
+  </div>
+  <div class="test-pill">
+    <div class="test-icon">🌐</div>
+    <div class="test-info">
+      <div class="test-title">Frontend Tests</div>
+      <div class="test-count">✅ 20/20 suites · 270/270 tests — Clean</div>
+      <div class="test-delta">Δ +7 suites, +79 tests vs. #4</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Master Bar ─── -->
+<div class="master-bar-wrap">
+  <div class="master-bar-header">
+    <span class="master-bar-title">Overall Completion</span>
+    <span class="master-bar-pct">79%</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" style="width: 79%"></div>
+  </div>
+  <div class="progress-legend">
+    <span><span class="legend-dot" style="background:var(--green)"></span>Completed (145 items)</span>
+    <span><span class="legend-dot" style="background:var(--indigo)"></span>🆕 New this release (75 items)</span>
+    <span><span class="legend-dot" style="background:var(--amber)"></span>Pre-existing / Pending (39 items)</span>
+  </div>
+</div>
+
+<!-- ─── Section Cards ─── -->
+<div class="sections">
+
+  <!-- §9 Hybrid Partial Update — featured -->
+  <div class="section-card featured">
+    <div class="section-header" onclick="toggleSection(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-patch">🔄</div>
+        <div>
+          <div class="sec-title">9. Hybrid Partial Update — PATCH ทั้งระบบ <span class="sec-new-badge">NEW</span></div>
+          <div class="sec-sub">ยก PUT → PATCH ทุกโมดูล + Optimistic Lock + Audit field-level</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-patch" style="width:100%"></div></div>
+        <div class="sec-pct" style="color:var(--indigo)">100%</div>
+      </div>
+    </div>
+    <div class="section-body open">
+
+      <div class="feature-grid">
+        <div class="feat-card">
+          <div class="feat-icon">🧬</div>
+          <div class="feat-title">DirtyTracker</div>
+          <div class="feat-desc">Snapshot-and-diff ฝั่ง frontend — ส่งเฉพาะฟิลด์ที่เปลี่ยนจริง ข้าม system fields อัตโนมัติ</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">🔐</div>
+          <div class="feat-title">Optimistic Locking</div>
+          <div class="feat-desc">ตรวจ <code>updatedAt</code> match ใน tx — mismatch คืน 409 พร้อมเสนอโหลดใหม่</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📋</div>
+          <div class="feat-title">Field-level Audit</div>
+          <div class="feat-desc">PATCH บันทึก <code>{ field, oldValue, newValue }[]</code> — รู้ว่าแก้อะไรเป็นรายฟิลด์</div>
+        </div>
+        <div class="feat-card">
+          <div class="feat-icon">📐</div>
+          <div class="feat-title">Steering Rule</div>
+          <div class="feat-desc">มาตรฐานบังคับ <code>.kiro/steering/partial-update-standard.md</code> — ห้าม PUT/full-form อีกต่อไป</div>
+        </div>
+      </div>
+
+      <div class="subsection-title">8 Phases — Module Coverage</div>
+      <div class="phase-grid">
+        <div class="phase-pill"><span class="phase-num">1</span><span class="phase-name">Master · Pilot</span><div class="phase-modules">Contacts</div></div>
+        <div class="phase-pill"><span class="phase-num">2</span><span class="phase-name">Master</span><div class="phase-modules">Prices (Company / PriceType / Customer), UOM</div></div>
+        <div class="phase-pill"><span class="phase-num">3</span><span class="phase-name">Inventory</span><div class="phase-modules">Products, Warehouses, Stock Moves, Issues</div></div>
+        <div class="phase-pill"><span class="phase-num">4</span><span class="phase-name">Sales</span><div class="phase-modules">Cust.Req, Quotations, SO, Deliveries, Ship Confirms, Sales Invoices, Credit Notes, Price Lists</div></div>
+        <div class="phase-pill"><span class="phase-num">5</span><span class="phase-name">Purchase</span><div class="phase-modules">Vendors, Sup.Quot, PO, Confirm PO, GR, AP Invoices, AP Payments</div></div>
+        <div class="phase-pill"><span class="phase-num">6</span><span class="phase-name">AR</span><div class="phase-modules">Customers, AR Invoices, AR Receipts, AR Advances</div></div>
+        <div class="phase-pill"><span class="phase-num">7</span><span class="phase-name">GL</span><div class="phase-modules">Chart of Accounts, Journal Entries, Adjust Vouchers</div></div>
+        <div class="phase-pill"><span class="phase-num">8</span><span class="phase-name">System</span><div class="phase-modules">Users, Roles, Groups, Access Rights, Record Rules, Docnum, SSO, Workflows</div></div>
+      </div>
+
+      <div class="subsection-title">Shared Infrastructure</div>
+      <div class="item-list">
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><span class="new-tag">NEW</span>Frontend DirtyTracker utility (getChangedFields / hasChanges / isEqual)</div><div class="item-file">shared/utils/dirty-tracker.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><span class="new-tag">NEW</span>ApiService — generic <code>patch&lt;T&gt;()</code> + entity-specific methods</div><div class="item-file">core/services/api.service.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><span class="new-tag">NEW</span>Backend <code>partialUpdate()</code> helper (404 / 409 / 400 handling)</div><div class="item-file">common/utils/partial-update.helper.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><span class="new-tag">NEW</span>Strip system fields อัตโนมัติก่อนส่ง Prisma</div><div class="item-file">partial-update.helper.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><span class="new-tag">NEW</span>Audit Log Interceptor — <code>changeDetails</code> field-level สำหรับ PATCH</div><div class="item-file">audit-log/audit-log.interceptor.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><span class="new-tag">NEW</span>MODEL_MAP ครอบคลุมทุกโมดูล</div><div class="item-file">audit-log.interceptor.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><span class="new-tag">NEW</span>Steering Rule (มาตรฐานบังคับใช้ตลอดไป)</div><div class="item-file">.kiro/steering/partial-update-standard.md</div></div>
+      </div>
+
+      <div class="subsection-title">Frontend Page Pattern (ทุก page component)</div>
+      <div class="item-list">
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Snapshot on Edit (<code>JSON.parse(JSON.stringify(record))</code>)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Dirty Tracking ก่อน submit + "ไม่มีการเปลี่ยนแปลง" detection</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">PATCH with <code>updatedAt</code> Optimistic Lock</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">409 Conflict — แจ้งเตือน + เสนอโหลดข้อมูลใหม่</div></div>
+      </div>
+
+      <div class="subsection-title">Property-Based Tests (7 properties)</div>
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">DirtyTracker diff correctness สำหรับ arbitrary objects</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Deep copy snapshot isolation — mutation ไม่กระทบ snapshot</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">System field stripping — Prisma ไม่ได้รับ system fields</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Audit changeDetails correctness — บันทึกเฉพาะที่เปลี่ยนจริง</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Optimistic locking — match → success / mismatch → 409</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">JSON round-trip — null / 0 / false / "" ไม่หาย</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Date serialization round-trip — Date → ISO → Date</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- §10 Product Autofill & Document Status Lock -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-auto">🪄</div>
+        <div>
+          <div class="sec-title">10. Product Autofill & Document Status Lock <span class="sec-new-badge">NEW</span></div>
+          <div class="sec-sub">เลือกสินค้า → เติมชื่อ/บาร์โค้ด/หน่วยอัตโนมัติ + ล็อคเอกสารเมื่อพ้นสถานะร่าง</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-auto" style="width:100%"></div></div>
+        <div class="sec-pct" style="color:var(--teal)">100%</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="subsection-title">Product Line Autofill</div>
+      <div class="item-list">
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">เติมชื่อสินค้า (<code>cusProdName</code>) + บาร์โค้ด (<code>prodBarcode</code>) อัตโนมัติ</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Dropdown หน่วยนับจาก MProdPack (filter <code>isActive=true</code>)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Default pack auto-select (<code>defPackFlag='Y'</code>) + fallback base UOM</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">ชื่อสินค้า read-only หลัง autofill (กันแก้สลับ)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Backend: <code>GET /api/products</code> ส่งเฉพาะ active packs</div><div class="item-file">products/products.service.ts</div></div>
+      </div>
+
+      <div class="subsection-title">Document Status Lock (statusTypIdx ≠ 5)</div>
+      <div class="item-list">
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">ปิด header form — date pickers, dropdowns, autocompletes, toggles, input numbers</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">ปิด grid — แก้ cell, เพิ่มแถว, ลบแถว, drag reorder</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">ซ่อนปุ่มบันทึก (ปุ่มเปลี่ยนสถานะ Submit/Confirm คงไว้ตามเงื่อนไขเดิม)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><code>@Input() readOnly</code> ใหม่ใน <code>ErpInlineGridComponent</code></div><div class="item-file">shared/components/erp-inline-grid</div></div>
+      </div>
+
+      <div class="subsection-title">โมดูลที่ใช้</div>
+      <div class="item-list">
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Sale Quotation Revamp</div><div class="item-file">sale-quotation-revamp.component.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Sale Order Revamp</div><div class="item-file">sale-order-revamp.component.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Customer Requests</div><div class="item-file">customer-requests.component.ts</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §11 Bug Fixes Round 2 -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-bug">🐛</div>
+        <div>
+          <div class="sec-title">11. Bug Fixes (Round 2) <span class="sec-new-badge">NEW</span></div>
+          <div class="sec-sub">Inline grid delete · Quotation status revert · FOC handling</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-bug" style="width:100%"></div></div>
+        <div class="sec-pct" style="color:var(--green)">5/5</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><b>Bug #1-3</b> — ลบรายการในตาราง inline grid ไม่ได้ (Quotation/Order/Products)<br><span style="color:#94a3b8;font-size:0.75rem">แก้: <code>deleteRow()</code> reindex จาก in-memory array แทนอ่านจาก grid API ที่ยังเป็นข้อมูลเก่า</span></div><div class="item-file">erp-inline-grid.component.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><b>Bug #4</b> — Sale Quotation status ค้างที่ "สั่งซื้อ" เมื่อยกเลิก SO<br><span style="color:#94a3b8;font-size:0.75rem">แก้: <code>softDelete()</code> ตรวจ <code>soRefTypIdx===1</code> → revert quotation 3 → 2 (best-effort)</span></div><div class="item-file">sale-order-revamp.service.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text"><b>Bug #5</b> — FOC ไม่ดีดราคา = 0 และไม่ disable ช่องราคา<br><span style="color:#94a3b8;font-size:0.75rem">แก้: <code>recalcLine()</code> reset salePrice/discPct1=0 + <code>editable: focFlag !== 'Y'</code> + cellStyle สีเทา + <code>refreshCells()</code></span></div><div class="item-file">sale-quotation/sale-order revamp components</div></div>
+      </div>
+
+      <div class="subsection-title">Tests (รวมใหม่ 9 tests)</div>
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Frontend ErpInlineGrid (deleteRow) — 3 tests ใหม่ (12 รวม)</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Backend SaleOrderRevamp (softDelete + status revert) — 6 tests ใหม่</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §12 Remark Rich Text Editor -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-rich">✍️</div>
+        <div>
+          <div class="sec-title">12. Remark Rich Text Editor <span class="sec-new-badge">NEW</span></div>
+          <div class="sec-sub">PrimeNG Editor (Quill.js) + Layout 2 คอลัมน์ + readonly auto</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-rich" style="width:100%"></div></div>
+        <div class="sec-pct" style="color:var(--pink)">100%</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">เพิ่ม <code>EditorModule</code> (Quill) ใน Sale Quotation modal</div><div class="item-file">sale-quotation-revamp.component.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">เพิ่ม <code>EditorModule</code> (Quill) ใน Sale Order modal</div><div class="item-file">sale-order-revamp.component.ts</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Layout Flexbox: remark (ซ้าย flex:1) + summary (ขวา min-width:320px, align-self flex-end)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Readonly อัตโนมัติเมื่อสถานะไม่ใช่ Draft (<code>[readonly]="isReadOnly"</code>)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">DTO เพิ่ม <code>remark?: string</code> ทั้ง Create + Update + PartialType (4 DTOs)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Service pass <code>remark</code> ใน create/update payload</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Database — ไม่ต้อง migrate (มี field <code>remark</code> VarChar(1000) อยู่แล้วใน TSaleQuot/TSaleOrd)</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Build verification — Backend <code>tsc --noEmit</code> + Frontend <code>ng build</code> ผ่าน</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §1 Sales Quotation/Order — Updated -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-sale">🧾</div>
+        <div>
+          <div class="sec-title">1. Sale Flow — Quotation & SO (Updated)</div>
+          <div class="sec-sub">รับฟีเจอร์ใหม่จากรอบนี้: Autofill, Status Lock, Remark, FOC, Status Revert</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-sale" style="width:90%"></div></div>
+        <div class="sec-pct" style="color:var(--blue)">90%</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="subsection-title">Sale Quotation — รายการที่เพิ่มเข้าใหม่</div>
+      <div class="item-list">
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Product Line Autofill (ชื่อ/บาร์โค้ด/หน่วย)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Unit Dropdown จาก MProdPack (active only)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Document Status Lock (header + grid + ซ่อนบันทึก)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">PATCH Partial Update + Optimistic Locking</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Remark Rich Text Editor (PrimeNG Quill)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">FOC = Y → ดีดราคา 0 + disable ช่องราคา/ส่วนลด/สุทธิ/VAT</div></div>
+      </div>
+
+      <div class="subsection-title">Sale Order — รายการที่เพิ่มเข้าใหม่</div>
+      <div class="item-list">
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Product Line Autofill + Unit Dropdown</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Document Status Lock</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">PATCH Partial Update + Optimistic Locking</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Remark Rich Text Editor</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">FOC handling (เหมือน Quotation)</div></div>
+        <div class="item chip-new"><span class="item-status">🆕</span><div class="item-text">Cancel SO → revert Quotation status (3 → 2) auto</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §Tests Summary -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-test">🧪</div>
+        <div>
+          <div class="sec-title">Test Suite — รวมใหม่ทั้งรอบ</div>
+          <div class="sec-sub">Backend +27 tests · Frontend +79 tests · Property-based 7 properties</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-test" style="width:100%"></div></div>
+        <div class="sec-pct" style="color:var(--green)">PASS</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Frontend DirtyTracker (Property + Unit) — 14 tests</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Backend Partial Update Helper (Property + Unit) — 7 tests</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Backend Audit Log Interceptor (Property + Unit) — 9 tests</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Backend Contacts Controller — 9 tests</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Frontend ErpInlineGrid deleteRow — 3 tests ใหม่ (12 รวม)</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Backend SaleOrderRevamp softDelete + status revert — 6 tests</div></div>
+        <div class="item chip-done"><span class="item-status">✅</span><div class="item-text">Regression — Sale Quotation/Order/Customer Request — ทั้ง 270 frontend / 589 backend ผ่าน</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §Tech Stack notes -->
+  <div class="section-card">
+    <div class="section-header" onclick="toggleSection(this)">
+      <div class="sec-left">
+        <div class="sec-icon c-stack">🧰</div>
+        <div>
+          <div class="sec-title">Tech Stack ที่เพิ่ม / เปลี่ยนในรอบนี้</div>
+          <div class="sec-sub">PrimeNG Editor (Quill.js) · PartialType (NestJS) · Property-based testing</div>
+        </div>
+      </div>
+      <div class="sec-right">
+        <div class="sec-mini-bar"><div class="sec-mini-fill bar-stack" style="width:100%"></div></div>
+        <div class="sec-pct" style="color:var(--amber)">—</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="item-list">
+        <div class="item chip-existing"><span class="item-status">📦</span><div class="item-text">PrimeNG <code>EditorModule</code> (Quill.js) — Rich Text Editor สำหรับ remark</div></div>
+        <div class="item chip-existing"><span class="item-status">📦</span><div class="item-text">NestJS <code>PartialType()</code> — สร้าง Patch DTOs จาก Create DTOs ใน Sales/Purchase/Master</div></div>
+        <div class="item chip-existing"><span class="item-status">📦</span><div class="item-text">Property-based test runner — ใช้ใน DirtyTracker / Partial Update Helper / Audit Log</div></div>
+        <div class="item chip-existing"><span class="item-status">📦</span><div class="item-text">AG Grid — ใช้ <code>refreshCells()</code> + <code>cellStyle</code> เพื่ออัพเดท editable แบบ row-conditional</div></div>
+        <div class="item chip-existing"><span class="item-status">📋</span><div class="item-text">Steering rule — <code>.kiro/steering/partial-update-standard.md</code> เป็น single source of truth</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Xcellence ERP · Progress Update #5 · 2026-05-02 · Generated from FEATURES_UPDATE.md & ERP_Flow_Checklist.md
+</footer>
+
+<script>
+  function toggleSection(header) {
+    var body = header.parentElement.querySelector('.section-body');
+    if (!body) return;
+    body.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
