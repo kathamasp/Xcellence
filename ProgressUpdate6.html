@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Update #6 — Xcellence POS / ERP</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e6ecf3 100%);
+    color: #1a2733;
+    line-height: 1.55;
+    padding: 24px;
+  }
+  .container { max-width: 1200px; margin: 0 auto; }
+
+  header {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+    color: white;
+    padding: 28px 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(30,58,95,0.18);
+    margin-bottom: 28px;
+  }
+  header h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+  header .meta { display: flex; gap: 18px; font-size: 14px; opacity: 0.92; flex-wrap: wrap; }
+  header .meta span { display: inline-flex; align-items: center; gap: 6px; }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    border-left: 4px solid #2c5282;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  .stat-card.green { border-left-color: #2f9e44; }
+  .stat-card.orange { border-left-color: #f08c00; }
+  .stat-card.purple { border-left-color: #7048e8; }
+  .stat-card.red { border-left-color: #c92a2a; }
+  .stat-card .label { font-size: 12px; color: #6b7c93; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .stat-card .value { font-size: 24px; font-weight: 700; color: #1a2733; }
+  .stat-card .sub { font-size: 12px; color: #6b7c93; margin-top: 2px; }
+
+  section {
+    background: white;
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 22px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+  }
+  section h2 {
+    font-size: 20px;
+    color: #1e3a5f;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e6ecf3;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  section h2 .badge {
+    background: #2c5282;
+    color: white;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 500;
+  }
+  section h3 {
+    font-size: 16px;
+    color: #2c5282;
+    margin: 18px 0 10px;
+    font-weight: 600;
+  }
+  section p { margin-bottom: 10px; color: #2d3e50; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  th {
+    background: #f0f4f8;
+    color: #1e3a5f;
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 2px solid #d0dce8;
+    font-weight: 600;
+  }
+  td {
+    padding: 9px 12px;
+    border-bottom: 1px solid #eef2f6;
+    vertical-align: top;
+  }
+  tr:hover td { background: #fafbfc; }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .pill-green { background: #d3f9d8; color: #2b8a3e; }
+  .pill-blue { background: #d0ebff; color: #1864ab; }
+  .pill-orange { background: #ffe8cc; color: #d9480f; }
+  .pill-gray { background: #e9ecef; color: #495057; }
+  .pill-red { background: #ffe3e3; color: #c92a2a; }
+  .pill-yellow { background: #fff3bf; color: #846100; }
+  .pill-purple { background: #e5dbff; color: #5f3dc4; }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .feature-card {
+    border: 1px solid #e6ecf3;
+    border-radius: 10px;
+    padding: 14px 16px;
+    background: #fafbfc;
+  }
+  .feature-card .title {
+    font-weight: 600;
+    color: #1e3a5f;
+    margin-bottom: 6px;
+    font-size: 14px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .feature-card .desc { font-size: 13px; color: #4a5b6e; }
+
+  .new-tag {
+    background: #ff6b35;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .check { color: #2b8a3e; font-weight: 700; }
+  .x { color: #c92a2a; font-weight: 700; }
+
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .status-item {
+    text-align: center;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #e6ecf3;
+  }
+  .status-item .name { font-weight: 600; font-size: 14px; }
+  .status-item .label { font-size: 12px; color: #6b7c93; margin-top: 4px; }
+
+  .timeline {
+    margin: 12px 0;
+    border-left: 3px solid #2c5282;
+    padding-left: 18px;
+  }
+  .timeline-item {
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 5px;
+    width: 11px;
+    height: 11px;
+    background: #2c5282;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  .timeline-item .date {
+    font-size: 12px;
+    color: #6b7c93;
+    font-weight: 600;
+  }
+  .timeline-item .title {
+    font-weight: 600;
+    color: #1e3a5f;
+    margin: 2px 0;
+  }
+  .timeline-item .desc {
+    font-size: 13px;
+    color: #4a5b6e;
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: #6b7c93;
+    font-size: 13px;
+  }
+
+  ul.clean { list-style: none; }
+  ul.clean li {
+    padding: 6px 0 6px 22px;
+    position: relative;
+    font-size: 14px;
+  }
+  ul.clean li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #2b8a3e;
+    font-weight: 700;
+  }
+
+  .highlight-box {
+    background: #fff8e1;
+    border-left: 4px solid #f59f00;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 14px;
+  }
+
+  @media (max-width: 720px) {
+    body { padding: 14px; }
+    header { padding: 20px; }
+    header h1 { font-size: 22px; }
+    section { padding: 18px; }
+    table { font-size: 12px; }
+    th, td { padding: 7px 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>Progress Update #6 — Xcellence POS / ERP</h1>
+  <div class="meta">
+    <span>📅 รายงาน ณ วันที่ 6 พฤษภาคม 2026</span>
+    <span>🌿 Branch: features/nott</span>
+    <span>📦 รอบการพัฒนาที่ 6</span>
+  </div>
+</header>
+
+<!-- Summary stats -->
+<div class="summary-grid">
+  <div class="stat-card green">
+    <div class="label">Backend Tests</div>
+    <div class="value">589 / 589</div>
+    <div class="sub">71 / 71 suites ✅</div>
+  </div>
+  <div class="stat-card green">
+    <div class="label">Frontend Tests</div>
+    <div class="value">270 / 270</div>
+    <div class="sub">20 / 20 suites ✅</div>
+  </div>
+  <div class="stat-card purple">
+    <div class="label">PATCH Coverage</div>
+    <div class="value">35+ Modules</div>
+    <div class="sub">8 Phases ครบทุกโมดูล</div>
+  </div>
+  <div class="stat-card orange">
+    <div class="label">หน้าเอกสาร UI Standard</div>
+    <div class="value">8 หน้า</div>
+    <div class="sub">+ 2 โมดูลใหม่</div>
+  </div>
+  <div class="stat-card red">
+    <div class="label">Bug Fixed (Round 3-4)</div>
+    <div class="value">15 Bugs</div>
+    <div class="sub">Issue + Ship Delivery</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">ไฟล์ที่ปรับปรุง</div>
+    <div class="value">57+ ไฟล์</div>
+    <div class="sub">Backend + Frontend + Docs</div>
+  </div>
+</div>
+
+<!-- Section 1: Highlights -->
+<section>
+  <h2>🎯 ภาพรวมรอบนี้ <span class="badge">Highlights</span></h2>
+  <div class="highlight-box">
+    รอบที่ 6 มุ่งเน้น <strong>การปรับ UI ทุกหน้าเอกสารให้เป็นมาตรฐานเดียวกัน (Document Page UI Standard)</strong> ครอบคลุม 8 หน้าเอกสาร พร้อมเปิดตัว 2 โมดูลใหม่ (Ship Delivery Order, A/R Invoice) และแก้บัค + เพิ่ม Wizard ให้กับ Issue และ Ship Delivery
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="title">📐 Document Page UI Standard <span class="new-tag">NEW</span></div>
+      <div class="desc">3-Zone Dialog Layout: Doc Info (sticky top) / Form + Grid (scrollable) / Remark + Summary (sticky bottom) — ใช้กับ 8 หน้าเอกสาร</div>
+    </div>
+    <div class="feature-card">
+      <div class="title">⭐ Ship Delivery Order <span class="new-tag">NEW</span></div>
+      <div class="desc">โมดูลใหม่ — TShip + TShipProd + TShipDet + Tab UI + ปุ่มสร้างสินค้าอัตโนมัติจาก Issue (group + sum)</div>
+    </div>
+    <div class="feature-card">
+      <div class="title">💼 A/R Invoice (Auto-Create) <span class="new-tag">NEW</span></div>
+      <div class="desc">โมดูลใหม่ — สร้างอัตโนมัติเมื่อ Sale Invoice ถูก confirm + Unique constraint ป้องกัน duplicate</div>
+    </div>
+    <div class="feature-card">
+      <div class="title">🧙 Wizard ครบทั้งระบบ <span class="new-tag">NEW</span></div>
+      <div class="desc">Issue 2 steps / Ship Delivery 3 steps / Ship Confirm 2 steps — แก้ปัญหา UUID error ก่อนสร้างเอกสาร</div>
+    </div>
+    <div class="feature-card">
+      <div class="title">🎨 Status System มาตรฐาน 6 สถานะ <span class="new-tag">NEW</span></div>
+      <div class="desc">DRAFT / CONFIRMED / REVISED / HOLD / CANCELLED / CLOSED — Action Bar เปลี่ยนตาม status</div>
+    </div>
+    <div class="feature-card">
+      <div class="title">📝 Rich Text Remark</div>
+      <div class="desc">PrimeNG Editor (Quill.js) ในทุกหน้าเอกสาร พร้อม readonly auto เมื่อสถานะไม่ใช่ Draft</div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 2: Document Page UI Standard -->
+<section>
+  <h2>📐 Document Page UI Standard <span class="badge">3-Zone Dialog</span></h2>
+
+  <h3>โครงสร้าง Layout 3 โซน</h3>
+  <table>
+    <thead>
+      <tr><th style="width:90px">Zone</th><th style="width:140px">ตำแหน่ง</th><th>เนื้อหา</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>Zone 1</strong></td><td>Sticky Top</td><td>Doc Info Box: เลขที่เอกสาร, วันที่ (datepicker), สถานะ (badge สี)</td></tr>
+      <tr><td><strong>Zone 2</strong></td><td>Scrollable Middle</td><td>Form fields (3-column grid) + ตารางสินค้า (erp-inline-grid)</td></tr>
+      <tr><td><strong>Zone 3</strong></td><td>Sticky Bottom</td><td>หมายเหตุ (ซ้าย) + Summary ยอดเงิน (ขวา) — เฉพาะเอกสารที่มียอดเงิน</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Status System มาตรฐาน 6 สถานะ</h3>
+  <div class="status-grid">
+    <div class="status-item"><div class="name"><span class="pill pill-gray">ร่าง</span></div><div class="label">DRAFT — แก้ไขได้</div></div>
+    <div class="status-item"><div class="name"><span class="pill pill-green">ยืนยันแล้ว</span></div><div class="label">CONFIRMED</div></div>
+    <div class="status-item"><div class="name"><span class="pill pill-orange">อยู่ระหว่างแก้ไข</span></div><div class="label">REVISED — แก้ไขได้</div></div>
+    <div class="status-item"><div class="name"><span class="pill pill-yellow">พักงาน</span></div><div class="label">HOLD</div></div>
+    <div class="status-item"><div class="name"><span class="pill pill-red">ยกเลิก</span></div><div class="label">CANCELLED</div></div>
+    <div class="status-item"><div class="name"><span class="pill pill-blue">ปิดงานแล้ว</span></div><div class="label">CLOSED</div></div>
+  </div>
+
+  <h3>Action Bar เปลี่ยนตาม Status</h3>
+  <table>
+    <thead><tr><th>Current Status</th><th>ปุ่มที่แสดง</th></tr></thead>
+    <tbody>
+      <tr><td><span class="pill pill-gray">DRAFT</span></td><td>Save · Confirm · Cancel</td></tr>
+      <tr><td><span class="pill pill-green">CONFIRMED</span></td><td>Revise · Hold · Close · Cancel</td></tr>
+      <tr><td><span class="pill pill-orange">REVISED</span></td><td>Save · Confirm · Cancel</td></tr>
+      <tr><td><span class="pill pill-yellow">HOLD</span></td><td>Resume · Cancel</td></tr>
+      <tr><td><span class="pill pill-red">CANCELLED</span></td><td>Reopen</td></tr>
+      <tr><td><span class="pill pill-blue">CLOSED</span></td><td>Reopen</td></tr>
+    </tbody>
+  </table>
+
+  <h3>หน้าเอกสารที่ปรับปรุง (8 หน้า)</h3>
+  <table>
+    <thead>
+      <tr><th>#</th><th>หน้า</th><th>CSS</th><th>Summary</th><th>Wizard</th><th>Status Endpoints ใหม่</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td><strong>Customer P/O</strong> <em>(เดิม Customer Request)</em></td><td><code>cp-</code></td><td class="check">✅</td><td class="x">—</td><td>confirm, cancel, revise, hold, close, resume, reopen</td></tr>
+      <tr><td>2</td><td><strong>Sale Quotation</strong></td><td><code>sq-</code></td><td class="check">✅</td><td class="x">—</td><td>cancel, revise, hold, close, resume, reopen</td></tr>
+      <tr><td>3</td><td><strong>Sale Order</strong></td><td><code>so-</code></td><td class="check">✅</td><td class="check">✅ (ลูกค้า + อ้างอิง)</td><td>submit + 6 endpoints</td></tr>
+      <tr><td>4</td><td><strong>Issue From Warehouse</strong></td><td><code>iw-</code></td><td class="x">—</td><td class="check">✅ (เลือก SO)</td><td>— (confirm/cancel เดิม)</td></tr>
+      <tr><td>5</td><td>⭐ <strong>Ship Delivery Order</strong> <span class="new-tag">NEW</span></td><td><code>sd-</code></td><td class="x">—</td><td class="check">✅ (3 steps)</td><td>CRUD + confirm, cancel</td></tr>
+      <tr><td>6</td><td><strong>Ship Confirm</strong></td><td><code>sc-</code></td><td class="x">—</td><td class="check">✅ (2 steps)</td><td>— (confirm เดิม)</td></tr>
+      <tr><td>7</td><td><strong>Sale Invoice</strong></td><td><code>si-</code></td><td class="check">✅</td><td class="x">—</td><td>— (post/cancel เดิม)</td></tr>
+      <tr><td>8</td><td><strong>A/R Invoice</strong></td><td><code>ai-</code></td><td class="check">✅</td><td class="x">—</td><td>CRUD + confirm, cancel</td></tr>
+    </tbody>
+  </table>
+
+  <h3>ลำดับคอลัมน์ตารางสินค้ามาตรฐาน</h3>
+  <p style="font-family:monospace; background:#f0f4f8; padding:10px 14px; border-radius:8px; font-size:13px;">
+    # · สินค้า · บาร์โค้ด · ชื่อสินค้า · หน่วย · ของแถม · จำนวน · ราคา · %ส่วนลด · มูลค่า · หมายเหตุ
+  </p>
+</section>
+
+<!-- Section 3: New Modules -->
+<section>
+  <h2>⭐ โมดูลใหม่ที่สร้าง <span class="badge">2 Modules</span></h2>
+
+  <h3>1. Ship Delivery Order — TShip + TShipProd + TShipDet</h3>
+  <ul class="clean">
+    <li>Prisma model: <code>TShip</code>, <code>TShipProd</code>, <code>TShipDet</code> (เพิ่ม TShipDet ในรอบนี้ ตาม Ship_Schema.xlsx)</li>
+    <li>Backend: <code>backend/src/ship-delivery/</code> — module + service + controller + 3 DTOs</li>
+    <li>API: <code>POST/GET/PATCH/DELETE /api/ship-deliveries</code> + confirm + cancel + Detail CRUD + Aggregate</li>
+    <li>Frontend: Tab UI (รายละเอียดการจัดส่ง / รายการสินค้า) + ปุ่มสร้างสินค้าอัตโนมัติจาก Issue</li>
+    <li>Auto-pull products: ดึง <code>t_isu_prod</code> จากทุก issue ที่อ้างอิง → group productId+uomId → sum qty</li>
+    <li>Wizard 3 steps: Issue Note → เลือก Issue (CONFIRMED) → เลือกลูกค้า</li>
+  </ul>
+
+  <h3>2. A/R Invoice — TArInv (Auto-Create)</h3>
+  <ul class="clean">
+    <li>Prisma model: <code>TArInv</code> + Unique constraint <code>(arInvRefTypIdx + arInvRefId)</code></li>
+    <li>Backend: <code>backend/src/ar-inv/</code> — module + service + controller + 3 DTOs</li>
+    <li>Trigger: เมื่อ Sale Invoice ถูก confirm (<code>POST /api/sales-invoices/:id/post</code>)</li>
+    <li>Auto-Create: สร้าง TArInv อัตโนมัติด้วย <code>docStatus = 'CONFIRMED'</code> ใน transaction เดียว</li>
+    <li>Manual create disabled — Frontend View-only + Cancel เท่านั้น</li>
+  </ul>
+</section>
+
+<!-- Section 4: Bug Fixes Round 3 -->
+<section>
+  <h2>🐛 Bug Fixes (Round 3) — Issue & Ship Delivery <span class="badge">8 Bugs · 5 พ.ค. 2026</span></h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>โมดูล</th><th>อาการ</th><th>การแก้ไข</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td><span class="pill pill-blue">Issue</span></td><td>column <code>doc_status</code> does not exist</td><td>Local DB + <code>prisma db push</code> sync schema</td></tr>
+      <tr><td>2</td><td><span class="pill pill-blue">Issue</span></td><td>UUID error: <code>whId: ''</code></td><td>DTO <code>@IsUUID()</code> + Service guard + Frontend ลบ payload ว่าง</td></tr>
+      <tr><td>3</td><td><span class="pill pill-blue">Issue</span></td><td>SO dropdown แสดง UUID</td><td>เพิ่ม <code>so.soNo</code> เป็น fallback แรก</td></tr>
+      <tr><td>4</td><td><span class="pill pill-blue">Issue</span></td><td>ConfirmIssue error "No stock balance"</td><td>ลด logic เหลือแค่ update status (stock TBD)</td></tr>
+      <tr><td>5</td><td><span class="pill pill-blue">Issue</span></td><td>Edit แล้ว grid block "Loading..."</td><td>เปิด dialog ทันที + loading อยู่ใน dialog</td></tr>
+      <tr><td>6</td><td><span class="pill pill-blue">Issue</span></td><td>คอลัมน์ "คลัง" แสดง UUID</td><td>เพิ่ม <code>valueFormatter</code> map UUID → label</td></tr>
+      <tr><td>7</td><td><span class="pill pill-purple">Ship Delivery</span></td><td>UUID error: <code>contactId: ''</code></td><td>เพิ่ม wizard step 3 + ลบ payload ว่าง</td></tr>
+      <tr><td>8</td><td><span class="pill pill-purple">Ship Delivery</span></td><td>เลขเอกสารสั่งส่งแสดง UUID</td><td><code>erp-entity-autocomplete</code> map UUID → <code>isuNo</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Section 5: Bug Fixes Round 4 -->
+<section>
+  <h2>🐛 Bug Fixes (Round 4) — Ship Delivery Detail <span class="badge">7 Bugs</span></h2>
+  <table>
+    <thead><tr><th>#</th><th>อาการ</th><th>สาเหตุ</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Dropdown แสดง dash ค้าง (<code>SD-2026-00002 —</code>)</td><td>Label format <code>${shipNo} — ${contactShipName}</code></td></tr>
+      <tr><td>2</td><td>Ship Delivery สร้างไม่ได้ — UUID error</td><td>Frontend ส่ง <code>contactId: ''</code></td></tr>
+      <tr><td>3</td><td>Ship Confirm สร้างไม่ได้ — UUID เดียวกัน</td><td>Frontend ส่ง <code>contactId: ''</code></td></tr>
+      <tr><td>4</td><td>เลขเอกสารสั่งส่งใน form แสดง UUID</td><td><code>&lt;input&gt;</code> แสดง <code>shipRefId</code> ตรงๆ</td></tr>
+      <tr><td>5</td><td>กดปุ่มสร้างรายการสินค้าแล้วไม่ดึงสินค้า</td><td>Detail lines ใน memory ยังไม่ save → backend หาไม่เจอ</td></tr>
+      <tr><td>6</td><td>Detail (<code>t_ship_det</code>) ไม่ save ลง DB</td><td>Backend <code>update()</code> ไม่ handle <code>details</code></td></tr>
+      <tr><td>7</td><td>กด edit แล้ว grid block "Loading..."</td><td><code>editById()</code> set loading ก่อน dialog</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Section 6: New Features Wizard -->
+<section>
+  <h2>✨ เพิ่ม Feature ใหม่ — Wizard & Auto-Pull <span class="badge">12 Features</span></h2>
+
+  <h3>Issue & Ship Delivery Wizard (5 Features)</h3>
+  <table>
+    <thead><tr><th>#</th><th>Feature</th><th>Before → After</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Issue Wizard — Step 2 เลือกคลัง</td><td>1 step (SO) → 2 steps (SO + คลัง)</td></tr>
+      <tr><td>2</td><td>Issue — ดึงสินค้าจาก SO อัตโนมัติ</td><td>เปล่า → ดึง <code>t_sale_ord_prod</code> → <code>t_isu_prod</code></td></tr>
+      <tr><td>3</td><td>Ship Delivery Wizard 3 steps</td><td>1 step + input → Issue Note + Autocomplete CONFIRMED + Customer</td></tr>
+      <tr><td>4</td><td>Ship Delivery — ดึงสินค้าจาก Issue อัตโนมัติ</td><td>เปล่า → ดึง <code>t_isu_prod</code> → <code>t_ship_prod</code></td></tr>
+      <tr><td>5</td><td>Contact ดึงจาก Customer Master</td><td><code>m_contact</code> → <code>ar_customer</code> (<code>code - name</code>)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Ship Delivery Order — Detail Tab + Aggregation (7 Features)</h3>
+  <table>
+    <thead><tr><th>#</th><th>Feature</th><th>รายละเอียด</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>ตาราง <code>t_ship_det</code></td><td>เพิ่ม Prisma <code>TShipDet</code> + DB table + CRUD endpoints (Ship_Schema.xlsx)</td></tr>
+      <tr><td>2</td><td>Tab UI แบบ Master Product</td><td>รวม Products + Details เป็น card เดียว สลับ tab</td></tr>
+      <tr><td>3</td><td>ปุ่ม "สร้างรายการสินค้า"</td><td>ดึง <code>t_isu_prod</code> ทุก issue → group productId+uomId → sum qty</td></tr>
+      <tr><td>4</td><td>Ship Delivery Wizard 3 steps</td><td>Issue Note → Issue (CONFIRMED) → Customer</td></tr>
+      <tr><td>5</td><td>Ship Confirm Wizard 2 steps</td><td>Ship Delivery → Customer</td></tr>
+      <tr><td>6</td><td>Auto-pull จาก Issue</td><td>สร้าง Ship Delivery → ดึงสินค้าจาก <code>t_isu_prod</code></td></tr>
+      <tr><td>7</td><td>Detail dropdown unique filter</td><td>เลขที่เอกสารที่เลือกแล้ว ไม่แสดงใน dropdown อีก</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Section 7: Update Features -->
+<section>
+  <h2>🔧 Update Feature — UX Improvements</h2>
+  <table>
+    <thead><tr><th>#</th><th>Feature</th><th>Before</th><th>After</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Issue — Remark</td><td><code>&lt;input&gt;</code> 1 บรรทัด ใน header</td><td><code>&lt;p-editor&gt;</code> Quill 150px ใต้รายการสินค้า</td></tr>
+      <tr><td>2</td><td>Ship Delivery — Remark</td><td><code>&lt;input&gt;</code> 1 บรรทัด ใน header</td><td><code>&lt;p-editor&gt;</code> Quill rich text ใต้ tab</td></tr>
+      <tr><td>3</td><td>Issue — ConfirmIssue</td><td>check stock + deduct + FIFO</td><td>update status เป็น CONFIRMED (stock TBD)</td></tr>
+      <tr><td>4</td><td>Auto-save หลังสร้างสินค้า</td><td>ไม่ save</td><td>silentSave + toast "สร้างรายการสินค้า X รายการ"</td></tr>
+      <tr><td>5</td><td>buildPayload()</td><td>payload ซ้ำ 2 ที่</td><td>shared method ใช้ร่วม</td></tr>
+      <tr><td>6</td><td>REF_TYPE_OPTIONS (Ship Delivery)</td><td>6 ประเภท มีเลขลำดับ</td><td>"Issue Note" อย่างเดียว</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Section 8: Menu Changes -->
+<section>
+  <h2>🗂️ เมนูที่เปลี่ยน (Sidebar)</h2>
+  <table>
+    <thead><tr><th>เดิม</th><th>ใหม่</th></tr></thead>
+    <tbody>
+      <tr><td>Customer Request</td><td><strong>Customer P/O</strong></td></tr>
+      <tr><td>Sale Quotation (Revamp)</td><td><strong>Sale Quotation</strong></td></tr>
+      <tr><td>Sale Order (Revamp)</td><td><strong>Sale Order</strong></td></tr>
+      <tr><td>Quotations / SO, Sale Orders, Delivery Orders, Credit/Debit Notes</td><td><span class="pill pill-red">ลบออก (ชั่วคราว)</span></td></tr>
+      <tr><td>Issue (เบิกสินค้า)</td><td><strong>Issue From Warehouse</strong></td></tr>
+      <tr><td>Ship Confirm</td><td><strong>Ship Confirm</strong> (rewrite)</td></tr>
+      <tr><td>—</td><td><span class="new-tag">NEW</span> ⭐ <strong>Ship Delivery Order</strong></td></tr>
+      <tr><td>AR Invoice</td><td><strong>A/R Invoice</strong> (rewrite)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Section 9: Files Changed -->
+<section>
+  <h2>📁 ไฟล์ที่แก้ไข/สร้างใหม่ <span class="badge">57+ ไฟล์</span></h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="title">Backend ใหม่ (13 ไฟล์)</div>
+      <div class="desc">
+        <code>ship-delivery/</code> 6 ไฟล์ + <code>ar-inv/</code> 6 ไฟล์ + <code>schema.prisma</code> (TShip, TShipProd, TShipDet, TArInv + unique constraint)
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="title">Backend แก้ไข (8 ไฟล์)</div>
+      <div class="desc">
+        Sale Quotation/Order/Customer Request controllers/services/DTOs (status endpoints) + Sales Invoice (auto-create AR) + app.module.ts
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="title">Frontend ใหม่ (1 ไฟล์)</div>
+      <div class="desc">
+        <code>pages/sales/ship-delivery/ship-delivery.component.ts</code>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="title">Frontend แก้ไข (12 ไฟล์)</div>
+      <div class="desc">
+        8 page rewrites (Sale Quotation, Customer P/O, Sale Order, Issue, Ship Delivery, Ship Confirm, Sale Invoice, AR Invoice) + api.service / i18n / layout / config
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="title">Config / Docs (3 ไฟล์)</div>
+      <div class="desc">
+        <code>.kiro/steering/document-page-standard.md</code> + <code>dev-start.bat</code> + <code>dev-start.sh</code>
+      </div>
+    </div>
+    <div class="feature-card">
+      <div class="title">Mockups (8 ไฟล์)</div>
+      <div class="desc">
+        <code>mockups/sale-quotation/</code> — HTML/CSS mockup สำหรับทุกหน้าเอกสาร
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 10: Tests -->
+<section>
+  <h2>🧪 ผลการทดสอบ</h2>
+  <table>
+    <thead><tr><th>Suite</th><th>Tests</th><th>ผลลัพธ์</th></tr></thead>
+    <tbody>
+      <tr><td>Backend (รวม)</td><td>589 / 71 suites</td><td><span class="pill pill-green">✅ ผ่านทั้งหมด</span></td></tr>
+      <tr><td>Frontend (รวม)</td><td>270 / 20 suites</td><td><span class="pill pill-green">✅ ผ่านทั้งหมด</span></td></tr>
+      <tr><td>Backend Issue Service (Round 3)</td><td>4 tests</td><td><span class="pill pill-green">✅ ผ่าน</span></td></tr>
+      <tr><td>Frontend ErpInlineGrid (deleteRow)</td><td>3 ใหม่ (12 รวม)</td><td><span class="pill pill-green">✅ ผ่าน</span></td></tr>
+      <tr><td>Backend SaleOrderRevamp (softDelete + revert)</td><td>6 ใหม่</td><td><span class="pill pill-green">✅ ผ่าน</span></td></tr>
+      <tr><td>Frontend DirtyTracker (Property + Unit)</td><td>14 tests</td><td><span class="pill pill-green">✅ ผ่าน</span></td></tr>
+      <tr><td>Backend Partial Update Helper</td><td>7 tests</td><td><span class="pill pill-green">✅ ผ่าน</span></td></tr>
+      <tr><td>Backend Audit Log Interceptor</td><td>9 tests</td><td><span class="pill pill-green">✅ ผ่าน</span></td></tr>
+      <tr><td>Backend Contacts Controller</td><td>9 tests</td><td><span class="pill pill-green">✅ ผ่าน</span></td></tr>
+      <tr><td>Backend <code>tsc --noEmit</code></td><td>—</td><td><span class="pill pill-green">✅ Clean</span></td></tr>
+      <tr><td>Frontend <code>ng build</code></td><td>—</td><td><span class="pill pill-green">✅ Clean</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- Section 11: Timeline -->
+<section>
+  <h2>📅 Timeline รอบนี้</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="date">2-3 พฤษภาคม 2026</div>
+      <div class="title">Document Page UI Standard — ปรับ UI ทุกหน้าเอกสาร</div>
+      <div class="desc">3-Zone Dialog Layout · Status System 6 สถานะ · Action Bar เปลี่ยนตาม status · 8 หน้า + 2 โมดูลใหม่ (Ship Delivery, A/R Invoice) · Bug fix Sale Order Submit · 7 status transition endpoints · เปลี่ยนเมนู Sidebar</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">5 พฤษภาคม 2026 (เช้า)</div>
+      <div class="title">แก้บัค Issue & Ship Delivery (Round 3)</div>
+      <div class="desc">8 bugs: doc_status column, UUID errors, dropdown UUID display, ConfirmIssue logic, Loading block, valueFormatter</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">5 พฤษภาคม 2026 (กลางวัน)</div>
+      <div class="title">เพิ่ม Feature Wizard + Auto-Pull Products</div>
+      <div class="desc">Issue Wizard 2 steps · Ship Delivery Wizard 3 steps · ดึงสินค้าจาก SO/Issue อัตโนมัติ · Customer Master integration</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">5 พฤษภาคม 2026 (บ่าย)</div>
+      <div class="title">Ship Delivery — Detail Tab + Product Aggregation</div>
+      <div class="desc">เพิ่ม TShipDet model · Tab UI · ปุ่มสร้างสินค้า (group + sum) · 7 bugs · 7 new features · 5 UX updates</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">6 พฤษภาคม 2026</div>
+      <div class="title">สรุปและรายงาน Progress Update #6</div>
+      <div class="desc">รวบรวมความคืบหน้า · ปรับ ERP_Flow_Checklist.md · สร้างเอกสารสรุปสำหรับ stakeholders</div>
+    </div>
+  </div>
+</section>
+
+<!-- Section 12: Next Steps -->
+<section>
+  <h2>🚀 ขั้นต่อไป (Next Steps)</h2>
+  <ul class="clean">
+    <li>Stock Logic ในหน้า Issue — implement check stock balance + deduct + FIFO consumption</li>
+    <li>SO auto-complete tracking — <code>qtyDelivered</code> → <code>COMPLETED / PARTIALLY_DELIVERED</code></li>
+    <li>Credit Note + Delivery Order — เปิดเมนูกลับมา (เคยลบชั่วคราว)</li>
+    <li>Three-way Match (PO + GR + AP Invoice) — enforce ใน <code>create()</code></li>
+    <li>Period Lock validation ใน AR Receipt + AP Payment</li>
+    <li>Index optimization — ArInvoice, SalQuotation, PurOrder, InvStockBalance</li>
+  </ul>
+</section>
+
+<footer>
+  Progress Update #6 · Xcellence POS / ERP · The Dreamcatcher Co., Ltd. · 6 พฤษภาคม 2026
+</footer>
+
+</div>
+</body>
+</html>
