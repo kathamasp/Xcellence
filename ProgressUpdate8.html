@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Update #8 — Xcellence POS ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-light: #dbeafe;
+    --success: #16a34a;
+    --success-dark: #15803d;
+    --success-light: #dcfce7;
+    --warning: #f59e0b;
+    --warning-light: #fef3c7;
+    --danger: #dc2626;
+    --danger-light: #fee2e2;
+    --info: #0891b2;
+    --info-light: #cffafe;
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --pink: #db2777;
+    --pink-light: #fce7f3;
+    --teal: #0d9488;
+    --teal-light: #ccfbf1;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  }
+  body {
+    font-family: 'Sarabun', 'Inter', -apple-system, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+    color: var(--gray-800);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #2dd4bf 100%);
+    color: white;
+    padding: 44px 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .hero h1 {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .hero p {
+    font-size: 16px;
+    opacity: 0.95;
+    max-width: 760px;
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    opacity: 0.95;
+  }
+  .hero-meta-item strong { font-weight: 700; }
+
+  /* Stat cards */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px; height: 100%;
+  }
+  .stat-card.success::before { background: var(--success); }
+  .stat-card.warning::before { background: var(--warning); }
+  .stat-card.primary::before { background: var(--primary); }
+  .stat-card.info::before { background: var(--info); }
+  .stat-card.purple::before { background: var(--purple); }
+  .stat-card.pink::before { background: var(--pink); }
+  .stat-card.teal::before { background: var(--teal); }
+  .stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .stat-icon.success { background: var(--success-light); }
+  .stat-icon.warning { background: var(--warning-light); }
+  .stat-icon.primary { background: var(--primary-light); }
+  .stat-icon.info { background: var(--info-light); }
+  .stat-icon.purple { background: var(--purple-light); }
+  .stat-icon.pink { background: var(--pink-light); }
+  .stat-icon.teal { background: var(--teal-light); }
+  .stat-label {
+    font-size: 13px;
+    color: var(--gray-500);
+    font-weight: 500;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .stat-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 13px;
+    color: var(--gray-600);
+  }
+
+  /* Section */
+  .section {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--gray-100);
+  }
+  .section-icon-wrap {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 2px;
+  }
+
+  /* Update card */
+  .update-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 16px;
+  }
+  .update-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 18px;
+    border-left: 4px solid var(--primary);
+  }
+  .update-card.success { border-left-color: var(--success); }
+  .update-card.warning { border-left-color: var(--warning); }
+  .update-card.info { border-left-color: var(--info); }
+  .update-card.purple { border-left-color: var(--purple); }
+  .update-card.pink { border-left-color: var(--pink); }
+  .update-card.danger { border-left-color: var(--danger); }
+  .update-card.teal { border-left-color: var(--teal); }
+  .update-card-title {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 15px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .update-card-meta {
+    display: inline-block;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    margin-left: auto;
+  }
+  .update-card-desc {
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+  .update-card-list {
+    list-style: none;
+    margin-top: 8px;
+  }
+  .update-card-list li {
+    font-size: 12.5px;
+    color: var(--gray-700);
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--gray-200);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .update-card-list li:last-child { border-bottom: none; }
+  .update-card-list li::before {
+    content: '✅';
+    flex-shrink: 0;
+    font-size: 11px;
+  }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  .clean-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .clean-table th {
+    background: var(--gray-50);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--gray-700);
+    border-bottom: 2px solid var(--gray-200);
+  }
+  .clean-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700);
+  }
+  .clean-table tr:hover td { background: var(--gray-50); }
+  .clean-table .ok { color: var(--success-dark); font-weight: 600; }
+  .clean-table .warn { color: var(--warning); font-weight: 600; }
+  .clean-table .new { color: var(--primary); font-weight: 600; }
+  .clean-table .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill.green { background: var(--success-light); color: var(--success-dark); }
+  .pill.blue { background: var(--primary-light); color: var(--primary-dark); }
+  .pill.purple { background: var(--purple-light); color: var(--purple); }
+  .pill.pink { background: var(--pink-light); color: var(--pink); }
+  .pill.gray { background: var(--gray-100); color: var(--gray-700); }
+  .pill.teal { background: var(--teal-light); color: var(--teal); }
+  .pill.warning { background: var(--warning-light); color: var(--warning); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 6px;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+  }
+  .timeline-item {
+    position: relative;
+    padding-bottom: 22px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+  .timeline-item.success::before { background: var(--success); box-shadow: 0 0 0 2px var(--success); }
+  .timeline-item.warning::before { background: var(--warning); box-shadow: 0 0 0 2px var(--warning); }
+  .timeline-item.purple::before { background: var(--purple); box-shadow: 0 0 0 2px var(--purple); }
+  .timeline-item.teal::before { background: var(--teal); box-shadow: 0 0 0 2px var(--teal); }
+  .timeline-date {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .timeline-title {
+    font-size: 14px;
+    color: var(--gray-700);
+    margin-bottom: 4px;
+  }
+  .timeline-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--gray-500);
+    font-size: 13px;
+  }
+  .footer strong { color: var(--gray-700); }
+
+  @media (max-width: 768px) {
+    .container { padding: 16px; }
+    .hero { padding: 28px 20px; }
+    .hero h1 { font-size: 26px; }
+    .section { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-badge">🚀 Progress Update #8 · 6-9 พฤษภาคม 2026</span>
+    <h1>Progress Update #8</h1>
+    <p>สรุปงานรอบล่าสุด — ครอบคลุม Ship Delivery/Confirm UX Updates, Default Quantity = 1, Sale Product Filter (saleFlag), UI Alignment ตาม Mockup ของ Purchase Module, Sales Invoice Bug Fixes, AG Grid Row Grouping และ Sale Invoice Schema Integration (TSaleInv V2)</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">📅 <strong>4 วัน</strong> (6-9 พ.ค. 2026)</div>
+      <div class="hero-meta-item">📂 <strong>8 หมวด</strong> ใหม่ (Section 35-42)</div>
+      <div class="hero-meta-item">🆕 <strong>1 หน้า UI</strong> ใหม่ (sale-invoice-v2)</div>
+      <div class="hero-meta-item">🐛 <strong>10+</strong> Bug Fixes & UX Updates</div>
+    </div>
+  </div>
+
+  <!-- HIGH-LEVEL STATS -->
+  <div class="stats-grid">
+    <div class="stat-card success">
+      <div class="stat-icon success">✅</div>
+      <div class="stat-label">New Sections</div>
+      <div class="stat-value">8</div>
+      <div class="stat-sub">เพิ่มใน Checklist (S35-S42)</div>
+    </div>
+    <div class="stat-card teal">
+      <div class="stat-icon teal">🆕</div>
+      <div class="stat-label">หน้า UI ใหม่</div>
+      <div class="stat-value">1</div>
+      <div class="stat-sub">sale-invoice-v2 (TSaleInv Schema)</div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-icon warning">🐛</div>
+      <div class="stat-label">Bug Fixes</div>
+      <div class="stat-value">10+</div>
+      <div class="stat-sub">Ship UX, Sales Invoice Grid, POSTED Status</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-icon purple">⚙️</div>
+      <div class="stat-label">Backend Endpoints ใหม่</div>
+      <div class="stat-value">10+</div>
+      <div class="stat-sub">TSaleInv (8) + Cancel + Customer-from-Issue</div>
+    </div>
+    <div class="stat-card primary">
+      <div class="stat-icon primary">📐</div>
+      <div class="stat-label">Schema Changes</div>
+      <div class="stat-value">3</div>
+      <div class="stat-sub">TSaleInv + TSaleInvProd + TSaleInvIsu</div>
+    </div>
+    <div class="stat-card pink">
+      <div class="stat-icon pink">🎨</div>
+      <div class="stat-label">UI Pages Aligned</div>
+      <div class="stat-value">4</div>
+      <div class="stat-sub">PO Settlement, PO V2, Confirm PO V2, Receive WH</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: TIMELINE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--teal) 0%, #0f766e 100%);">⏱</div>
+      <div>
+        <h2>Timeline งานที่ทำ (6-9 พฤษภาคม 2026)</h2>
+        <div class="section-subtitle">เรียงลำดับตามวันที่</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item teal">
+        <div class="timeline-date">6-7 พฤษภาคม 2026</div>
+        <div class="timeline-title">Ship Delivery & Ship Confirm — UX Updates: ลูกค้า read-only, สินค้าไม่ group (แยกตาม issue), wizard step 3 auto-fill, customer lock, contactId filter, save-then-confirm</div>
+        <div class="timeline-tags">
+          <span class="pill teal">Ship UX</span>
+          <span class="pill green">7 SD updates</span>
+          <span class="pill blue">5 SC updates</span>
+          <span class="pill warning">3 bugs fixed</span>
+        </div>
+      </div>
+      <div class="timeline-item success">
+        <div class="timeline-date">7 พฤษภาคม 2026</div>
+        <div class="timeline-title">Sale Line Item Default Qty = 1 + Sale Product Filter (saleFlag = 'Y' / stopSaleFlag = 'N') — กรองที่ database level</div>
+        <div class="timeline-tags">
+          <span class="pill green">Quality of Life</span>
+          <span class="pill blue">Filter</span>
+        </div>
+      </div>
+      <div class="timeline-item purple">
+        <div class="timeline-date">8 พฤษภาคม 2026</div>
+        <div class="timeline-title">UI Alignment with Mockups — Purchase Module & PO Settlement: ปรับ layout 4 หน้า (PO Settlement, PO V2, Confirm PO V2, Receive to WH) + แก้ API path 4 endpoints + เพิ่ม cancel endpoints</div>
+        <div class="timeline-tags">
+          <span class="pill purple">UI Polish</span>
+          <span class="pill blue">API Path Fix</span>
+          <span class="pill green">+2 cancel endpoints</span>
+        </div>
+      </div>
+      <div class="timeline-item warning">
+        <div class="timeline-date">8 พฤษภาคม 2026</div>
+        <div class="timeline-title">Bug Fix — Sales Invoices Grid ไม่แสดงข้อมูล: field mapping mismatch (saleInvNo→docNumber, saleInvDate→invoiceDate, docStatus→status, saleInvAmt→totalAmount) + customerName lookup</div>
+        <div class="timeline-tags">
+          <span class="pill warning">Bug Fix</span>
+          <span class="pill blue">Field Mapping</span>
+        </div>
+      </div>
+      <div class="timeline-item warning">
+        <div class="timeline-date">9 พฤษภาคม 2026</div>
+        <div class="timeline-title">Bug Fix — Sales Invoice POSTED Status (ไม่มีสี/ไอคอน) + Sale Order AG Grid Row Grouping (Enterprise feature with graceful degradation) + Sale Invoice Schema Integration V2 (TSaleInv/TSaleInvProd/TSaleInvIsu)</div>
+        <div class="timeline-tags">
+          <span class="pill warning">Status Fix</span>
+          <span class="pill purple">Row Grouping</span>
+          <span class="pill teal">TSaleInv V2</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: KEY UPDATES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">⭐</div>
+      <div>
+        <h2>Key Updates ในรอบนี้</h2>
+        <div class="section-subtitle">งานสำคัญที่ส่งผลต่อระบบหลัก</div>
+      </div>
+    </div>
+
+    <div class="update-grid">
+      <div class="update-card teal">
+        <div class="update-card-title">🚚 Ship Delivery — UX Updates <span class="update-card-meta">6-7 พ.ค.</span></div>
+        <div class="update-card-desc">ลูกค้า read-only เสมอ + สินค้าไม่ group (แยกตาม issue) + ค้างส่งดึงตัวเลขจริง + wizard step 3 auto-fill</div>
+        <ul class="update-card-list">
+          <li>ลูกค้า → read-only (เลือกจาก wizard เท่านั้น)</li>
+          <li>สินค้าไม่ group — แยกตาม issue + แสดง isuNo</li>
+          <li>Wizard step 3: auto-fill จาก Issue → SO → ArCustomer</li>
+          <li>Issue dropdown filter ตาม customer (cusId)</li>
+          <li>แยก saleOrderOptions / wizardSoOptions</li>
+        </ul>
+      </div>
+
+      <div class="update-card teal">
+        <div class="update-card-title">🚢 Ship Confirm — UX Updates <span class="update-card-meta">6-7 พ.ค.</span></div>
+        <div class="update-card-desc">Wizard สลับ step (เลือกลูกค้าก่อน) + customer lock + Ship Delivery filter ตาม contactId</div>
+        <ul class="update-card-list">
+          <li>Step 1: เลือกลูกค้าก่อน (สลับจากเดิม)</li>
+          <li>Step 2: Ship Delivery filter ตาม customer + available</li>
+          <li>Customer lock เมื่อเลือก SD แล้ว</li>
+          <li>Form ผู้ติดต่อ → read-only เสมอ</li>
+        </ul>
+      </div>
+
+      <div class="update-card success">
+        <div class="update-card-title">1️⃣ Sale Line Default Qty = 1 <span class="update-card-meta">7 พ.ค.</span></div>
+        <div class="update-card-desc">Sale Quotation, Customer P/O — เพิ่มรายการสินค้า → qty = 1 อัตโนมัติ (ไม่ใช่ 0)</div>
+        <ul class="update-card-list">
+          <li>lineDefaults qty: 0 → 1</li>
+          <li>Safety net onCellValueChanged set qty=1 ถ้า productId เปลี่ยนและ qty ยัง 0</li>
+          <li>Sale Order ไม่กระทบ — ดึง qty จาก source document</li>
+          <li>Edit mode ไม่กระทบ — โหลดจาก API</li>
+        </ul>
+      </div>
+
+      <div class="update-card success">
+        <div class="update-card-title">🔍 Sale Product Filter (saleFlag) <span class="update-card-meta">7 พ.ค.</span></div>
+        <div class="update-card-desc">Sale Quotation, Customer P/O — แสดงเฉพาะสินค้าที่ saleFlag='Y' + stopSaleFlag='N' กรองที่ database level</div>
+        <ul class="update-card-list">
+          <li>Backend `?saleFlag=Y` query param</li>
+          <li>Filter ที่ Prisma where clause (ลด payload)</li>
+          <li>Frontend `getProducts(undefined, { saleFlag: 'Y' })`</li>
+          <li>Backward compat — โมดูลอื่นไม่กระทบ</li>
+        </ul>
+      </div>
+
+      <div class="update-card purple">
+        <div class="update-card-title">🎨 UI Alignment Purchase Mockup <span class="update-card-meta">8 พ.ค.</span></div>
+        <div class="update-card-desc">ปรับ layout 4 หน้า ให้ตรง mockup + แก้ API path 4 endpoints + เพิ่ม cancel endpoints</div>
+        <ul class="update-card-list">
+          <li>PO Settlement: 3-cols Amount + Tab + ลบปุ่มปิด</li>
+          <li>Purchase Order V2: เพิ่ม 7 fields (PoRef, SupBill, SupCfm)</li>
+          <li>Confirm PO V2: ลด 8→4 fields + grid columns ใหม่ + ลบ summary</li>
+          <li>Receive to WH: ลบปุ่มปิด</li>
+          <li>API path: -v2 → ตรง backend (4 modules)</li>
+          <li>+ Cancel endpoints: SupQuot, ConfirmPO</li>
+        </ul>
+      </div>
+
+      <div class="update-card warning">
+        <div class="update-card-title">🐛 Sales Invoices Grid ไม่แสดงข้อมูล <span class="update-card-meta">8 พ.ค.</span></div>
+        <div class="update-card-desc">Field mapping mismatch ระหว่าง Frontend และ Backend (Prisma model response)</div>
+        <ul class="update-card-list">
+          <li>saleInvNo → docNumber</li>
+          <li>saleInvDate → invoiceDate</li>
+          <li>docStatus → status</li>
+          <li>saleInvAmt → totalAmount</li>
+          <li>Backend `findAll()` เพิ่ม customerName lookup</li>
+        </ul>
+      </div>
+
+      <div class="update-card warning">
+        <div class="update-card-title">🎨 Sales Invoice POSTED Status <span class="update-card-meta">9 พ.ค.</span></div>
+        <div class="update-card-desc">Backend ใช้ `POSTED` (ไม่ใช่ `CONFIRMED`) แต่ frontend STATUS_CONFIG ไม่ครอบคลุม → แสดง raw text</div>
+        <ul class="update-card-list">
+          <li>เพิ่ม POSTED ใน DocStatus type</li>
+          <li>เพิ่ม STATUS_CONFIG (สีเขียว, "ยืนยันแล้ว")</li>
+          <li>เพิ่ม STATUS_ACTIONS</li>
+          <li>STATUS_OPTIONS filter ใช้ POSTED แทน CONFIRMED</li>
+        </ul>
+      </div>
+
+      <div class="update-card purple">
+        <div class="update-card-title">📊 Sale Order AG Grid Row Grouping <span class="update-card-meta">9 พ.ค.</span></div>
+        <div class="update-card-desc">เพิ่ม Row Grouping + Side Bar — group ตามลูกค้า/สถานะ (Enterprise feature with graceful degradation)</div>
+        <ul class="update-card-list">
+          <li>withRowGrouping() — drag column ไป Row Group panel</li>
+          <li>withSideBar() — Columns + Filters panel</li>
+          <li>Groupable: ลูกค้า, สถานะ</li>
+          <li>Graceful degradation ถ้าไม่มี Enterprise license</li>
+        </ul>
+      </div>
+
+      <div class="update-card teal">
+        <div class="update-card-title">🧾 Sale Invoice Schema V2 (TSaleInv) <span class="update-card-meta">9 พ.ค.</span></div>
+        <div class="update-card-desc">ระบบ Sale Invoice ใหม่ใช้ Schema TSaleInv/TSaleInvProd/TSaleInvIsu — ไม่กระทบ module เดิม (backward compat)</div>
+        <ul class="update-card-list">
+          <li>3 ตารางใหม่ (FK CASCADE)</li>
+          <li>8 endpoints (CRUD + save + confirm + generate-lines)</li>
+          <li>Auto-create AR Invoice เมื่อ confirm (arInvRefTypIdx=3)</li>
+          <li>Frontend component sale-invoice-v2 (3-zone dialog)</li>
+          <li>Save keeps screen open + Confirm refreshes with official number</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: NEW UI / SCHEMA / ENDPOINTS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--info) 0%, #0e7490 100%);">📂</div>
+      <div>
+        <h2>หน้า UI / Schema / Endpoints ใหม่</h2>
+        <div class="section-subtitle">รายละเอียดหน้าใหม่ + ตารางใหม่ + endpoints</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:8px;margin-bottom:10px;font-size:15px;color:var(--gray-800);">หน้า UI ใหม่ (1 หน้า)</h3>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr>
+            <th>กลุ่ม</th><th>หน้า</th><th>Route</th><th>CSS Prefix</th><th>Detail Grid</th><th>วันที่</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="pill teal">Sales V2</span></td><td>Sale Invoice V2</td><td><code>/sales/invoices-v2</code></td><td><code>si2-</code></td><td>TSaleInvProd + TSaleInvIsu</td><td>9 พ.ค.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:24px;margin-bottom:10px;font-size:15px;color:var(--gray-800);">Database Schema ใหม่</h3>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>Table</th><th>Prisma Model</th><th>คำอธิบาย</th><th>วันที่</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>t_sale_inv</code></td><td><code>TSaleInv</code></td><td>Header ใบแจ้งหนี้ขาย (V2)</td><td>9 พ.ค.</td></tr>
+          <tr><td><code>t_sale_inv_prod</code></td><td><code>TSaleInvProd</code></td><td>รายการสินค้า — FK CASCADE</td><td>9 พ.ค.</td></tr>
+          <tr><td><code>t_sale_inv_isu</code></td><td><code>TSaleInvIsu</code></td><td>อ้างอิงใบเบิก — FK CASCADE</td><td>9 พ.ค.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:24px;margin-bottom:10px;font-size:15px;color:var(--gray-800);">API Endpoints ใหม่ (10+ endpoints)</h3>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>Method</th><th>Endpoint</th><th>หน้าที่</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/t-sale-inv</code></td><td>สร้าง Invoice ใหม่ (DRAFT + Temp number)</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/t-sale-inv</code></td><td>List + pagination + search + filter</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/t-sale-inv/:id</code></td><td>Get by ID + products + issues</td></tr>
+          <tr><td><span class="pill warning">PATCH</span></td><td><code>/api/t-sale-inv/:id</code></td><td>Partial update header</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/t-sale-inv/:id/save</code></td><td>Full save (header + lines upsert)</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/t-sale-inv/:id/confirm</code></td><td>Confirm + official number + AR Invoice</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/t-sale-inv/:id/generate-lines</code></td><td>สร้างรายการจาก Issue</td></tr>
+          <tr><td><span class="pill warning">DELETE</span></td><td><code>/api/t-sale-inv/:id</code></td><td>Soft delete</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/supplier-quotations/:id/cancel</code></td><td>Cancel Supplier Quotation</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/confirm-po/:id/cancel</code></td><td>Cancel Confirm Purchase Order</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/ship-deliveries/customer-from-issue/:issueId</code></td><td>ดึง Customer จาก Issue (ผ่าน SO → ArCustomer)</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/products?saleFlag=Y</code></td><td>เพิ่ม saleFlag query param (filter ที่ DB level)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 4: BUG FIXES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);">🐛</div>
+      <div>
+        <h2>Bug Fixes ในรอบนี้ (10+ bugs)</h2>
+        <div class="section-subtitle">Ship UX 3 / Sales Invoice 2 / API Path 4 / Status 1 + UI Polish</div>
+      </div>
+    </div>
+    <div class="update-grid">
+      <div class="update-card danger">
+        <div class="update-card-title">Ship Delivery / Confirm UX (3 bugs)</div>
+        <ul class="update-card-list">
+          <li>Ship Delivery ไม่ดึงลูกค้ามาให้ (step 3 ว่าง) — `getCustomerFromIssue` ดึงจาก mContact (แก้: ดึงจาก arCustomer)</li>
+          <li>API customer-from-issue return 404 — Backend ยังไม่ restart</li>
+          <li>Issue dropdown ไม่ filter ตาม customer — `loadIssueOptions` ไม่ส่ง cusId</li>
+        </ul>
+      </div>
+      <div class="update-card danger">
+        <div class="update-card-title">Sales Invoices Grid (1 major bug)</div>
+        <ul class="update-card-list">
+          <li>Grid แสดงแถวว่างๆ — Field mapping ไม่ตรงกับ Prisma response</li>
+          <li>5 fields: saleInvNo / saleInvDate / docStatus / saleInvAmt / customerName</li>
+          <li>+ Backend findAll() เพิ่ม customer name lookup</li>
+        </ul>
+      </div>
+      <div class="update-card danger">
+        <div class="update-card-title">Sales Invoice POSTED Status (1 bug)</div>
+        <ul class="update-card-list">
+          <li>POSTED แสดงเป็น raw text ไม่มี badge สี</li>
+          <li>เพิ่ม POSTED ใน DocStatus, STATUS_CONFIG, STATUS_ACTIONS, STATUS_OPTIONS</li>
+          <li>POSTED แสดงเหมือน CONFIRMED (สีเขียว, "ยืนยันแล้ว")</li>
+        </ul>
+      </div>
+      <div class="update-card danger">
+        <div class="update-card-title">API Path Mismatches (4 paths + 2 endpoints)</div>
+        <ul class="update-card-list">
+          <li>/api/supplier-quotations-v2 → /api/supplier-quotations</li>
+          <li>/api/purchase-orders-v2 → /api/purchase-orders</li>
+          <li>/api/confirm-po-v2 → /api/confirm-po</li>
+          <li>/api/receive-to-warehouse → /api/goods-receipts</li>
+          <li>+ confirm endpoint → /post (goods-receipts)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: BUSINESS / UX RULES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">📋</div>
+      <div>
+        <h2>Business / UX Rules ใหม่</h2>
+        <div class="section-subtitle">กฎการทำงานเชิงธุรกิจที่เพิ่มในรอบล่าสุด</div>
+      </div>
+    </div>
+    <div class="update-grid">
+      <div class="update-card teal">
+        <div class="update-card-title">🔒 Ship Delivery — Customer Read-only</div>
+        <div class="update-card-desc">เลือกลูกค้าได้เฉพาะใน wizard เท่านั้น (auto-fill ผ่าน Issue → SO → ArCustomer)</div>
+        <ul class="update-card-list">
+          <li>ฟอร์มลูกค้าใน detail tab → read-only เสมอ</li>
+          <li>จำนวนส่ง (shipQty) → read-only</li>
+          <li>สินค้าไม่ group — แยกตาม issue (ไม่รวม qty)</li>
+        </ul>
+      </div>
+      <div class="update-card teal">
+        <div class="update-card-title">🔄 Ship Confirm — Wizard Reorder</div>
+        <div class="update-card-desc">เลือกลูกค้าก่อน → Ship Delivery filter ตาม customer</div>
+        <ul class="update-card-list">
+          <li>Step 1: ลูกค้า (สลับจากเดิม)</li>
+          <li>Step 2: Ship Delivery (filter ตาม contactId + available)</li>
+          <li>Customer lock เมื่อเลือก SD แล้ว</li>
+        </ul>
+      </div>
+      <div class="update-card success">
+        <div class="update-card-title">1️⃣ Default Qty = 1 (เพิ่มรายการ)</div>
+        <div class="update-card-desc">เพิ่มรายการสินค้าใน Sale Quotation / Customer P/O → qty = 1 อัตโนมัติ (รวม FOC)</div>
+        <ul class="update-card-list">
+          <li>lineDefaults qty: 1</li>
+          <li>Safety net เมื่อเลือก productId ครั้งแรก (ถ้า qty ยัง 0)</li>
+          <li>ไม่ override ถ้า user เคยแก้แล้ว (`!qty` check)</li>
+          <li>Sale Order ไม่กระทบ — ดึงจาก source document</li>
+        </ul>
+      </div>
+      <div class="update-card success">
+        <div class="update-card-title">🔍 saleFlag Filter (Sales Only)</div>
+        <div class="update-card-desc">โมดูลฝั่ง Sale แสดงเฉพาะสินค้าที่ขายได้ (saleFlag='Y' + stopSaleFlag='N')</div>
+        <ul class="update-card-list">
+          <li>กรองที่ database level (ลด payload)</li>
+          <li>โมดูล Purchase / Inventory / Ship ไม่กระทบ</li>
+          <li>API service backward compat</li>
+        </ul>
+      </div>
+      <div class="update-card teal">
+        <div class="update-card-title">📑 TSaleInv V2 — Auto-Create AR</div>
+        <div class="update-card-desc">Confirm Sale Invoice → auto-create AR Invoice (arInvRefTypIdx=3) ใน transaction เดียวกัน</div>
+        <ul class="update-card-list">
+          <li>Save: Temp doc number + line/header totals + transaction</li>
+          <li>Confirm: Generate official number (DocnumService)</li>
+          <li>Status DRAFT → 'Confirm'</li>
+          <li>Auto-create AR Invoice (arInvRefTypIdx=3)</li>
+        </ul>
+      </div>
+      <div class="update-card purple">
+        <div class="update-card-title">📊 Row Grouping (AG Grid Enterprise)</div>
+        <div class="update-card-desc">Sale Order list — group ตามลูกค้า/สถานะ + Side Bar (Columns/Filters)</div>
+        <ul class="update-card-list">
+          <li>Drag column ไป Row Group panel</li>
+          <li>Groupable: customerName, docStatus</li>
+          <li>Graceful degradation ถ้าไม่มี license</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: SECTIONS OVERVIEW -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-900) 100%);">📁</div>
+      <div>
+        <h2>หมวดที่เพิ่มใน Checklist (Section 35-42)</h2>
+        <div class="section-subtitle">8 หมวดใหม่ — Ship UX, Default Qty, Filters, UI Alignment, Sales Invoice Bug Fixes, Row Grouping, TSaleInv V2</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>#</th><th>หมวด</th><th>วันที่</th><th>โมดูลที่เกี่ยวข้อง</th><th>สถานะ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>35</td><td>Ship Delivery & Ship Confirm — UX Updates</td><td>6-7 พ.ค.</td><td>Ship Delivery, Ship Confirm, Issues</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>36</td><td>Sale Line Item — Default Quantity = 1</td><td>7 พ.ค.</td><td>Sale Quotation, Customer P/O</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>37</td><td>Sale Product Filter (saleFlag = 'Y')</td><td>7 พ.ค.</td><td>Sale Quotation, Sale Order, Products API</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>38</td><td>UI Alignment with Mockups — Purchase Module & PO Settlement</td><td>8 พ.ค.</td><td>PO Settlement, PO V2, Confirm PO V2, Receive WH</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>39</td><td>Bug Fix — Sales Invoices Grid ไม่แสดงข้อมูล</td><td>8 พ.ค.</td><td>Sales Invoices</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>40</td><td>Bug Fix — Sales Invoice POSTED Status (ไม่มีสี)</td><td>9 พ.ค.</td><td>Sales Invoices</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>41</td><td>Sale Order — AG Grid Row Grouping</td><td>9 พ.ค.</td><td>Sale Order Revamp</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>42</td><td>Sale Invoice Schema Integration (TSaleInv V2)</td><td>9 พ.ค.</td><td>Sale Invoice V2 (TSaleInv/TSaleInvProd/TSaleInvIsu)</td><td><span class="pill green">✅</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 7: FILES SUMMARY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-900) 100%);">📁</div>
+      <div>
+        <h2>ภาพรวมไฟล์ที่ปรับปรุง</h2>
+        <div class="section-subtitle">รวม Backend, Frontend, Schema, และ Component Updates</div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card teal">
+        <div class="stat-icon teal">⚙️</div>
+        <div class="stat-label">Backend Modules ใหม่</div>
+        <div class="stat-value">1</div>
+        <div class="stat-sub">t-sale-inv (TSaleInv V2)</div>
+      </div>
+      <div class="stat-card success">
+        <div class="stat-icon success">🅰️</div>
+        <div class="stat-label">Frontend Pages ใหม่</div>
+        <div class="stat-value">1</div>
+        <div class="stat-sub">sale-invoice-v2</div>
+      </div>
+      <div class="stat-card warning">
+        <div class="stat-icon warning">📐</div>
+        <div class="stat-label">Schema Changes</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">TSaleInv + TSaleInvProd + TSaleInvIsu</div>
+      </div>
+      <div class="stat-card info">
+        <div class="stat-icon info">🔄</div>
+        <div class="stat-label">Components ที่ Update</div>
+        <div class="stat-value">15+</div>
+        <div class="stat-sub">Ship UX, Sales Invoice, Purchase V2, AG Grid</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>Xcellence POS — Progress Update #8</strong><br>
+    สรุปงาน 6-9 พฤษภาคม 2026 · อ้างอิงจาก FEATURES_UPDATE.md และ ERP_Flow_Checklist.md (Section 35-42)<br>
+    <em>Generated 2026-05-09 · Branch: features/nott / develop</em>
+  </div>
+
+</div>
+</body>
+</html>
