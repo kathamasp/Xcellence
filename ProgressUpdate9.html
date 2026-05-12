@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Update #9 — Xcellence POS ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-light: #dbeafe;
+    --success: #16a34a;
+    --success-dark: #15803d;
+    --success-light: #dcfce7;
+    --warning: #f59e0b;
+    --warning-light: #fef3c7;
+    --danger: #dc2626;
+    --danger-light: #fee2e2;
+    --info: #0891b2;
+    --info-light: #cffafe;
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --pink: #db2777;
+    --pink-light: #fce7f3;
+    --teal: #0d9488;
+    --teal-light: #ccfbf1;
+    --orange: #ea580c;
+    --orange-light: #fed7aa;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  }
+  body {
+    font-family: 'Sarabun', 'Inter', -apple-system, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+    color: var(--gray-800);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+    color: white;
+    padding: 44px 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .hero h1 {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .hero p {
+    font-size: 16px;
+    opacity: 0.95;
+    max-width: 760px;
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    opacity: 0.95;
+  }
+  .hero-meta-item strong { font-weight: 700; }
+
+  /* Stat cards */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px; height: 100%;
+  }
+  .stat-card.success::before { background: var(--success); }
+  .stat-card.warning::before { background: var(--warning); }
+  .stat-card.primary::before { background: var(--primary); }
+  .stat-card.info::before { background: var(--info); }
+  .stat-card.purple::before { background: var(--purple); }
+  .stat-card.pink::before { background: var(--pink); }
+  .stat-card.teal::before { background: var(--teal); }
+  .stat-card.orange::before { background: var(--orange); }
+  .stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .stat-icon.success { background: var(--success-light); }
+  .stat-icon.warning { background: var(--warning-light); }
+  .stat-icon.primary { background: var(--primary-light); }
+  .stat-icon.info { background: var(--info-light); }
+  .stat-icon.purple { background: var(--purple-light); }
+  .stat-icon.pink { background: var(--pink-light); }
+  .stat-icon.teal { background: var(--teal-light); }
+  .stat-icon.orange { background: var(--orange-light); }
+  .stat-label {
+    font-size: 13px;
+    color: var(--gray-500);
+    font-weight: 500;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .stat-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 13px;
+    color: var(--gray-600);
+  }
+
+  /* Section */
+  .section {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--gray-100);
+  }
+  .section-icon-wrap {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 2px;
+  }
+
+  /* Update card */
+  .update-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 16px;
+  }
+  .update-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 18px;
+    border-left: 4px solid var(--primary);
+  }
+  .update-card.success { border-left-color: var(--success); }
+  .update-card.warning { border-left-color: var(--warning); }
+  .update-card.info { border-left-color: var(--info); }
+  .update-card.purple { border-left-color: var(--purple); }
+  .update-card.pink { border-left-color: var(--pink); }
+  .update-card.danger { border-left-color: var(--danger); }
+  .update-card.teal { border-left-color: var(--teal); }
+  .update-card.orange { border-left-color: var(--orange); }
+  .update-card-title {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 15px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .update-card-meta {
+    display: inline-block;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    margin-left: auto;
+  }
+  .update-card-desc {
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+  .update-card-list {
+    list-style: none;
+    margin-top: 8px;
+  }
+  .update-card-list li {
+    font-size: 12.5px;
+    color: var(--gray-700);
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--gray-200);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .update-card-list li:last-child { border-bottom: none; }
+  .update-card-list li::before {
+    content: '✅';
+    flex-shrink: 0;
+    font-size: 11px;
+  }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  .clean-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .clean-table th {
+    background: var(--gray-50);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--gray-700);
+    border-bottom: 2px solid var(--gray-200);
+  }
+  .clean-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700);
+  }
+  .clean-table tr:hover td { background: var(--gray-50); }
+  .clean-table .ok { color: var(--success-dark); font-weight: 600; }
+  .clean-table .warn { color: var(--warning); font-weight: 600; }
+  .clean-table .new { color: var(--primary); font-weight: 600; }
+  .clean-table .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill.green { background: var(--success-light); color: var(--success-dark); }
+  .pill.blue { background: var(--primary-light); color: var(--primary-dark); }
+  .pill.purple { background: var(--purple-light); color: var(--purple); }
+  .pill.pink { background: var(--pink-light); color: var(--pink); }
+  .pill.gray { background: var(--gray-100); color: var(--gray-700); }
+  .pill.teal { background: var(--teal-light); color: var(--teal); }
+  .pill.warning { background: var(--warning-light); color: var(--warning); }
+  .pill.orange { background: var(--orange-light); color: var(--orange); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 6px;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+  }
+  .timeline-item {
+    position: relative;
+    padding-bottom: 22px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+  .timeline-item.success::before { background: var(--success); box-shadow: 0 0 0 2px var(--success); }
+  .timeline-item.warning::before { background: var(--warning); box-shadow: 0 0 0 2px var(--warning); }
+  .timeline-item.purple::before { background: var(--purple); box-shadow: 0 0 0 2px var(--purple); }
+  .timeline-item.teal::before { background: var(--teal); box-shadow: 0 0 0 2px var(--teal); }
+  .timeline-item.orange::before { background: var(--orange); box-shadow: 0 0 0 2px var(--orange); }
+  .timeline-date {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .timeline-title {
+    font-size: 14px;
+    color: var(--gray-700);
+    margin-bottom: 4px;
+  }
+  .timeline-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--gray-500);
+    font-size: 13px;
+  }
+  .footer strong { color: var(--gray-700); }
+
+  @media (max-width: 768px) {
+    .container { padding: 16px; }
+    .hero { padding: 28px 20px; }
+    .hero h1 { font-size: 26px; }
+    .section { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-badge">🚀 Progress Update #9 · 9-11 พฤษภาคม 2026</span>
+    <h1>Progress Update #9</h1>
+    <p>สรุปงานรอบล่าสุด — ครอบคลุม Sale Order Direct Create &amp; Source Pull, Customer P/O &amp; Purchase Filter (saleFlag/purFlag + qty=1), Receive Module (ใบรับสินค้า), TSupInv V2 Schema, Sale Invoice V2 UI Updates, Set Sale Price (กำหนดราคาขาย), Receive — Purchase Invoice Support, PO Settlement Auto-Create + UI Fixes, Issue/Receive DateTime, และ Price List Company Update</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">📅 <strong>3 วัน</strong> (9-11 พ.ค. 2026)</div>
+      <div class="hero-meta-item">📂 <strong>12 หมวด</strong> ใหม่ (Section 43-54)</div>
+      <div class="hero-meta-item">🆕 <strong>4 หน้า UI</strong> ใหม่ (Receive, t-sup-inv, set-sale-price, price-list)</div>
+      <div class="hero-meta-item">🐛 <strong>30+</strong> Bug Fixes &amp; UX Updates</div>
+    </div>
+  </div>
+
+  <!-- HIGH-LEVEL STATS -->
+  <div class="stats-grid">
+    <div class="stat-card success">
+      <div class="stat-icon success">✅</div>
+      <div class="stat-label">New Sections</div>
+      <div class="stat-value">12</div>
+      <div class="stat-sub">เพิ่มใน Checklist (S43-S54)</div>
+    </div>
+    <div class="stat-card teal">
+      <div class="stat-icon teal">🆕</div>
+      <div class="stat-label">หน้า UI ใหม่</div>
+      <div class="stat-value">4</div>
+      <div class="stat-sub">Receive, Sup Invoice V2, Set Sale Price, Price List</div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-icon warning">🐛</div>
+      <div class="stat-label">Bug Fixes</div>
+      <div class="stat-value">30+</div>
+      <div class="stat-sub">Purchase V2 (12), Receive (10), PO Settlement (8+)</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-icon purple">⚙️</div>
+      <div class="stat-label">Backend Endpoints ใหม่</div>
+      <div class="stat-value">25+</div>
+      <div class="stat-sub">TSupInv (8), Set Sale Price (6), Receive (10+), Company Price</div>
+    </div>
+    <div class="stat-card primary">
+      <div class="stat-icon primary">📐</div>
+      <div class="stat-label">Schema Changes</div>
+      <div class="stat-value">7</div>
+      <div class="stat-sub">TRcv/Prod, TSupInv/Prod/Po, TChngSalePrice/Prod</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-icon orange">⚡</div>
+      <div class="stat-label">Auto-Create Flows</div>
+      <div class="stat-value">2</div>
+      <div class="stat-sub">PO Settlement (จาก Receive SupInv) + AR Invoice (จาก Sale Inv)</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: TIMELINE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--purple) 0%, #6d28d9 100%);">⏱</div>
+      <div>
+        <h2>Timeline งานที่ทำ (9-11 พฤษภาคม 2026)</h2>
+        <div class="section-subtitle">เรียงลำดับตามวันที่</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item success">
+        <div class="timeline-date">9 พฤษภาคม 2026</div>
+        <div class="timeline-title">Sale Order — Direct Create &amp; Source Document Pull: กดสร้างเข้า Form ทันที (ไม่ผ่าน Wizard) + ดึงข้อมูลจาก Sale Quotation / Customer P/O มาใส่อัตโนมัติ + Default qty=1 + ที่อยู่เปิดบิล save ลง DB</div>
+        <div class="timeline-tags">
+          <span class="pill green">UX Flow</span>
+          <span class="pill blue">Source Pull</span>
+          <span class="pill teal">Auto Fill</span>
+        </div>
+      </div>
+      <div class="timeline-item success">
+        <div class="timeline-date">9 พฤษภาคม 2026</div>
+        <div class="timeline-title">Customer P/O — กรองสินค้าเฉพาะที่ขายได้ (saleFlag='Y'): ปรับให้ใช้ filter เหมือน Sale Order/Sale Quotation</div>
+        <div class="timeline-tags">
+          <span class="pill green">Filter</span>
+        </div>
+      </div>
+      <div class="timeline-item warning">
+        <div class="timeline-date">9 พฤษภาคม 2026</div>
+        <div class="timeline-title">Purchase V2 (Supplier Quotation / PO / Confirm PO) — purFlag Filter + Default Qty=1 + Auto-fill จากเอกสารต้นทาง + 12 Bug Fixes (currency THB, mapStatus, mapPoResponse, vendor lookup)</div>
+        <div class="timeline-tags">
+          <span class="pill blue">purFlag Filter</span>
+          <span class="pill green">Default Qty</span>
+          <span class="pill warning">12 Bug Fixes</span>
+        </div>
+      </div>
+      <div class="timeline-item teal">
+        <div class="timeline-date">7-9 พฤษภาคม 2026</div>
+        <div class="timeline-title">Receive Module (ใบรับสินค้า) — Prisma `TRcv` + `TRcvProd` + Wizard 3 steps + Outstanding column + Exception Flag + Temp/Official docnum</div>
+        <div class="timeline-tags">
+          <span class="pill teal">New Module</span>
+          <span class="pill blue">11 features</span>
+          <span class="pill warning">4 bugs</span>
+        </div>
+      </div>
+      <div class="timeline-item teal">
+        <div class="timeline-date">10 พฤษภาคม 2026</div>
+        <div class="timeline-title">Supplier Invoice V2 — Schema ใหม่ (TSupInv / TSupInvProd / TSupInvPo) + Tab "รายการใบสั่งซื้อ" + ปุ่ม "ดึงรายการสินค้า" จาก PO + 8 endpoints</div>
+        <div class="timeline-tags">
+          <span class="pill teal">TSupInv V2</span>
+          <span class="pill blue">Tab Layout</span>
+          <span class="pill green">Pull Products</span>
+        </div>
+      </div>
+      <div class="timeline-item success">
+        <div class="timeline-date">9-10 พฤษภาคม 2026</div>
+        <div class="timeline-title">Sale Invoice V2 UI Updates — เปลี่ยน Title, Wizard เลือกลูกค้าก่อน, SO/Issue เป็น dropdown, สลับ Tab, แก้ Backend route `/api/t-sale-inv`</div>
+        <div class="timeline-tags">
+          <span class="pill green">UI Polish</span>
+          <span class="pill blue">Wizard</span>
+        </div>
+      </div>
+      <div class="timeline-item purple">
+        <div class="timeline-date">10 พฤษภาคม 2026</div>
+        <div class="timeline-title">Set Sale Price — กำหนดราคาขาย (TChngSalePrice / TChngSalePriceProd) + 13 ประเภท + Mark Down (ชั่วคราว/ถาวร) + Auto-apply ราคาไป MProdPriceCom เมื่อ Confirm</div>
+        <div class="timeline-tags">
+          <span class="pill purple">New Module</span>
+          <span class="pill teal">Price Apply</span>
+          <span class="pill blue">2 Schema</span>
+        </div>
+      </div>
+      <div class="timeline-item teal">
+        <div class="timeline-date">9-10 พฤษภาคม 2026</div>
+        <div class="timeline-title">Receive — Purchase Invoice Support: Wizard step 1 มี 2 options (PO/SupInv default=6) + Pull from SupInv + Exception Flag + Oth Ref No + 6 bug fixes</div>
+        <div class="timeline-tags">
+          <span class="pill teal">SupInv Support</span>
+          <span class="pill green">6 features</span>
+          <span class="pill warning">6 bugs</span>
+        </div>
+      </div>
+      <div class="timeline-item orange">
+        <div class="timeline-date">10 พฤษภาคม 2026</div>
+        <div class="timeline-title">PO Settlement Auto-Create — confirm Receive (type=6 SupInv) ที่ไม่มี outstanding → สร้าง PO Settlement อัตโนมัติ (Header, Receives, Products, Toast notification, Duplicate prevention)</div>
+        <div class="timeline-tags">
+          <span class="pill orange">Auto-Create</span>
+          <span class="pill green">7 features</span>
+          <span class="pill warning">4 bugs</span>
+        </div>
+      </div>
+      <div class="timeline-item warning">
+        <div class="timeline-date">10 พฤษภาคม 2026</div>
+        <div class="timeline-title">Issue &amp; Receive — DateTime with Time: เปลี่ยน DB column `isu_date` / `rcv_date` จาก DATE เป็น TIMESTAMP + Datepicker 24h format</div>
+        <div class="timeline-tags">
+          <span class="pill warning">Schema</span>
+          <span class="pill blue">UX</span>
+        </div>
+      </div>
+      <div class="timeline-item warning">
+        <div class="timeline-date">11 พฤษภาคม 2026</div>
+        <div class="timeline-title">PO Settlement UI Fixes — เลขที่รับแจ้งหนี้ว่าง, Detail UUID, Remark duplicate, อ่าน listTSupInv อย่างเดียว, ฟอร์มหัว read-only</div>
+        <div class="timeline-tags">
+          <span class="pill warning">UI Fix</span>
+          <span class="pill blue">Read-only</span>
+        </div>
+      </div>
+      <div class="timeline-item purple">
+        <div class="timeline-date">11 พฤษภาคม 2026</div>
+        <div class="timeline-title">Price List Company Update — รวม Customer + Company Price เป็นหน้าเดียว 2 tabs (view-only) + Set Sale Price (default chngPriceTypIdx=1 readonly, markDownTypIdx handler, price-lookup API, ลบ remark)</div>
+        <div class="timeline-tags">
+          <span class="pill purple">Menu</span>
+          <span class="pill teal">2 Tabs</span>
+          <span class="pill blue">View-Only</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: KEY UPDATES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">⭐</div>
+      <div>
+        <h2>Key Updates ในรอบนี้</h2>
+        <div class="section-subtitle">งานสำคัญที่ส่งผลต่อระบบหลัก</div>
+      </div>
+    </div>
+
+    <div class="update-grid">
+      <div class="update-card success">
+        <div class="update-card-title">🛒 Sale Order — Direct Create + Source Pull <span class="update-card-meta">9 พ.ค.</span></div>
+        <div class="update-card-desc">เปลี่ยนจาก Wizard 3 ขั้น → กดสร้างเข้า Form ทันที + ดึงข้อมูลจากเอกสารอ้างอิงมาใส่อัตโนมัติ</div>
+        <ul class="update-card-list">
+          <li>openCreateDirect() แทน openCreateWizard()</li>
+          <li>เลือก Sale Quotation/Customer P/O ใน Form → ดึง header + products auto</li>
+          <li>เลือกลูกค้า → auto-fill cusBillName + cusBillAddr</li>
+          <li>Default qty=1 เมื่อเลือกสินค้า</li>
+          <li>cusBillName/cusBillAddr save ลง DB ถูกต้อง</li>
+        </ul>
+      </div>
+
+      <div class="update-card teal">
+        <div class="update-card-title">📥 Receive Module (ใบรับสินค้า) <span class="update-card-meta">7-9 พ.ค.</span></div>
+        <div class="update-card-desc">โมดูลใหม่: Prisma `TRcv` + `TRcvProd` + Wizard 3 steps + Outstanding tracking + Exception Flag</div>
+        <ul class="update-card-list">
+          <li>Wizard: ประเภทเอกสาร → PO (outstanding > 0) → คลัง</li>
+          <li>Outstanding match ด้วย lineOrder (ไม่ใช่ productId)</li>
+          <li>Exception Flag — สินค้านอกใบสั่ง</li>
+          <li>Temp-xxx → RCV-xxx ตอน confirm</li>
+          <li>Confirm validation: ไม่ให้รับเกิน outstanding</li>
+        </ul>
+      </div>
+
+      <div class="update-card teal">
+        <div class="update-card-title">🧾 Supplier Invoice V2 (TSupInv) <span class="update-card-meta">10 พ.ค.</span></div>
+        <div class="update-card-desc">Schema ใหม่ TSupInv/TSupInvProd/TSupInvPo + Tab "รายการใบสั่งซื้อ" + Pull Products จาก PO</div>
+        <ul class="update-card-list">
+          <li>3 ตารางใหม่ (FK CASCADE)</li>
+          <li>8 endpoints (CRUD + save + confirm + generate-lines)</li>
+          <li>Tab Layout: PO refs + Product lines</li>
+          <li>ปุ่ม "ดึงรายการสินค้า" จาก linked PO → skip duplicates</li>
+          <li>Backend route /api/t-sup-inv</li>
+        </ul>
+      </div>
+
+      <div class="update-card purple">
+        <div class="update-card-title">💰 Set Sale Price (กำหนดราคาขาย) <span class="update-card-meta">10 พ.ค.</span></div>
+        <div class="update-card-desc">หน้าใหม่: TChngSalePrice + 13 ประเภทการเปลี่ยน + Mark Down + Auto-apply ราคา</div>
+        <ul class="update-card-list">
+          <li>2 ตารางใหม่ (header + detail FK CASCADE)</li>
+          <li>5 endpoints + price-lookup endpoint</li>
+          <li>Confirm → Upsert MProdPriceCom อัตโนมัติ</li>
+          <li>markDownTypIdx=1 (ชั่วคราว/expireDate) / 2 (ถาวร/9999-12-31)</li>
+          <li>เมนู SALES ตำแหน่งบนสุด, CSS prefix: sp-</li>
+        </ul>
+      </div>
+
+      <div class="update-card orange">
+        <div class="update-card-title">⚡ PO Settlement Auto-Create <span class="update-card-meta">10 พ.ค.</span></div>
+        <div class="update-card-desc">Confirm Receive (type=6 SupInv) ที่ไม่มี outstanding → สร้าง PO Settlement อัตโนมัติ</div>
+        <ul class="update-card-list">
+          <li>Header: ผู้จำหน่าย + SupInv + PO (จาก t_sup_inv_po)</li>
+          <li>Settlement receives: confirmed receives ที่อ้างอิง SupInv</li>
+          <li>Settlement products: t_sup_inv_prod + sum rcv_qty</li>
+          <li>Toast "สร้าง PO Settlement แล้ว เลขที่ xxx"</li>
+          <li>Duplicate prevention — เช็คว่ายังไม่มี settlement</li>
+        </ul>
+      </div>
+
+      <div class="update-card warning">
+        <div class="update-card-title">🛍 Purchase V2 — purFlag Filter + Bug Fixes <span class="update-card-meta">9 พ.ค.</span></div>
+        <div class="update-card-desc">SQ/PO/CPO V2: filter purFlag='Y' + default qty=1 + auto-fill จากเอกสารต้นทาง + 12 bug fixes</div>
+        <ul class="update-card-list">
+          <li>Products API: ?purFlag=Y + stopPurFlag='N'</li>
+          <li>Default qty=1 ใน 3 หน้า (SQ, PO, CPO V2)</li>
+          <li>PO V2: dropdown SQ ตาม vendor + auto-fill</li>
+          <li>Confirm PO V2: auto-fill จาก PO</li>
+          <li>currency $ → THB, mapStatus, mapPoResponse</li>
+          <li>SQ vendor lookup, partialUpdate แยก nested arrays</li>
+        </ul>
+      </div>
+
+      <div class="update-card purple">
+        <div class="update-card-title">🏷 Price List Company + 2 Tabs <span class="update-card-meta">11 พ.ค.</span></div>
+        <div class="update-card-desc">รวม Customer + Company Price List เป็นหน้าเดียว 2 tabs (view-only)</div>
+        <ul class="update-card-list">
+          <li>ลบเมนู "Customer Price List" + "Price Lists" เดิม</li>
+          <li>หน้าใหม่: "Price List" (ล่างสุด SALES, 2 tabs)</li>
+          <li>Tab Company: MProdPriceCom (paginated, search, filter)</li>
+          <li>Tab Customer: MProdPriceCus (reuse)</li>
+          <li>ไม่มี New/Save/Confirm/Cancel — view-only</li>
+          <li>API ใหม่: GET /api/company-prices</li>
+        </ul>
+      </div>
+
+      <div class="update-card success">
+        <div class="update-card-title">📅 Issue &amp; Receive — DateTime <span class="update-card-meta">10 พ.ค.</span></div>
+        <div class="update-card-desc">เปลี่ยน isu_date / rcv_date จาก DATE → TIMESTAMP + Datepicker 24h format</div>
+        <ul class="update-card-list">
+          <li>Schema: ลบ @db.Date</li>
+          <li>Frontend: [showTime]="true" [hourFormat]="'24'"</li>
+          <li>เก็บทั้งวันที่ + เวลาในใบเบิก + ใบรับ</li>
+        </ul>
+      </div>
+
+      <div class="update-card teal">
+        <div class="update-card-title">📦 Receive — Purchase Invoice Support <span class="update-card-meta">9-10 พ.ค.</span></div>
+        <div class="update-card-desc">Receive ดึงสินค้าจาก Purchase Invoice (SupInv) นอกเหนือจาก PO</div>
+        <ul class="update-card-list">
+          <li>Wizard step 1 มี 2 options: PO/Purchase Invoice (default=6)</li>
+          <li>Dynamic label step 2 ตาม type</li>
+          <li>2 outstanding APIs สำหรับ SupInv</li>
+          <li>Pull from SupInv — เฉพาะ outstanding &gt; 0</li>
+          <li>Exception Flag + Oth Ref No</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: NEW UI / SCHEMA / ENDPOINTS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--info) 0%, #0e7490 100%);">📂</div>
+      <div>
+        <h2>หน้า UI / Schema / Endpoints ใหม่</h2>
+        <div class="section-subtitle">รายละเอียดหน้าใหม่ + ตารางใหม่ + endpoints</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:8px;margin-bottom:10px;font-size:15px;color:var(--gray-800);">หน้า UI ใหม่ (4 หน้า)</h3>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr>
+            <th>กลุ่ม</th><th>หน้า</th><th>Route</th><th>CSS Prefix</th><th>Detail Grid</th><th>วันที่</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="pill teal">Inventory</span></td><td>Receive (ใบรับสินค้า)</td><td><code>/inventory/receive</code></td><td><code>rv-</code></td><td>TRcvProd + Outstanding column</td><td>7-9 พ.ค.</td></tr>
+          <tr><td><span class="pill teal">Purchase V2</span></td><td>Supplier Invoice V2</td><td><code>/purchase/supplier-invoice</code></td><td><code>si2-</code></td><td>TSupInvPo + TSupInvProd (Tabs)</td><td>10 พ.ค.</td></tr>
+          <tr><td><span class="pill purple">Sales</span></td><td>Set Sale Price (กำหนดราคาขาย)</td><td><code>/sales/set-sale-price</code></td><td><code>sp-</code></td><td>TChngSalePriceProd</td><td>10 พ.ค.</td></tr>
+          <tr><td><span class="pill purple">Sales</span></td><td>Price List (Company + Customer)</td><td><code>/sales/price-list</code></td><td><code>pl-</code></td><td>2 Tabs (view-only)</td><td>11 พ.ค.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:24px;margin-bottom:10px;font-size:15px;color:var(--gray-800);">Database Schema ใหม่ (7 tables)</h3>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>Table</th><th>Prisma Model</th><th>คำอธิบาย</th><th>วันที่</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>t_rcv</code></td><td><code>TRcv</code></td><td>Header ใบรับสินค้า</td><td>7-9 พ.ค.</td></tr>
+          <tr><td><code>t_rcv_prod</code></td><td><code>TRcvProd</code></td><td>รายการสินค้าใบรับ — FK CASCADE</td><td>7-9 พ.ค.</td></tr>
+          <tr><td><code>t_sup_inv</code></td><td><code>TSupInv</code></td><td>Header ใบแจ้งหนี้ผู้จำหน่าย</td><td>10 พ.ค.</td></tr>
+          <tr><td><code>t_sup_inv_prod</code></td><td><code>TSupInvProd</code></td><td>รายการสินค้า — FK CASCADE</td><td>10 พ.ค.</td></tr>
+          <tr><td><code>t_sup_inv_po</code></td><td><code>TSupInvPo</code></td><td>อ้างอิงใบสั่งซื้อ — FK CASCADE</td><td>10 พ.ค.</td></tr>
+          <tr><td><code>t_chng_sale_price</code></td><td><code>TChngSalePrice</code></td><td>Header เอกสารกำหนดราคาขาย</td><td>10 พ.ค.</td></tr>
+          <tr><td><code>t_chng_sale_price_prod</code></td><td><code>TChngSalePriceProd</code></td><td>รายการสินค้าเปลี่ยนราคา — FK CASCADE</td><td>10 พ.ค.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:24px;margin-bottom:10px;font-size:15px;color:var(--gray-800);">Database Schema Updates</h3>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>Table</th><th>Field</th><th>Change</th><th>วันที่</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>t_isu</code></td><td><code>isu_date</code></td><td><code>DATE</code> → <code>TIMESTAMP</code> (วันที่ + เวลา)</td><td>10 พ.ค.</td></tr>
+          <tr><td><code>t_rcv</code></td><td><code>rcv_date</code></td><td><code>DATE</code> → <code>TIMESTAMP</code> (วันที่ + เวลา)</td><td>10 พ.ค.</td></tr>
+          <tr><td><code>m_prod_price_cus</code></td><td>—</td><td>เพิ่ม composite unique + resolve index</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:24px;margin-bottom:10px;font-size:15px;color:var(--gray-800);">API Endpoints ใหม่ (25+ endpoints)</h3>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>Method</th><th>Endpoint</th><th>หน้าที่</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/t-sup-inv</code></td><td>สร้าง Supplier Invoice V2 (DRAFT + Temp)</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/t-sup-inv</code></td><td>List + pagination + search + filter</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/t-sup-inv/:id</code></td><td>Get by ID + products + poRefs</td></tr>
+          <tr><td><span class="pill warning">PATCH</span></td><td><code>/api/t-sup-inv/:id</code></td><td>Partial update header</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/t-sup-inv/:id/save</code></td><td>Full save (header + lines + poRefs)</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/t-sup-inv/:id/confirm</code></td><td>Confirm + official number</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/t-sup-inv/:id/generate-lines</code></td><td>ดึงรายการสินค้าจาก PO</td></tr>
+          <tr><td><span class="pill warning">DELETE</span></td><td><code>/api/t-sup-inv/:id</code></td><td>Soft delete</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/set-sale-prices</code></td><td>สร้างเอกสารกำหนดราคา</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/set-sale-prices</code></td><td>List + filters</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/set-sale-prices/:id</code></td><td>Get by ID + lines</td></tr>
+          <tr><td><span class="pill warning">PATCH</span></td><td><code>/api/set-sale-prices/:id</code></td><td>Partial update</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/set-sale-prices/:id/confirm</code></td><td>Confirm + apply prices to MProdPriceCom</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/set-sale-prices/price-lookup</code></td><td>ค้นหาราคาเดิมจาก MProdPriceCom</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/company-prices</code></td><td>Company Price List (paginated)</td></tr>
+          <tr><td><span class="pill green">POST</span></td><td><code>/api/receives</code></td><td>สร้างใบรับสินค้า (Temp)</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/receives/outstanding/:poId</code></td><td>ค้างรับจาก PO (key=lineOrder)</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/receives/purchase-orders-with-outstanding</code></td><td>PO ที่ยังมีค้างรับ</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/receives/sup-invs-with-outstanding</code></td><td>SupInv ที่ยังมีค้างรับ</td></tr>
+          <tr><td><span class="pill blue">GET</span></td><td><code>/api/receives/outstanding-from-sup-inv/:id</code></td><td>ค้างรับจาก SupInv</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 4: BUG FIXES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);">🐛</div>
+      <div>
+        <h2>Bug Fixes ในรอบนี้ (30+ bugs)</h2>
+        <div class="section-subtitle">Purchase V2 (12) / Receive (10) / PO Settlement (8+)</div>
+      </div>
+    </div>
+    <div class="update-grid">
+      <div class="update-card danger">
+        <div class="update-card-title">Purchase V2 — 12 Bug Fixes (SQ/PO/CPO)</div>
+        <ul class="update-card-list">
+          <li>SQ: supQuotItem must be a number (field name mismatch)</li>
+          <li>SQ: Invalid delegate.update() ตอน PATCH (nested array)</li>
+          <li>SQ: มูลค่า = 0 หลังบันทึก (ไม่คำนวณ supQuotAmt)</li>
+          <li>SQ: List view ผู้จำหน่ายว่าง + ราคา 0</li>
+          <li>SQ: List view แสดง $ (USD) → THB</li>
+          <li>SQ: "Only draft quotations can be confirmed" (mapStatus)</li>
+          <li>PO: vendorId undefined (รับทั้ง vendorId/supId)</li>
+          <li>PO: ข้อมูลหายหลังบันทึก (mapPoResponse)</li>
+          <li>PO: List view จำนวนเงินหาย + USD → THB</li>
+          <li>CPO: poId must be a string</li>
+          <li>CPO: ข้อมูลหายหลังบันทึก (poId, remark)</li>
+          <li>CPO: ราคา/มูลค่าหายหลังบันทึก (TChngPoProd ไม่มี unitPrice — ค้าง)</li>
+        </ul>
+      </div>
+
+      <div class="update-card danger">
+        <div class="update-card-title">Receive (ใบรับสินค้า) — 10 Bug Fixes</div>
+        <ul class="update-card-list">
+          <li>เมนูแสดง /inventory/receive แทน "Receive" (MENU_LABELS key)</li>
+          <li>API 404 Cannot GET /api/receives (ยัง restart ไม่)</li>
+          <li>เลขที่เป็น RCV-xxx แทน Temp-xxx</li>
+          <li>ค้างรับผิด — สินค้าซ้ำหลายบรรทัด (เปลี่ยน key เป็น lineOrder)</li>
+          <li>เลขที่เอกสารอ้างอิงหายใน form</li>
+          <li>SupInv confirm สถานะ "Confirm" แทน "CONFIRMED"</li>
+          <li>Backend start ไม่ได้ (Prisma ไม่ regenerate)</li>
+          <li>+ 3 bugs ที่ระบุไว้ใน FEATURES_UPDATE</li>
+        </ul>
+      </div>
+
+      <div class="update-card danger">
+        <div class="update-card-title">PO Settlement — 8+ Bug Fixes</div>
+        <ul class="update-card-list">
+          <li>Confirm error "ค้างรับเพียง 0" (type=6 ใช้ API ผิด)</li>
+          <li>Error message แสดง UUID (ดึงชื่อ code-name)</li>
+          <li>PO Settlement detail แสดง UUID (valueFormatter)</li>
+          <li>Backend compile error (return; ใน Promise function)</li>
+          <li>เลขที่รับแจ้งหนี้ว่าง (listSupplierInvoices API เก่า)</li>
+          <li>Detail สินค้าแสดง UUID (timing)</li>
+          <li>Detail receives แสดง UUID (raw field)</li>
+          <li>หมายเหตุ duplicate (header + footer) — ลบ header</li>
+        </ul>
+      </div>
+
+      <div class="update-card danger">
+        <div class="update-card-title">Sale Order Direct Create + Customer P/O</div>
+        <ul class="update-card-list">
+          <li>Customer P/O dropdown สินค้าได้ทุกตัว → filter saleFlag='Y'</li>
+          <li>ที่อยู่เปิดบิล ไม่ save ลง DB → เพิ่ม cusBillName/cusBillAddr ใน DTO</li>
+          <li>Default qty=0 → 1 เมื่อเลือกสินค้า</li>
+          <li>erp-inline-grid ไม่ re-apply editable rules → เพิ่ม ngOnChanges</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: BUSINESS / UX RULES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">📋</div>
+      <div>
+        <h2>Business / UX Rules ใหม่</h2>
+        <div class="section-subtitle">กฎการทำงานเชิงธุรกิจที่เพิ่มในรอบล่าสุด</div>
+      </div>
+    </div>
+    <div class="update-grid">
+      <div class="update-card success">
+        <div class="update-card-title">🛍 Sale Order — Source Pull (Auto-fill)</div>
+        <div class="update-card-desc">เลือก Sale Quotation/Customer P/O ใน Form → ดึง header + รายการสินค้า + ที่อยู่เปิดบิล มาใส่อัตโนมัติ</div>
+        <ul class="update-card-list">
+          <li>applySourceQuotation: salePersonId, rvCusId, reqDate, vatInclFlag, paymentTermIdx, paymentTypIdx, sourceQuotTypIdx + products</li>
+          <li>applySourceCustomerRequest: cusPoNo, cusPoDate, rcvPoPersonId, salePersonId, rvCusId, ... + products</li>
+          <li>onCustomerChange: getCustomer → cusName → cusBillName, address → cusBillAddr</li>
+        </ul>
+      </div>
+
+      <div class="update-card teal">
+        <div class="update-card-title">📦 Outstanding Tracking — Receive</div>
+        <div class="update-card-desc">ระบบคงค้างของใบรับสินค้า ใช้ lineOrder เป็น key (ไม่ใช่ productId) เพื่อแยกแต่ละบรรทัด</div>
+        <ul class="update-card-list">
+          <li>PO outstanding: PO qty - sum(confirmed rcv qty) แยกตาม lineOrder</li>
+          <li>SupInv outstanding: SupInv qty - sum(confirmed rcv qty)</li>
+          <li>Confirm validation: ไม่ให้รับเกิน outstanding</li>
+          <li>Dropdown filter: เฉพาะเอกสารที่ outstanding &gt; 0</li>
+        </ul>
+      </div>
+
+      <div class="update-card orange">
+        <div class="update-card-title">⚡ Auto PO Settlement (Receive SupInv)</div>
+        <div class="update-card-desc">Confirm Receive ที่อ้างอิง SupInv + ไม่มี outstanding เหลือ → สร้าง PO Settlement อัตโนมัติ</div>
+        <ul class="update-card-list">
+          <li>Header: ผู้จำหน่าย + เลข SupInv + PO refs</li>
+          <li>Settlement products: t_sup_inv_prod + sum rcv_qty</li>
+          <li>Toast notification + Duplicate prevention</li>
+          <li>Atomic — อยู่ใน confirm transaction</li>
+        </ul>
+      </div>
+
+      <div class="update-card purple">
+        <div class="update-card-title">💰 Set Sale Price — Auto-apply</div>
+        <div class="update-card-desc">Confirm เอกสารกำหนดราคา → Upsert MProdPriceCom สำหรับทุกบรรทัด</div>
+        <ul class="update-card-list">
+          <li>13 ประเภทการเปลี่ยนราคา (default=1 readonly)</li>
+          <li>Mark Down 2 ประเภท: ชั่วคราว (expireDate) / ถาวร (9999-12-31)</li>
+          <li>Update: salePrice, discPct1, startDate, expireDate, lastChngDate</li>
+          <li>Old price ดึงจาก MProdPriceCom (price-lookup API)</li>
+        </ul>
+      </div>
+
+      <div class="update-card teal">
+        <div class="update-card-title">📑 Supplier Invoice V2 — Pull from PO</div>
+        <div class="update-card-desc">Tab "รายการใบสั่งซื้อ" → ปุ่ม "ดึงรายการสินค้า" → สร้าง product lines จาก PO references</div>
+        <ul class="update-card-list">
+          <li>อ่าน PO lines จาก linked PO references</li>
+          <li>Skip duplicates (prodId ที่มีอยู่)</li>
+          <li>Recalculate header totals</li>
+          <li>Switch ไป Tab "รายการสินค้า" หลังดึงเสร็จ</li>
+        </ul>
+      </div>
+
+      <div class="update-card success">
+        <div class="update-card-title">🔍 purFlag Filter (Purchase Only)</div>
+        <div class="update-card-desc">โมดูลฝั่ง Purchase แสดงเฉพาะสินค้าที่ซื้อได้ (purFlag='Y' + stopPurFlag='N')</div>
+        <ul class="update-card-list">
+          <li>Products API: ?purFlag=Y query param</li>
+          <li>Filter ที่ Prisma where clause (ลด payload)</li>
+          <li>SQ V2, PO V2, Confirm PO V2 ใช้ filter ใหม่</li>
+          <li>โมดูล Sale/Inventory/Ship ไม่กระทบ</li>
+        </ul>
+      </div>
+
+      <div class="update-card warning">
+        <div class="update-card-title">📅 DateTime (Issue/Receive)</div>
+        <div class="update-card-desc">บันทึกวันที่ + เวลาในใบเบิก + ใบรับ (TIMESTAMP)</div>
+        <ul class="update-card-list">
+          <li>Schema: ลบ @db.Date (รับ timestamp default)</li>
+          <li>UX: Datepicker 24h format</li>
+          <li>ใช้สำหรับ audit / FIFO timing</li>
+        </ul>
+      </div>
+
+      <div class="update-card purple">
+        <div class="update-card-title">🏷 Price List (View-Only) Consolidation</div>
+        <div class="update-card-desc">รวม Customer Price + Company Price เป็นหน้าเดียว 2 tabs</div>
+        <ul class="update-card-list">
+          <li>ลบเมนู Customer Price List + Price Lists เดิม</li>
+          <li>หน้าใหม่: Price List (ล่างสุด SALES)</li>
+          <li>View-only: ไม่มี New/Save/Confirm</li>
+          <li>การแก้ราคาทำผ่าน Set Sale Price แทน</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: SECTIONS OVERVIEW -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-900) 100%);">📁</div>
+      <div>
+        <h2>หมวดที่เพิ่มใน Checklist (Section 43-54)</h2>
+        <div class="section-subtitle">12 หมวดใหม่ — Sale Order Direct Create, Filters, Receive Module, TSupInv V2, Sale Invoice V2 UI, Set Sale Price, PO Settlement Auto-Create, DateTime, Price List</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>#</th><th>หมวด</th><th>วันที่</th><th>โมดูลที่เกี่ยวข้อง</th><th>สถานะ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>43</td><td>Sale Order — Direct Create &amp; Source Document Pull</td><td>9 พ.ค.</td><td>Sale Order Revamp</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>44</td><td>Customer P/O — กรองสินค้าเฉพาะที่ขายได้</td><td>9 พ.ค.</td><td>Customer Requests</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>45</td><td>Purchase — purFlag Filter + Default Qty + V2 Bug Fixes</td><td>9 พ.ค.</td><td>SQ V2 / PO V2 / Confirm PO V2 / Products API</td><td><span class="pill warning">✅ (1 ค้าง)</span></td></tr>
+          <tr><td>46</td><td>Receive Module (ใบรับสินค้า)</td><td>7-9 พ.ค.</td><td>Receive (TRcv / TRcvProd) + Wizard 3 steps</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>47</td><td>Supplier Invoice V2 — TSupInv Schema</td><td>10 พ.ค.</td><td>t-sup-inv (TSupInv / TSupInvProd / TSupInvPo)</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>48</td><td>Sale Invoice V2 — UI Updates</td><td>9-10 พ.ค.</td><td>sale-invoice-v2</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>49</td><td>Set Sale Price — กำหนดราคาขาย</td><td>10 พ.ค.</td><td>set-sale-price (TChngSalePrice / TChngSalePriceProd)</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>50</td><td>Receive — Purchase Invoice Support + Bug Fixes</td><td>9-10 พ.ค.</td><td>Receive (รองรับ ref type=6 SupInv)</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>51</td><td>PO Settlement Auto-Create + UI Fixes</td><td>10 พ.ค.</td><td>Receive → PO Settlement</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>52</td><td>Issue &amp; Receive — DateTime with Time</td><td>10 พ.ค.</td><td>TIsu / TRcv (timestamp)</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>53</td><td>PO Settlement UI Fixes</td><td>11 พ.ค.</td><td>po-settlement.component</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>54</td><td>Price List Company Update + Set Sale Price Logic</td><td>11 พ.ค.</td><td>price-list + set-sale-price + company-price-list</td><td><span class="pill green">✅</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 7: FILES SUMMARY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-900) 100%);">📁</div>
+      <div>
+        <h2>ภาพรวมไฟล์ที่ปรับปรุง</h2>
+        <div class="section-subtitle">รวม Backend, Frontend, Schema, และ Component Updates</div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card teal">
+        <div class="stat-icon teal">⚙️</div>
+        <div class="stat-label">Backend Modules ใหม่</div>
+        <div class="stat-value">4</div>
+        <div class="stat-sub">receive, t-sup-inv, set-sale-price, company-price-list</div>
+      </div>
+      <div class="stat-card success">
+        <div class="stat-icon success">🅰️</div>
+        <div class="stat-label">Frontend Pages ใหม่</div>
+        <div class="stat-value">4</div>
+        <div class="stat-sub">receive, set-sale-price, price-list, supplier-invoice (V2)</div>
+      </div>
+      <div class="stat-card warning">
+        <div class="stat-icon warning">📐</div>
+        <div class="stat-label">Schema Changes</div>
+        <div class="stat-value">7</div>
+        <div class="stat-sub">TRcv/Prod, TSupInv/Prod/Po, TChngSalePrice/Prod</div>
+      </div>
+      <div class="stat-card info">
+        <div class="stat-icon info">🔄</div>
+        <div class="stat-label">Components ที่ Update</div>
+        <div class="stat-value">20+</div>
+        <div class="stat-sub">Sale Order, SQ V2, PO V2, Receive, PO Settlement, etc.</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon purple">⚡</div>
+        <div class="stat-label">Auto-Create Flows ใหม่</div>
+        <div class="stat-value">2</div>
+        <div class="stat-sub">PO Settlement (จาก Receive SupInv) + Price Apply (Set Sale Price)</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon orange">🐛</div>
+        <div class="stat-label">รวม Bug Fixes</div>
+        <div class="stat-value">30+</div>
+        <div class="stat-sub">ทุก feature areas ในรอบนี้</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>Xcellence POS — Progress Update #9</strong><br>
+    สรุปงาน 9-11 พฤษภาคม 2026 · อ้างอิงจาก FEATURES_UPDATE.md และ ERP_Flow_Checklist.md (Section 43-54)<br>
+    <em>Generated 2026-05-12 · Branch: features/nott / develop</em>
+  </div>
+
+</div>
+</body>
+</html>

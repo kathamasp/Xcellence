@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xcellence POS — ERP Project Overview</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-light: #dbeafe;
+    --success: #16a34a;
+    --success-light: #dcfce7;
+    --warning: #f59e0b;
+    --warning-light: #fef3c7;
+    --danger: #dc2626;
+    --danger-light: #fee2e2;
+    --info: #0891b2;
+    --info-light: #cffafe;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  }
+  body {
+    font-family: 'Sarabun', 'Inter', -apple-system, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+    color: var(--gray-800);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+    color: white;
+    padding: 48px 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    backdrop-filter: blur(8px);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .hero p {
+    font-size: 17px;
+    opacity: 0.92;
+    max-width: 720px;
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    opacity: 0.9;
+  }
+  .hero-meta-item strong {
+    font-weight: 600;
+  }
+
+  /* Section */
+  .section {
+    background: white;
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--gray-100);
+  }
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .section h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 20px 0 12px;
+  }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .stat-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .stat-card.success { border-left: 4px solid var(--success); }
+  .stat-card.primary { border-left: 4px solid var(--primary); }
+  .stat-card.info { border-left: 4px solid var(--info); }
+  .stat-card.warning { border-left: 4px solid var(--warning); }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--gray-500);
+    font-weight: 500;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+  }
+  .stat-sub {
+    font-size: 13px;
+    color: var(--gray-500);
+  }
+
+  /* Module cards */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .module-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s;
+  }
+  .module-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .module-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .module-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .module-icon.sale { background: #dbeafe; color: #1e40af; }
+  .module-icon.purchase { background: #fef3c7; color: #92400e; }
+  .module-icon.payment { background: #dcfce7; color: #166534; }
+  .module-icon.inventory { background: #fce7f3; color: #9f1239; }
+  .module-icon.gl { background: #e0e7ff; color: #3730a3; }
+  .module-icon.system { background: #cffafe; color: #155e75; }
+
+  .module-title {
+    font-weight: 600;
+    color: var(--gray-900);
+    font-size: 15px;
+  }
+  .module-desc {
+    font-size: 13px;
+    color: var(--gray-600);
+    margin-bottom: 12px;
+  }
+  .module-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    font-weight: 500;
+  }
+  .tag.success { background: var(--success-light); color: var(--success); }
+  .tag.warning { background: var(--warning-light); color: #92400e; }
+  .tag.info { background: var(--info-light); color: var(--info); }
+  .tag.primary { background: var(--primary-light); color: var(--primary-dark); }
+
+  /* Status flow */
+  .flow-container {
+    background: var(--gray-50);
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--gray-200);
+  }
+  .flow-row {
+    margin-bottom: 24px;
+  }
+  .flow-row:last-child { margin-bottom: 0; }
+  .flow-title {
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+  .flow-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .flow-step {
+    background: white;
+    border: 1.5px solid var(--gray-300);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-700);
+    box-shadow: var(--shadow-sm);
+    white-space: nowrap;
+  }
+  .flow-step.start { border-color: var(--primary); color: var(--primary-dark); background: var(--primary-light); }
+  .flow-step.end { border-color: var(--success); color: var(--success); background: var(--success-light); }
+  .flow-arrow {
+    color: var(--gray-400);
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  /* Status badges */
+  .status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+  }
+  .status-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+    background: white;
+  }
+  .status-pill .name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .status-dot.gray { background: #6b7280; }
+  .status-dot.green { background: #16a34a; }
+  .status-dot.orange { background: #f97316; }
+  .status-dot.yellow { background: #eab308; }
+  .status-dot.red { background: #dc2626; }
+  .status-dot.blue { background: #2563eb; }
+  .status-pill .editable {
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  .editable.yes { background: var(--success-light); color: var(--success); }
+  .editable.no { background: var(--gray-100); color: var(--gray-500); }
+
+  /* GL Table */
+  .gl-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+  }
+  .gl-table th {
+    background: var(--gray-50);
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: 13px;
+    border-bottom: 2px solid var(--gray-200);
+  }
+  .gl-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 14px;
+  }
+  .gl-table tr:hover {
+    background: var(--gray-50);
+  }
+  .gl-code {
+    font-family: 'Inter', monospace;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    display: inline-block;
+  }
+
+  /* Highlights */
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .highlight {
+    background: linear-gradient(135deg, var(--primary-light) 0%, #eff6ff 100%);
+    border-left: 4px solid var(--primary);
+    padding: 18px 20px;
+    border-radius: 10px;
+  }
+  .highlight.success {
+    background: linear-gradient(135deg, var(--success-light) 0%, #f0fdf4 100%);
+    border-left-color: var(--success);
+  }
+  .highlight.warning {
+    background: linear-gradient(135deg, var(--warning-light) 0%, #fffbeb 100%);
+    border-left-color: var(--warning);
+  }
+  .highlight-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--gray-900);
+    margin-bottom: 6px;
+  }
+  .highlight-desc {
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.5;
+  }
+
+  /* Phase list */
+  .phase-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 12px;
+  }
+  .phase-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--gray-50);
+    border-radius: 10px;
+    border: 1px solid var(--gray-200);
+  }
+  .phase-num {
+    width: 28px;
+    height: 28px;
+    background: var(--primary);
+    color: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+  .phase-content { flex: 1; }
+  .phase-name {
+    font-weight: 600;
+    color: var(--gray-900);
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  .phase-modules {
+    font-size: 12px;
+    color: var(--gray-600);
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--gray-500);
+    font-size: 13px;
+  }
+  .footer strong { color: var(--gray-700); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container { padding: 16px; }
+    .hero { padding: 32px 24px; }
+    .hero h1 { font-size: 28px; }
+    .section { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-badge">Project Overview · Updated 2026-05-12</span>
+    <h1>Xcellence POS — ERP System</h1>
+    <p>ระบบ Enterprise Resource Planning ครบวงจร ครอบคลุมตั้งแต่ Sale Flow, Purchase Flow, Inventory, Payment, GL พร้อมระบบ Audit Log แบบ Field-level, Optimistic Locking, Outstanding Balance ทั้ง pipeline, Contact Master, Sale Invoice V2 (TSaleInv), Receive Module (ใบรับสินค้า), Supplier Invoice V2 (TSupInv), Set Sale Price (กำหนดราคาขาย) และ Auto PO Settlement</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">📦 <strong>55+</strong> Modules</div>
+      <div class="hero-meta-item">🔧 <strong>8</strong> Implementation Phases</div>
+      <div class="hero-meta-item">✅ <strong>859</strong> Tests Passing</div>
+      <div class="hero-meta-item">📐 <strong>54</strong> Major Sections</div>
+    </div>
+    <div style="margin-top:18px;position:relative;display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="ProgressUpdate9.html" style="display:inline-block;background:rgba(255,255,255,0.28);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.4);">🚀 Progress Update #9 (9-11 พ.ค.) →</a>
+      <a href="ProgressUpdate8.html" style="display:inline-block;background:rgba(255,255,255,0.18);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.3);">📦 Progress Update #8</a>
+      <a href="ProgressUpdate7.html" style="display:inline-block;background:rgba(255,255,255,0.12);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.25);">📦 #7</a>
+      <a href="ERP_Progress_Overview.html" style="display:inline-block;background:rgba(255,255,255,0.18);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.3);">📊 Progress Overview →</a>
+    </div>
+  </div>
+
+  <!-- BUILD STATUS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <h2>สรุปสถานะโครงการ (Build & Test Status)</h2>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card success">
+        <div class="stat-label">Backend Compile</div>
+        <div class="stat-value">Clean</div>
+        <div class="stat-sub">TypeScript build success</div>
+      </div>
+      <div class="stat-card success">
+        <div class="stat-label">Backend Tests</div>
+        <div class="stat-value">589 / 589</div>
+        <div class="stat-sub">71 / 71 suites passed</div>
+      </div>
+      <div class="stat-card primary">
+        <div class="stat-label">Frontend Build</div>
+        <div class="stat-value">Clean</div>
+        <div class="stat-sub">Angular ng build success</div>
+      </div>
+      <div class="stat-card primary">
+        <div class="stat-label">Frontend Tests</div>
+        <div class="stat-value">270 / 270</div>
+        <div class="stat-sub">20 / 20 suites passed</div>
+      </div>
+      <div class="stat-card info">
+        <div class="stat-label">PATCH Coverage</div>
+        <div class="stat-value">100%</div>
+        <div class="stat-sub">35+ modules / 8 phases</div>
+      </div>
+      <div class="stat-card info">
+        <div class="stat-label">Audit Log</div>
+        <div class="stat-value">Field-level</div>
+        <div class="stat-sub">เปิดใช้งานทุกโมดูล</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY HIGHLIGHTS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⭐</div>
+      <h2>คุณสมบัติเด่นของระบบ (Key Highlights)</h2>
+    </div>
+    <div class="highlights">
+      <div class="highlight">
+        <div class="highlight-title">Hybrid Partial Update (PATCH)</div>
+        <div class="highlight-desc">เปลี่ยนจาก PUT เป็น PATCH ทุกโมดูล ส่งเฉพาะฟิลด์ที่เปลี่ยน พร้อม Optimistic Locking ผ่าน updatedAt</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">Field-level Audit Log</div>
+        <div class="highlight-desc">บันทึก changeDetails ระดับฟิลด์ทุกครั้งที่มีการแก้ไข ผ่าน Audit Log Interceptor</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">3-Zone Dialog Layout</div>
+        <div class="highlight-desc">UI มาตรฐาน — Doc Info (Sticky Top), Form + Grid (Scroll Middle), Remark + Summary (Sticky Bottom)</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">Race Condition Free</div>
+        <div class="highlight-desc">GL pre-fetch นอก transaction + balance load ภายใน tx + batch findMany กัน N+1</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">Auto Stock Reservation</div>
+        <div class="highlight-desc">SO สร้าง → reserveStock อัตโนมัติ ตรวจ qtyOnHand - qtyReserved ก่อนยืนยัน</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">Property-Based Testing</div>
+        <div class="highlight-desc">7 correctness properties — DirtyTracker, Snapshot isolation, Optimistic Lock, JSON round-trip</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">📊 Outstanding Balance Pipeline 🆕</div>
+        <div class="highlight-desc">ระบบคงค้างทั้ง pipeline — SO→Issue→Ship Delivery→Ship Confirm พร้อม FIFO logic + real-time validation</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">👥 Contact Master Auto-Create 🆕</div>
+        <div class="highlight-desc">Contact = Master Entity หลัก — Customer/Vendor ถูกสร้างอัตโนมัติเมื่อตั้ง flag (cusFlag/supFlag) แบบ idempotent + transaction-safe</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">💰 Customer Price Resolution 🆕</div>
+        <div class="highlight-desc">บันทึกราคาลูกค้าจาก Sale Quotation Confirm — POST /resolve ค้นหาราคาที่มีผลบังคับใช้ ณ วันที่ + tie-breaker</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">🔒 Sale Order Lock by Quote Type 🆕</div>
+        <div class="highlight-desc">SO จาก SQ confirmed — ล็อคช่องราคา/จำนวนตาม specificQuotTypIdx (Type 1: Price · Type 2: Price+Qty)</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">💾 Global Save Behavior 🆕</div>
+        <div class="highlight-desc">Save ไม่ปิด dialog — อยู่หน้าเดิม reload ข้อมูลล่าสุด ทั้ง 18 หน้าเอกสาร</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">🚫 Soft-Delete Guards 🆕</div>
+        <div class="highlight-desc">ลบเอกสารได้เฉพาะ DRAFT/REVISED — Defense in Depth (Frontend hide + Backend reject 400)</div>
+      </div>
+      <div class="highlight" style="border-left-color: var(--info);background: linear-gradient(135deg, var(--info-light) 0%, #ecfeff 100%);">
+        <div class="highlight-title">🧾 Sale Invoice V2 Schema (TSaleInv) 🆕</div>
+        <div class="highlight-desc">ระบบ Sale Invoice ใหม่ใช้ Schema TSaleInv/TSaleInvProd/TSaleInvIsu — 8 endpoints + Auto-create AR + Save keeps screen open + Backward compat</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">🔍 saleFlag Filter (Sales Only) 🆕</div>
+        <div class="highlight-desc">โมดูลฝั่ง Sale แสดงเฉพาะสินค้าที่ saleFlag='Y' + stopSaleFlag='N' — กรองที่ database level (ไม่กระทบ Purchase/Inventory)</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">📊 AG Grid Row Grouping 🆕</div>
+        <div class="highlight-desc">Sale Order list — group ตามลูกค้า/สถานะ + Side Bar (Columns/Filters) + graceful degradation ถ้าไม่มี Enterprise license</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">🛒 Sale Order Direct Create + Source Pull 🆕</div>
+        <div class="highlight-desc">กดสร้าง SO เข้า Form ทันที (ไม่ผ่าน Wizard) + เลือก Sale Quotation/Customer P/O ใน Form → ดึง header + รายการสินค้า + ที่อยู่เปิดบิล มาใส่อัตโนมัติ</div>
+      </div>
+      <div class="highlight" style="border-left-color: var(--info);background: linear-gradient(135deg, var(--info-light) 0%, #ecfeff 100%);">
+        <div class="highlight-title">📥 Receive Module (ใบรับสินค้า) 🆕</div>
+        <div class="highlight-desc">โมดูลใหม่ TRcv/TRcvProd — Wizard 3 steps + Outstanding (key=lineOrder) + Exception Flag (สินค้านอกใบสั่ง) + Temp/Official docnum + Confirm validation</div>
+      </div>
+      <div class="highlight" style="border-left-color: var(--info);background: linear-gradient(135deg, var(--info-light) 0%, #ecfeff 100%);">
+        <div class="highlight-title">🧾 Supplier Invoice V2 (TSupInv) 🆕</div>
+        <div class="highlight-desc">Schema ใหม่ TSupInv/TSupInvProd/TSupInvPo — 8 endpoints + Tab Layout (PO refs + Products) + Pull Products จาก PO</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">💰 Set Sale Price (กำหนดราคาขาย) 🆕</div>
+        <div class="highlight-desc">หน้าใหม่ TChngSalePrice/Prod — 13 ประเภทเปลี่ยนราคา + Mark Down (ชั่วคราว/ถาวร) + Confirm → Upsert MProdPriceCom อัตโนมัติ</div>
+      </div>
+      <div class="highlight" style="border-left-color: #ea580c;background: linear-gradient(135deg, #fed7aa 0%, #ffedd5 100%);">
+        <div class="highlight-title">⚡ Auto PO Settlement 🆕</div>
+        <div class="highlight-desc">Confirm Receive ที่อ้างอิง SupInv + หมด outstanding → สร้าง PO Settlement อัตโนมัติ + Toast notification + Duplicate prevention + Atomic tx</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">🔍 purFlag Filter (Purchase Only) 🆕</div>
+        <div class="highlight-desc">โมดูลฝั่ง Purchase (SQ/PO/CPO V2) แสดงเฉพาะสินค้าที่ purFlag='Y' + stopPurFlag='N' + Default qty=1 + Auto-fill จากเอกสารต้นทาง</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">🏷 Price List (View-Only) 🆕</div>
+        <div class="highlight-desc">รวม Customer Price + Company Price เป็นหน้าเดียว 2 tabs (view-only) — การแก้ราคาทำผ่าน Set Sale Price แทน + GET /api/company-prices</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">📅 DateTime (Issue/Receive) 🆕</div>
+        <div class="highlight-desc">DB column isu_date/rcv_date จาก DATE → TIMESTAMP + Datepicker 24h format (บันทึกวันที่ + เวลาในใบเบิก/ใบรับ)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUSINESS MODULES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🧩</div>
+      <h2>โมดูลหลักของระบบ (Core Business Modules)</h2>
+    </div>
+
+    <h3>1. Sale Flow — Quotation → AR</h3>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon sale">📝</div>
+          <div class="module-title">Sales Quotation</div>
+        </div>
+        <div class="module-desc">QT/SO แยก tab + Customer relation + Price List + Product Autofill + FOC handling</div>
+        <div class="module-tags">
+          <span class="tag success">PATCH</span>
+          <span class="tag primary">Rich Text</span>
+          <span class="tag info">Lock</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon sale">📦</div>
+          <div class="module-title">Sales Order</div>
+        </div>
+        <div class="module-desc">Convert QT → SO + Credit Control + Stock Reservation + Status Revert on Cancel</div>
+        <div class="module-tags">
+          <span class="tag success">Wizard</span>
+          <span class="tag primary">Stock Lock</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon sale">📤</div>
+          <div class="module-title">Issue From Warehouse</div>
+        </div>
+        <div class="module-desc">Wizard 2 steps (SO + คลัง) + ดึงสินค้าจาก SO อัตโนมัติ + Rich Text Remark</div>
+        <div class="module-tags">
+          <span class="tag warning">FIFO</span>
+          <span class="tag info">Stock</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon sale">🚚</div>
+          <div class="module-title">Ship Delivery Order ⭐</div>
+        </div>
+        <div class="module-desc">Wizard 3 steps + Tab UI (Detail + Products) + Auto-pull จาก Issue + Aggregate Products</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag primary">COGS GL</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon sale">🧾</div>
+          <div class="module-title">Sales Invoice + A/R Invoice</div>
+        </div>
+        <div class="module-desc">Auto-Create AR Invoice เมื่อ confirm Sale Invoice + Duplicate Prevention + Atomic Tx</div>
+        <div class="module-tags">
+          <span class="tag warning">Auto-Create</span>
+          <span class="tag info">GL</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon sale">🧮</div>
+          <div class="module-title">Sale Invoice V2 (TSaleInv) 🆕</div>
+        </div>
+        <div class="module-desc">Schema ใหม่ TSaleInv/TSaleInvProd/TSaleInvIsu — 8 endpoints + SO Popup + Issue Popup + generate-lines + save keeps screen open</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag info">3-Zone</span>
+          <span class="tag warning">Backward Compat</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>2. Purchase Flow — Quotation → AP</h3>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon purchase">📋</div>
+          <div class="module-title">Supplier Quotation</div>
+        </div>
+        <div class="module-desc">CRUD + Confirm + Convert to Purchase Order</div>
+        <div class="module-tags"><span class="tag">มีอยู่แล้ว</span></div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon purchase">🛒</div>
+          <div class="module-title">Purchase Order</div>
+        </div>
+        <div class="module-desc">Pagination + Search + Filter + PO Settlement (ปรับต้นทุน + GL Journal)</div>
+        <div class="module-tags">
+          <span class="tag success">Settlement</span>
+          <span class="tag info">Avg Cost</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon purchase">📥</div>
+          <div class="module-title">Goods Receipt</div>
+        </div>
+        <div class="module-desc">Create from PO + GL pre-fetch + Avg cost recalc + FIFO cost layer creation</div>
+        <div class="module-tags">
+          <span class="tag warning">FIFO</span>
+          <span class="tag primary">GL</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon purchase">🧮</div>
+          <div class="module-title">AP Invoice</div>
+        </div>
+        <div class="module-desc">Three-way match (PO+GR) + Auto WHT transaction + GL Journal</div>
+        <div class="module-tags">
+          <span class="tag info">3-Way</span>
+          <span class="tag warning">WHT</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon purchase">📑</div>
+          <div class="module-title">Supplier Invoice V2 (TSupInv) 🆕</div>
+        </div>
+        <div class="module-desc">Schema ใหม่ TSupInv/TSupInvProd/TSupInvPo — 8 endpoints + Tab UI (PO refs + Products) + ดึงรายการสินค้าจาก PO + Skip duplicates</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag info">Pull Products</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon purchase">🛍</div>
+          <div class="module-title">Purchase V2 — purFlag Filter 🆕</div>
+        </div>
+        <div class="module-desc">SQ V2 / PO V2 / Confirm PO V2 — filter purFlag='Y' + Default qty=1 + Auto-fill จากเอกสารต้นทาง</div>
+        <div class="module-tags">
+          <span class="tag success">Filter</span>
+          <span class="tag primary">Auto-fill</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon purchase">⚡</div>
+          <div class="module-title">Auto PO Settlement 🆕</div>
+        </div>
+        <div class="module-desc">Confirm Receive (SupInv) ที่หมด outstanding → สร้าง PO Settlement อัตโนมัติ + Toast + Duplicate prevention</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag warning">Auto-Create</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>3. Payment Flows</h3>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon payment">💵</div>
+          <div class="module-title">AR Receipt (รับชำระ)</div>
+        </div>
+        <div class="module-desc">GL pre-fetch + batch invoice paid check + Auto-mark PAID + Credit unhold</div>
+        <div class="module-tags"><span class="tag success">Optimized</span></div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon payment">💸</div>
+          <div class="module-title">AP Payment (จ่ายชำระ)</div>
+        </div>
+        <div class="module-desc">PurApPayment + Allocation + GL Dr.AP / Cr.Cash + Period lock validation</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่ทั้งหมด</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>4. Inventory & Stock Management</h3>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon inventory">🏭</div>
+          <div class="module-title">Warehouse + Location</div>
+        </div>
+        <div class="module-desc">CRUD + Location hierarchy</div>
+        <div class="module-tags"><span class="tag">มีอยู่แล้ว</span></div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon inventory">🔄</div>
+          <div class="module-title">Stock Move</div>
+        </div>
+        <div class="module-desc">Confirm + Race condition fix + N+1 fix (batch findMany)</div>
+        <div class="module-tags">
+          <span class="tag success">Optimized</span>
+          <span class="tag info">Tx-safe</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon inventory">🔒</div>
+          <div class="module-title">Stock Reservation</div>
+        </div>
+        <div class="module-desc">reserveStock / unreserveStock + validate qtyOnHand - qtyReserved</div>
+        <div class="module-tags"><span class="tag success">ใหม่</span></div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon inventory">📥</div>
+          <div class="module-title">Receive to Warehouse 🆕</div>
+        </div>
+        <div class="module-desc">หน้า UI ใหม่ /inventory/receive-to-warehouse + TRcvProd grid</div>
+        <div class="module-tags"><span class="tag success">ใหม่</span></div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon inventory">📦</div>
+          <div class="module-title">Receive (ใบรับสินค้า) 🆕</div>
+        </div>
+        <div class="module-desc">TRcv/TRcvProd + Wizard 3 steps + Outstanding (lineOrder key) + Exception Flag + Temp→Official docnum + รองรับ PO/SupInv refs</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag warning">Outstanding</span>
+          <span class="tag info">Auto-Settle</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>5. Master Data (Contact = Single Source of Truth) 🆕</h3>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon system">👥</div>
+          <div class="module-title">Contact Master 🆕</div>
+        </div>
+        <div class="module-desc">5 tabs (General, Address, Contact Info, Customer Info, Vendor Info) + auto-create Customer/Vendor</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag warning">Auto-Create</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon system">💰</div>
+          <div class="module-title">Customer Price (MProdPriceCus) 🆕</div>
+        </div>
+        <div class="module-desc">บันทึกราคาลูกค้าจาก SQ Confirm + Resolve API + Auto-resolve ใน Sale Order/Customer P/O/Sales Invoice</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag info">Resolve</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon system">📑</div>
+          <div class="module-title">Doc Numbers Config</div>
+        </div>
+        <div class="module-desc">DocType Dropdown (21 ประเภท) + Unique constraint + Filter</div>
+        <div class="module-tags"><span class="tag primary">UI Update</span></div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon system">💵</div>
+          <div class="module-title">Set Sale Price (กำหนดราคาขาย) 🆕</div>
+        </div>
+        <div class="module-desc">TChngSalePrice/Prod — 13 ประเภทเปลี่ยนราคา + Mark Down (ชั่วคราว/ถาวร) + Confirm → Upsert MProdPriceCom auto + 6 endpoints</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag warning">Price Apply</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon system">🏷</div>
+          <div class="module-title">Price List (Company + Customer) 🆕</div>
+        </div>
+        <div class="module-desc">หน้าเดียว 2 tabs view-only — Company (MProdPriceCom) + Customer (MProdPriceCus) + Search + Filter (Status/VAT/Date)</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag info">View-Only</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>6. Outstanding Balance Pipeline (ระบบคงค้าง) 🆕</h3>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon sale">📊</div>
+          <div class="module-title">Issue Outstanding 🆕</div>
+        </div>
+        <div class="module-desc">SO→Issue: คำนวณ soQty - sum(confirmed isuQty) real-time + dropdown filter + auto-create</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag info">Real-time</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon sale">📦</div>
+          <div class="module-title">Ship Delivery Outstanding 🆕</div>
+        </div>
+        <div class="module-desc">Issue→SD: คำนวณจากหลาย issues + FIFO logic (ตัด issue ใบแรกก่อน)</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag warning">FIFO</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon sale">✅</div>
+          <div class="module-title">Ship Confirm Outstanding (1:1) 🆕</div>
+        </div>
+        <div class="module-desc">SD→SC: 1:1 logic + race-safe (แสดงเลขเอกสารที่ตัดหน้า)</div>
+        <div class="module-tags">
+          <span class="tag success">ใหม่</span>
+          <span class="tag info">1:1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPLEMENTATION PHASES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🎯</div>
+      <h2>Implementation Phases — PATCH Migration (8 Phases / 35+ Modules)</h2>
+    </div>
+    <div class="phase-list">
+      <div class="phase-item"><div class="phase-num">1</div><div class="phase-content"><div class="phase-name">Master (Pilot)</div><div class="phase-modules">Contacts</div></div></div>
+      <div class="phase-item"><div class="phase-num">2</div><div class="phase-content"><div class="phase-name">Master Data</div><div class="phase-modules">Prices (Company / PriceType / Customer), UOM</div></div></div>
+      <div class="phase-item"><div class="phase-num">3</div><div class="phase-content"><div class="phase-name">Inventory</div><div class="phase-modules">Products, Warehouses, Stock Moves, Issues</div></div></div>
+      <div class="phase-item"><div class="phase-num">4</div><div class="phase-content"><div class="phase-name">Sales</div><div class="phase-modules">Customer Requests, Quotations, Sale Orders, Deliveries, Ship, Invoices, Credit Notes, Price Lists</div></div></div>
+      <div class="phase-item"><div class="phase-num">5</div><div class="phase-content"><div class="phase-name">Purchase</div><div class="phase-modules">Vendors, Sup Quotations, POs, Confirm PO, GR, AP Invoices, AP Payments</div></div></div>
+      <div class="phase-item"><div class="phase-num">6</div><div class="phase-content"><div class="phase-name">Accounts Receivable</div><div class="phase-modules">Customers, AR Invoices, AR Receipts, AR Advances</div></div></div>
+      <div class="phase-item"><div class="phase-num">7</div><div class="phase-content"><div class="phase-name">General Ledger</div><div class="phase-modules">Chart of Accounts, Journal Entries, Adjust Vouchers</div></div></div>
+      <div class="phase-item"><div class="phase-num">8</div><div class="phase-content"><div class="phase-name">System</div><div class="phase-modules">Users, Roles, Groups, Access Rights, Record Rules, Docnum, SSO, Workflows</div></div></div>
+    </div>
+  </div>
+
+  <!-- DOCUMENT STATUS SYSTEM -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🚦</div>
+      <h2>Document Status System (6 Statuses มาตรฐาน)</h2>
+    </div>
+    <div class="status-grid">
+      <div class="status-pill"><div class="name"><span class="status-dot gray"></span>DRAFT — ร่าง</div><span class="editable yes">แก้ไขได้</span></div>
+      <div class="status-pill"><div class="name"><span class="status-dot green"></span>CONFIRMED — ยืนยันแล้ว</div><span class="editable no">Lock</span></div>
+      <div class="status-pill"><div class="name"><span class="status-dot orange"></span>REVISED — กำลังแก้</div><span class="editable yes">แก้ไขได้</span></div>
+      <div class="status-pill"><div class="name"><span class="status-dot yellow"></span>HOLD — พักงาน</div><span class="editable no">Lock</span></div>
+      <div class="status-pill"><div class="name"><span class="status-dot red"></span>CANCELLED — ยกเลิก</div><span class="editable no">Lock</span></div>
+      <div class="status-pill"><div class="name"><span class="status-dot blue"></span>CLOSED — ปิดงาน</div><span class="editable no">Lock</span></div>
+    </div>
+
+    <h3>Action Bar ตามสถานะ</h3>
+    <div class="flow-container">
+      <div class="flow-row">
+        <div class="flow-title">DRAFT / REVISED</div>
+        <div class="flow-steps">
+          <span class="flow-step">Save</span>
+          <span class="flow-step start">Confirm</span>
+          <span class="flow-step">Cancel</span>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-title">CONFIRMED</div>
+        <div class="flow-steps">
+          <span class="flow-step">Revise</span>
+          <span class="flow-step">Hold</span>
+          <span class="flow-step end">Close</span>
+          <span class="flow-step">Cancel</span>
+        </div>
+      </div>
+      <div class="flow-row">
+        <div class="flow-title">HOLD / CANCELLED / CLOSED</div>
+        <div class="flow-steps">
+          <span class="flow-step">Resume</span>
+          <span class="flow-step">Reopen</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUSINESS FLOW -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🔁</div>
+      <h2>Business Status Flow</h2>
+    </div>
+
+    <div class="flow-container">
+      <div class="flow-row">
+        <div class="flow-title">🛒 Sale Flow</div>
+        <div class="flow-steps">
+          <span class="flow-step start">Quotation</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Sale Order</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Issue</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Ship Delivery</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Sales Invoice</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">AR Invoice</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step end">AR Receipt</span>
+        </div>
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-title">📦 Purchase Flow</div>
+        <div class="flow-steps">
+          <span class="flow-step start">Sup Quotation</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Purchase Order</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">Goods Receipt</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step">AP Invoice</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step end">AP Payment</span>
+        </div>
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-title">📊 Inventory Flow</div>
+        <div class="flow-steps">
+          <span class="flow-step start">Stock Move (DRAFT)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step end">DONE</span>
+          <span class="flow-arrow">|</span>
+          <span class="flow-step start">Issue (1)</span>
+          <span class="flow-arrow">→</span>
+          <span class="flow-step end">Confirmed (2)</span>
+          <span class="flow-arrow">/</span>
+          <span class="flow-step">Cancelled (3)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GL ACCOUNT MAPPING -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🏦</div>
+      <h2>GL Account Mapping (ใช้ในระบบ)</h2>
+    </div>
+    <table class="gl-table">
+      <thead>
+        <tr><th>Code</th><th>ชื่อบัญชี</th><th>ใช้ในโมดูล</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="gl-code">1100</span></td><td>Accounts Receivable</td><td>AR Invoice post, AR Receipt post</td></tr>
+        <tr><td><span class="gl-code">1200</span></td><td>Inventory</td><td>GR post, Delivery COGS, PO Settlement</td></tr>
+        <tr><td><span class="gl-code">1300</span></td><td>Cash / Bank</td><td>AR Receipt post, AP Payment post</td></tr>
+        <tr><td><span class="gl-code">2100</span></td><td>Accounts Payable</td><td>AP Invoice post, AP Payment post</td></tr>
+        <tr><td><span class="gl-code">2200</span></td><td>VAT Payable (Output)</td><td>AR Invoice post</td></tr>
+        <tr><td><span class="gl-code">2210</span></td><td>VAT Input</td><td>AP Invoice post</td></tr>
+        <tr><td><span class="gl-code">4100</span></td><td>Revenue</td><td>AR Invoice post</td></tr>
+        <tr><td><span class="gl-code">5100</span></td><td>COGS</td><td>Delivery confirmShip</td></tr>
+        <tr><td><span class="gl-code">5200</span></td><td>Purchase Expense</td><td>GR post, AP Invoice post, PO Settlement</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <h2>เทคโนโลยีและโครงสร้าง (Tech Stack)</h2>
+    </div>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon system">🟦</div>
+          <div class="module-title">Backend</div>
+        </div>
+        <div class="module-desc">NestJS + TypeScript + Prisma ORM (PostgreSQL) + Vitest</div>
+        <div class="module-tags">
+          <span class="tag info">NestJS</span>
+          <span class="tag info">Prisma</span>
+          <span class="tag info">PostgreSQL</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon system">🅰️</div>
+          <div class="module-title">Frontend</div>
+        </div>
+        <div class="module-desc">Angular + PrimeNG + Quill Editor + ag-Grid (erp-inline-grid)</div>
+        <div class="module-tags">
+          <span class="tag primary">Angular</span>
+          <span class="tag primary">PrimeNG</span>
+          <span class="tag primary">Quill</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon system">🧪</div>
+          <div class="module-title">Testing</div>
+        </div>
+        <div class="module-desc">Vitest + Property-Based Tests + 859 tests รวมทั้งระบบ</div>
+        <div class="module-tags">
+          <span class="tag success">589 BE</span>
+          <span class="tag success">270 FE</span>
+        </div>
+      </div>
+      <div class="module-card">
+        <div class="module-card-header">
+          <div class="module-icon system">🔐</div>
+          <div class="module-title">Architecture</div>
+        </div>
+        <div class="module-desc">PATCH + Optimistic Locking + Audit Interceptor + Period Lock + Credit Control</div>
+        <div class="module-tags">
+          <span class="tag warning">Steering Rules</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT WORK -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🆕</div>
+      <h2>งานล่าสุด (Recent Updates — May 2026)</h2>
+    </div>
+    <div class="highlights">
+      <div class="highlight">
+        <div class="highlight-title">Document Page UI Standard</div>
+        <div class="highlight-desc">ปรับ UI 8 หน้าเอกสารเป็น 3-Zone Dialog Layout (2-3 พ.ค.) — Customer P/O, Quotation, SO, Issue, Ship Delivery, Ship Confirm, Sale Invoice, AR Invoice</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">Ship Delivery Order ⭐ (ใหม่)</div>
+        <div class="highlight-desc">โมดูลใหม่ + Tab UI (Detail + Products) + Aggregate products จาก Issue + Wizard 3 steps + Auto silentSave</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">Bug Fixes Round 2-4</div>
+        <div class="highlight-desc">แก้ inline grid delete, Status revert on SO cancel, FOC price = 0, UUID errors ใน Issue/Ship Delivery</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">Issue Wizard 2 Steps</div>
+        <div class="highlight-desc">เลือก SO → เลือกคลัง → ดึงสินค้าจาก t_sale_ord_prod อัตโนมัติ + Rich Text Remark</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">AR Invoice Auto-Create</div>
+        <div class="highlight-desc">Sale Invoice confirm → สร้าง TArInv อัตโนมัติ (Atomic tx + Duplicate Prevention)</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">PATCH ครบทั้งระบบ</div>
+        <div class="highlight-desc">35+ modules / 8 phases + 39 tests + 7 property-based correctness checks</div>
+      </div>
+      <div class="highlight" style="border-top:3px solid var(--purple);background:linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);">
+        <div class="highlight-title">🚢 Ship Confirm Bug Fixes & Updates (5 พ.ค.)</div>
+        <div class="highlight-desc">Schema เพิ่ม docStatus + เปลี่ยน packId เป็น String + save-then-confirm + wizard 2 steps + auto-pull products + packCount validation</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">💰 Customer Price จาก Sale Quotation (6 พ.ค.)</div>
+        <div class="highlight-desc">Module ใหม่ — บันทึกราคาลูกค้าจาก SQ Confirm + API Resolve (filter+tie-breaker) + Auto-resolve ใน 3 หน้า</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">🆕 13 หน้า UI ใหม่ (6 พ.ค.)</div>
+        <div class="highlight-desc">AR Bill/Receive (2) + Purchase V2 (4) + Receive to Warehouse (1) + AP Module (3) + Customer Price List (1) + Contact Master (1) + Doc Numbers Dropdown (1)</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">📊 Outstanding Balance Pipeline (6 พ.ค.)</div>
+        <div class="highlight-desc">ระบบคงค้างทั้ง 3 stages — Issue (SO→Issue) + Ship Delivery (Issue→SD, FIFO) + Ship Confirm (SD→SC, 1:1) + Real-time validation</div>
+      </div>
+      <div class="highlight" style="border-top:3px solid var(--pink);background:linear-gradient(135deg, #fff0f7 0%, #fce7f3 100%);">
+        <div class="highlight-title">👥 Contact Master + Auto-Create Customer/Vendor (7 พ.ค.)</div>
+        <div class="highlight-desc">Contact (MContact) ยกระดับเป็น Master Entity หลัก — Customer/Vendor ถูกสร้างอัตโนมัติ + 5 tabs UI + create() blocked เพื่อบังคับใช้ flow</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">🔒 Sale List Guards + SO Lock by Quote Type (6 พ.ค.)</div>
+        <div class="highlight-desc">ลบเอกสารได้เฉพาะ DRAFT/REVISED + customerName join + SO lock ราคา/จำนวนตาม specificQuotTypIdx</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">💾 Global Save Behavior + Sale Invoice Source (7 พ.ค.)</div>
+        <div class="highlight-desc">18 หน้าเอกสาร — Save ไม่ปิด dialog + reload ล่าสุด · Sale Invoice popup เลือก SO/Issue + generate-lines API</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">⌨️ UOM Autocomplete (Typeahead) (6 พ.ค.)</div>
+        <div class="highlight-desc">เปลี่ยน agSelectCellEditor → AutocompleteCellEditor — พิมพ์กรองได้ + dynamic per-row options + keyboard nav</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">🗂️ Menu Restructure Final (7 พ.ค.)</div>
+        <div class="highlight-desc">เมนู 6 หมวด — MASTER, INVENTORY, AR, AP, SALES, PURCHASE — จัดลำดับใหม่ทั้งหมด</div>
+      </div>
+
+      <div class="highlight" style="border-top:3px solid var(--info);background:linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);">
+        <div class="highlight-title">🚚 Ship Delivery & Confirm UX Updates (6-7 พ.ค.)</div>
+        <div class="highlight-desc">ลูกค้า read-only + สินค้าไม่ group (แยกตาม issue) + wizard auto-fill (SD step 3) + Customer lock (SC) + Ship Delivery filter ตาม contactId</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">1️⃣ Default Qty=1 + 🔍 saleFlag Filter (7 พ.ค.)</div>
+        <div class="highlight-desc">Sale Quotation/Customer P/O — เพิ่มรายการ → qty=1 อัตโนมัติ + Sale dropdown แสดงเฉพาะสินค้า saleFlag='Y' + stopSaleFlag='N'</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">🎨 UI Alignment Purchase Mockup (8 พ.ค.)</div>
+        <div class="highlight-desc">PO Settlement layout (3-cols Amount + Tab) + Purchase Order V2 (เพิ่ม 7 fields) + Confirm PO V2 (ลด 8→4 fields) + Receive WH + แก้ API path 4 endpoints</div>
+      </div>
+      <div class="highlight" style="border-top:3px solid var(--danger);background:linear-gradient(135deg, #fff1f2 0%, #fee2e2 100%);">
+        <div class="highlight-title">🐛 Sales Invoices Grid + POSTED Status (8-9 พ.ค.)</div>
+        <div class="highlight-desc">Field mapping mismatch (saleInvNo→docNumber etc.) + customer name lookup + เพิ่ม POSTED ใน STATUS_CONFIG (แสดง badge สีเขียว "ยืนยันแล้ว")</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">📊 Sale Order AG Grid Row Grouping (9 พ.ค.)</div>
+        <div class="highlight-desc">Row Grouping + Side Bar — group ตามลูกค้า/สถานะ + graceful degradation ถ้าไม่มี Enterprise license</div>
+      </div>
+      <div class="highlight" style="border-top:3px solid var(--info);background:linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);">
+        <div class="highlight-title">🧾 Sale Invoice Schema V2 — TSaleInv (9 พ.ค.)</div>
+        <div class="highlight-desc">3 ตารางใหม่ (TSaleInv/TSaleInvProd/TSaleInvIsu) + 8 endpoints + auto-create AR Invoice + Frontend sale-invoice-v2 (3-zone) + backward compat</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">🛒 Sale Order — Direct Create + Source Pull (9 พ.ค.)</div>
+        <div class="highlight-desc">กดสร้าง SO เข้า Form ทันที (ไม่ผ่าน Wizard) + ดึง header + รายการสินค้า + ที่อยู่เปิดบิล จาก Sale Quotation/Customer P/O มาใส่อัตโนมัติ + cusBillName/cusBillAddr save DB</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">🛍 Purchase V2 (SQ/PO/CPO) — purFlag + Default Qty + 12 Bug Fixes (9 พ.ค.)</div>
+        <div class="highlight-desc">filter purFlag='Y' + stopPurFlag='N' + qty=1 + Auto-fill จาก SQ/PO + 12 bug fixes (currency THB, mapStatus, mapPoResponse, vendor lookup)</div>
+      </div>
+      <div class="highlight" style="border-top:3px solid var(--teal);background:linear-gradient(135deg, #ccfbf1 0%, #e6fffa 100%);">
+        <div class="highlight-title">📥 Receive Module (ใบรับสินค้า) (7-9 พ.ค.)</div>
+        <div class="highlight-desc">โมดูลใหม่ TRcv/TRcvProd + Wizard 3 steps (type/PO/คลัง) + Outstanding (key=lineOrder) + Exception Flag + Temp→Official docnum + 11 features + 4 bugs</div>
+      </div>
+      <div class="highlight" style="border-top:3px solid var(--info);background:linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);">
+        <div class="highlight-title">🧾 Supplier Invoice V2 — TSupInv (10 พ.ค.)</div>
+        <div class="highlight-desc">3 ตารางใหม่ (TSupInv/TSupInvProd/TSupInvPo) + 8 endpoints + Tab UI (PO refs + Products) + ดึงรายการสินค้าจาก PO + Skip duplicates</div>
+      </div>
+      <div class="highlight" style="border-top:3px solid var(--purple);background:linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);">
+        <div class="highlight-title">💰 Set Sale Price (กำหนดราคาขาย) (10 พ.ค.)</div>
+        <div class="highlight-desc">TChngSalePrice/Prod + 13 ประเภทเปลี่ยนราคา + Mark Down (ชั่วคราว/ถาวร) + Confirm → Upsert MProdPriceCom อัตโนมัติ + 6 endpoints + price-lookup</div>
+      </div>
+      <div class="highlight" style="border-top:3px solid var(--orange,#ea580c);background:linear-gradient(135deg, #fed7aa 0%, #ffedd5 100%);">
+        <div class="highlight-title">⚡ Auto PO Settlement (10 พ.ค.)</div>
+        <div class="highlight-desc">Confirm Receive (SupInv type=6) ที่หมด outstanding → สร้าง PO Settlement อัตโนมัติ + Toast notification + Duplicate prevention + Atomic transaction</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">📦 Receive — Purchase Invoice Support (9-10 พ.ค.)</div>
+        <div class="highlight-desc">Wizard step 1 มี 2 options: 1:PO, 6:Purchase Invoice (default=6) + 2 SupInv outstanding APIs + Pull products จาก SupInv + Exception Flag + Oth Ref No</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">📅 Issue & Receive — DateTime with Time (10 พ.ค.)</div>
+        <div class="highlight-desc">เปลี่ยน DB column isu_date / rcv_date จาก DATE → TIMESTAMP + Datepicker 24h format</div>
+      </div>
+      <div class="highlight">
+        <div class="highlight-title">🏷 Price List Company Update (11 พ.ค.)</div>
+        <div class="highlight-desc">รวม Customer + Company Price เป็นหน้าเดียว 2 tabs (view-only) + Set Sale Price (chngPriceTypIdx=1 readonly, markDownTypIdx handler, price-lookup, ลบ remark)</div>
+      </div>
+      <div class="highlight warning">
+        <div class="highlight-title">🔧 PO Settlement UI Fixes (11 พ.ค.)</div>
+        <div class="highlight-desc">supInvOptions load จาก listTSupInv อย่างเดียว + form หัว read-only + ลบ remark header (เหลือ footer rich text)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>Xcellence POS — ERP System</strong><br>
+    อ้างอิงจาก ERP_Flow_Checklist.md (Section 1-54) · <a href="ProgressUpdate9.html">Progress Update #9</a> · <a href="ProgressUpdate8.html">Progress Update #8</a> · <a href="ProgressUpdate7.html">Progress Update #7</a> · Updated 2026-05-12
+  </div>
+
+</div>
+</body>
+</html>
