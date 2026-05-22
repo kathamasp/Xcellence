@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progress Update #10 — Xcellence POS ERP (Show More + Full Screen Mode)</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-light: #dbeafe;
+    --success: #16a34a;
+    --success-dark: #15803d;
+    --success-light: #dcfce7;
+    --warning: #f59e0b;
+    --warning-light: #fef3c7;
+    --danger: #dc2626;
+    --danger-light: #fee2e2;
+    --info: #0891b2;
+    --info-light: #cffafe;
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --pink: #db2777;
+    --pink-light: #fce7f3;
+    --teal: #0d9488;
+    --teal-light: #ccfbf1;
+    --orange: #ea580c;
+    --orange-light: #fed7aa;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -1px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  }
+  body {
+    font-family: 'Sarabun', 'Inter', -apple-system, sans-serif;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8eef5 100%);
+    color: var(--gray-800);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, #0891b2 0%, #0d9488 50%, #16a34a 100%);
+    color: white;
+    padding: 44px 40px;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; right: -20%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .hero h1 {
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+    position: relative;
+  }
+  .hero p {
+    font-size: 16px;
+    opacity: 0.95;
+    max-width: 820px;
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .hero-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    opacity: 0.95;
+  }
+  .hero-meta-item strong { font-weight: 700; }
+
+  /* Stat cards */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 5px; height: 100%;
+  }
+  .stat-card.success::before { background: var(--success); }
+  .stat-card.warning::before { background: var(--warning); }
+  .stat-card.primary::before { background: var(--primary); }
+  .stat-card.info::before { background: var(--info); }
+  .stat-card.purple::before { background: var(--purple); }
+  .stat-card.pink::before { background: var(--pink); }
+  .stat-card.teal::before { background: var(--teal); }
+  .stat-card.orange::before { background: var(--orange); }
+  .stat-icon {
+    width: 44px; height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .stat-icon.success { background: var(--success-light); }
+  .stat-icon.warning { background: var(--warning-light); }
+  .stat-icon.primary { background: var(--primary-light); }
+  .stat-icon.info { background: var(--info-light); }
+  .stat-icon.purple { background: var(--purple-light); }
+  .stat-icon.pink { background: var(--pink-light); }
+  .stat-icon.teal { background: var(--teal-light); }
+  .stat-icon.orange { background: var(--orange-light); }
+  .stat-label {
+    font-size: 13px;
+    color: var(--gray-500);
+    font-weight: 500;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .stat-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+    line-height: 1;
+  }
+  .stat-sub {
+    font-size: 13px;
+    color: var(--gray-600);
+  }
+
+  /* Section */
+  .section {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--gray-100);
+  }
+  .section-icon-wrap {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 2px;
+  }
+
+  /* Update card */
+  .update-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 16px;
+  }
+  .update-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 18px;
+    border-left: 4px solid var(--primary);
+  }
+  .update-card.success { border-left-color: var(--success); }
+  .update-card.warning { border-left-color: var(--warning); }
+  .update-card.info { border-left-color: var(--info); }
+  .update-card.purple { border-left-color: var(--purple); }
+  .update-card.pink { border-left-color: var(--pink); }
+  .update-card.danger { border-left-color: var(--danger); }
+  .update-card.teal { border-left-color: var(--teal); }
+  .update-card.orange { border-left-color: var(--orange); }
+  .update-card-title {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 15px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .update-card-meta {
+    display: inline-block;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    margin-left: auto;
+  }
+  .update-card-desc {
+    font-size: 13px;
+    color: var(--gray-700);
+    line-height: 1.55;
+    margin-bottom: 8px;
+  }
+  .update-card-list {
+    list-style: none;
+    margin-top: 8px;
+  }
+  .update-card-list li {
+    font-size: 12.5px;
+    color: var(--gray-700);
+    padding: 4px 0;
+    border-bottom: 1px dashed var(--gray-200);
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .update-card-list li:last-child { border-bottom: none; }
+  .update-card-list li::before {
+    content: '✅';
+    flex-shrink: 0;
+    font-size: 11px;
+  }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  .clean-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .clean-table th {
+    background: var(--gray-50);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--gray-700);
+    border-bottom: 2px solid var(--gray-200);
+  }
+  .clean-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--gray-100);
+    color: var(--gray-700);
+  }
+  .clean-table tr:hover td { background: var(--gray-50); }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill.green { background: var(--success-light); color: var(--success-dark); }
+  .pill.blue { background: var(--primary-light); color: var(--primary-dark); }
+  .pill.purple { background: var(--purple-light); color: var(--purple); }
+  .pill.pink { background: var(--pink-light); color: var(--pink); }
+  .pill.gray { background: var(--gray-100); color: var(--gray-700); }
+  .pill.teal { background: var(--teal-light); color: var(--teal); }
+  .pill.warning { background: var(--warning-light); color: var(--warning); }
+  .pill.orange { background: var(--orange-light); color: var(--orange); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 6px;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+  }
+  .timeline-item {
+    position: relative;
+    padding-bottom: 22px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--primary);
+  }
+  .timeline-item.success::before { background: var(--success); box-shadow: 0 0 0 2px var(--success); }
+  .timeline-item.warning::before { background: var(--warning); box-shadow: 0 0 0 2px var(--warning); }
+  .timeline-item.purple::before { background: var(--purple); box-shadow: 0 0 0 2px var(--purple); }
+  .timeline-item.teal::before { background: var(--teal); box-shadow: 0 0 0 2px var(--teal); }
+  .timeline-item.orange::before { background: var(--orange); box-shadow: 0 0 0 2px var(--orange); }
+  .timeline-date {
+    font-weight: 700;
+    color: var(--gray-900);
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .timeline-title {
+    font-size: 14px;
+    color: var(--gray-700);
+    margin-bottom: 4px;
+  }
+  .timeline-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--gray-500);
+    font-size: 13px;
+  }
+  .footer strong { color: var(--gray-700); }
+
+  @media (max-width: 768px) {
+    .container { padding: 16px; }
+    .hero { padding: 28px 20px; }
+    .hero h1 { font-size: 26px; }
+    .section { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-badge">🚀 Progress Update #10 · 12-21 พฤษภาคม 2026</span>
+    <h1>Show More Popup &amp; Full Screen Mode</h1>
+    <p>สรุปงานรอบล่าสุด — Pilot ที่หน้า Issue From Warehouse แล้ว roll out ไปทุกหน้าที่มีรายการสินค้า รวมถึง Sale Order Full Screen Mode ที่ขยายไปทุกหน้า Inventory + Ship Delivery + Ship Confirm พร้อม Unsaved Changes Warning ครบทุกหน้า</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">📅 <strong>12-21 พ.ค. 2026</strong></div>
+      <div class="hero-meta-item">📂 <strong>2 หมวด</strong> ใหม่ (Section 55-56)</div>
+      <div class="hero-meta-item">🆕 <strong>11 หน้า</strong> Apply Show More Popup</div>
+      <div class="hero-meta-item">🪟 <strong>9 หน้า</strong> Apply Full Screen Mode</div>
+    </div>
+  </div>
+
+  <!-- HIGH-LEVEL STATS -->
+  <div class="stats-grid">
+    <div class="stat-card success">
+      <div class="stat-icon success">✅</div>
+      <div class="stat-label">New Sections</div>
+      <div class="stat-value">2</div>
+      <div class="stat-sub">เพิ่มใน Checklist (S55-S56)</div>
+    </div>
+    <div class="stat-card teal">
+      <div class="stat-icon teal">🔍</div>
+      <div class="stat-label">Show More Popup</div>
+      <div class="stat-value">11</div>
+      <div class="stat-sub">หน้าที่ Apply (Sales/Purchase/Ship/Inventory)</div>
+    </div>
+    <div class="stat-card primary">
+      <div class="stat-icon primary">🪟</div>
+      <div class="stat-label">Full Screen Mode</div>
+      <div class="stat-value">9</div>
+      <div class="stat-sub">Inventory + Ship + Sale Order (pilot)</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-icon orange">⌨️</div>
+      <div class="stat-label">Unsaved Warning</div>
+      <div class="stat-value">9/9</div>
+      <div class="stat-sub">isDirty + attemptClose() + Escape guard</div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-icon warning">🐛</div>
+      <div class="stat-label">Bug Fixes</div>
+      <div class="stat-value">2</div>
+      <div class="stat-sub">Checkbox vs row click + Empty row replace</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-icon purple">🧩</div>
+      <div class="stat-label">Shared Components</div>
+      <div class="stat-value">3</div>
+      <div class="stat-sub">mixin + ProductPopup + UomPopup</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: TIMELINE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--teal) 0%, #0f766e 100%);">⏱</div>
+      <div>
+        <h2>Timeline งานที่ทำ (12-21 พฤษภาคม 2026)</h2>
+        <div class="section-subtitle">เรียงจาก Pilot → Apply ทุกหน้า</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item teal">
+        <div class="timeline-date">Pilot — หน้า Issue From Warehouse</div>
+        <div class="timeline-title">AG Grid Show More Button — เพิ่มปุ่ม "แสดงเพิ่มเติม..." ที่ด้านล่าง dropdown panel ของ AutocompleteCellEditor → dispatch CustomEvent ให้ parent component เปิด popup dialog ค้นหาสินค้าแบบละเอียด</div>
+        <div class="timeline-tags">
+          <span class="pill teal">Pilot</span>
+          <span class="pill blue">Issue page</span>
+          <span class="pill green">Custom Editor</span>
+        </div>
+      </div>
+      <div class="timeline-item teal">
+        <div class="timeline-date">Issue Show More Enhancement</div>
+        <div class="timeline-title">Product Popup เพิ่มคอลัมน์ "หน่วย" + checkbox multi-select + ปุ่ม "ตกลง" (insert หลายแถว default isuQty=1) | UOM Column เปลี่ยนเป็น AutocompleteCellEditor + Show More popup (filter ตามสินค้า) | Backend findAll() batch-lookup m_uom เพื่อ return uomCode, uomName</div>
+        <div class="timeline-tags">
+          <span class="pill teal">Multi-Select</span>
+          <span class="pill blue">UOM Dropdown</span>
+          <span class="pill green">Batch Lookup</span>
+        </div>
+      </div>
+      <div class="timeline-item warning">
+        <div class="timeline-date">Bug Fixes — Issue Show More</div>
+        <div class="timeline-title">#1 กด checkbox แล้วเลือกสินค้าทันที (onRowSelect ยิงทั้ง checkbox + row click) → เช็ค event.originalEvent.target ถ้าเป็น checkbox ให้ return | #2 Multi-select ข้ามบรรทัดว่าง → เช็ค focused row ถ้าว่างแทนที่ด้วยสินค้าตัวแรก</div>
+        <div class="timeline-tags">
+          <span class="pill warning">2 bugs</span>
+          <span class="pill blue">Event Guard</span>
+          <span class="pill green">Empty Row</span>
+        </div>
+      </div>
+      <div class="timeline-item success">
+        <div class="timeline-date">Roll Out — Show More ทุกหน้า (11 หน้า)</div>
+        <div class="timeline-title">สกัด Shared Foundation: show-more-popup.mixin.ts (utility), ShowMoreProductPopupComponent (multi-select), ShowMoreUomPopupComponent (single-select, disabled checkbox) → Apply: sale-quotation-revamp, sale-order-revamp, customer-requests, sale-invoice-v2, sales-invoices, ship-confirms, ship-delivery, purchase-order-v2, supplier-quotation-v2, issues, receive</div>
+        <div class="timeline-tags">
+          <span class="pill green">11 หน้า</span>
+          <span class="pill purple">Reusable</span>
+          <span class="pill blue">DRY</span>
+        </div>
+      </div>
+      <div class="timeline-item purple">
+        <div class="timeline-date">Pilot — Sale Order Full Screen Mode</div>
+        <div class="timeline-title">ปุ่ม Maximize/Restore (custom button ใน topbar) — Full Screen: 5-6 columns/row | Normal: ไม่เปลี่ยน (95vw, 3 cols) | Save/Confirm ใน FullScreen ไม่ปิด dialog (reload data) | Back button มุมซ้ายบน | Required field indicator (* แดง บน ลูกค้า) | Unsaved Changes Warning + Escape key ผ่าน dirty check</div>
+        <div class="timeline-tags">
+          <span class="pill purple">Pilot</span>
+          <span class="pill blue">Sale Order</span>
+          <span class="pill green">Full Screen</span>
+        </div>
+      </div>
+      <div class="timeline-item success">
+        <div class="timeline-date">Roll Out — Full Screen Mode ทุกหน้า Inventory + Ship</div>
+        <div class="timeline-title">Issues, Receive, Receive to Warehouse, Ship Delivery, Ship Confirms ใช้ Full Screen Grid (5-6 cols) | Products, Stock Moves, Warehouses ใช้ maximize-only | ทุกหน้า: isDirty getter, attemptClose() dialog, Escape key guard, ปุ่ม "ปิด" ใน footer, [closable]="false"</div>
+        <div class="timeline-tags">
+          <span class="pill green">9 หน้า</span>
+          <span class="pill blue">Inventory + Ship</span>
+          <span class="pill orange">Dirty Check</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: KEY UPDATES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">⭐</div>
+      <div>
+        <h2>Key Updates ในรอบนี้</h2>
+        <div class="section-subtitle">งานหลักที่ส่งผลต่อ UX ทั่วระบบ</div>
+      </div>
+    </div>
+
+    <div class="update-grid">
+      <div class="update-card teal">
+        <div class="update-card-title">🔍 AG Grid Show More Button (Pilot — Issue) <span class="update-card-meta">เริ่ม Pilot</span></div>
+        <div class="update-card-desc">เพิ่มปุ่ม "แสดงเพิ่มเติม..." ที่ด้านล่าง dropdown panel ของ AutocompleteCellEditor — เปิด popup dialog ค้นหาสินค้าแบบละเอียด ก่อน roll out ทุกหน้า</div>
+        <ul class="update-card-list">
+          <li>วาง pilot ที่หน้า Issue From Warehouse</li>
+          <li>dispatch CustomEvent ให้ parent component</li>
+          <li>เก็บ pattern ก่อน apply ทั้งระบบ</li>
+        </ul>
+      </div>
+
+      <div class="update-card teal">
+        <div class="update-card-title">📦 Issue Show More Enhancement (Multi-Select) <span class="update-card-meta">Issue</span></div>
+        <div class="update-card-desc">Product Popup รองรับ multi-select + เพิ่มคอลัมน์ "หน่วย" + UOM column ใช้ AutocompleteCellEditor</div>
+        <ul class="update-card-list">
+          <li>Product Popup: คอลัมน์ "หน่วย" + checkbox multi-select + ปุ่ม "ตกลง"</li>
+          <li>Insert หลายแถว default isuQty=1</li>
+          <li>UOM column: AutocompleteCellEditor + Show More popup (filter ตามสินค้า)</li>
+          <li>UOM popup: checkbox disabled, single-select เท่านั้น</li>
+          <li>Backend findAll() batch-lookup m_uom → uomCode/uomName</li>
+        </ul>
+      </div>
+
+      <div class="update-card success">
+        <div class="update-card-title">🧩 Shared Foundation (Reusable) <span class="update-card-meta">All Pages</span></div>
+        <div class="update-card-desc">สกัด pattern ออกเป็นไฟล์ร่วมก่อน roll out ไปทุกหน้า</div>
+        <ul class="update-card-list">
+          <li><code>show-more-popup.mixin.ts</code> — event handling, filter, multi-select, UOM utilities</li>
+          <li><code>ShowMoreProductPopupComponent</code> — multi-select + ปุ่ม "ตกลง"</li>
+          <li><code>ShowMoreUomPopupComponent</code> — single-select (disabled checkbox)</li>
+        </ul>
+      </div>
+
+      <div class="update-card success">
+        <div class="update-card-title">🚀 Show More Apply ทุกหน้า (11) <span class="update-card-meta">Roll Out</span></div>
+        <div class="update-card-desc">Apply ทั้งฝั่ง Sales / Purchase / Ship / Inventory</div>
+        <ul class="update-card-list">
+          <li>Sales: sale-quotation-revamp, sale-order-revamp, customer-requests, sale-invoice-v2, sales-invoices</li>
+          <li>Ship: ship-confirms, ship-delivery</li>
+          <li>Purchase: purchase-order-v2, supplier-quotation-v2</li>
+          <li>Inventory: issues, receive</li>
+        </ul>
+      </div>
+
+      <div class="update-card purple">
+        <div class="update-card-title">🪟 Sale Order Full Screen Mode (Pilot) <span class="update-card-meta">Sale Order</span></div>
+        <div class="update-card-desc">ปุ่ม Maximize/Restore ใน topbar — สลับระหว่าง Normal (95vw, 3 cols) กับ Full Screen (5-6 cols/row)</div>
+        <ul class="update-card-list">
+          <li>Save/Confirm ใน Full Screen ไม่ปิด dialog (reload data)</li>
+          <li>Back button มุมซ้ายบน (เฉพาะ fullscreen)</li>
+          <li>Required field indicator (* แดง บน "ลูกค้า")</li>
+          <li>Unsaved Changes Warning + Escape key ผ่าน dirty check</li>
+        </ul>
+      </div>
+
+      <div class="update-card primary">
+        <div class="update-card-title">🪟 Full Screen Apply ทุกหน้า Inventory + Ship <span class="update-card-meta">Roll Out</span></div>
+        <div class="update-card-desc">Apply 9 หน้าครบ — รวม pilot Sale Order</div>
+        <ul class="update-card-list">
+          <li>3-zone + wizard (5-6 cols): Issues, Receive, Receive to Warehouse, Ship Delivery, Ship Confirms, Sale Order</li>
+          <li>Simple form (maximize only): Products, Stock Moves, Warehouses</li>
+          <li>ทุกหน้ามี Unsaved Warning + Escape guard</li>
+        </ul>
+      </div>
+
+      <div class="update-card warning">
+        <div class="update-card-title">🐛 Bug Fixes — Issue Show More <span class="update-card-meta">Bug</span></div>
+        <div class="update-card-desc">2 bugs ที่พบหลัง roll out pilot</div>
+        <ul class="update-card-list">
+          <li>กด checkbox แล้วเลือกสินค้าทันที → เช็ค event.originalEvent.target</li>
+          <li>Multi-select ข้ามบรรทัดว่าง → แทนที่ row ว่างด้วยสินค้าตัวแรก</li>
+        </ul>
+      </div>
+
+      <div class="update-card orange">
+        <div class="update-card-title">⌨️ Unsaved Changes Warning (Pattern) <span class="update-card-meta">9 หน้า</span></div>
+        <div class="update-card-desc">มาตรฐานการตรวจจับ dirty state + flow ปิด dialog ที่ปลอดภัย</div>
+        <ul class="update-card-list">
+          <li><code>isDirty</code> getter — ทั้ง new + existing record</li>
+          <li><code>attemptClose()</code> — แสดง warning dialog เมื่อมี unsaved changes</li>
+          <li>Escape key → ผ่าน dirty check ก่อนปิด</li>
+          <li>ปุ่ม "ปิด" ใน footer (ผ่าน attemptClose ทุกครั้ง)</li>
+          <li><code>[closable]="false"</code> บน p-dialog</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: PAGES TABLE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--info) 0%, #0e7490 100%);">📂</div>
+      <div>
+        <h2>หน้าที่ Apply ครบทั้งหมด</h2>
+        <div class="section-subtitle">Show More Popup (11) · Full Screen Mode (9) · Unsaved Warning (9)</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:8px;margin-bottom:10px;font-size:15px;color:var(--gray-800);">Show More Popup — 11 หน้า</h3>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>#</th><th>หน้า</th><th>กลุ่ม</th><th>Product Multi-Select</th><th>UOM Single-Select</th><th>สถานะ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>sale-quotation-revamp</td><td><span class="pill green">Sales</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>2</td><td>sale-order-revamp</td><td><span class="pill green">Sales</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>3</td><td>customer-requests (Customer P/O)</td><td><span class="pill green">Sales</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>4</td><td>sale-invoice-v2</td><td><span class="pill green">Sales</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>5</td><td>sales-invoices</td><td><span class="pill green">Sales</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>6</td><td>ship-confirms</td><td><span class="pill teal">Ship</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>7</td><td>ship-delivery</td><td><span class="pill teal">Ship</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>8</td><td>purchase-order-v2</td><td><span class="pill warning">Purchase</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>9</td><td>supplier-quotation-v2</td><td><span class="pill warning">Purchase</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>10</td><td>issues <em>(pilot)</em></td><td><span class="pill blue">Inventory</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>11</td><td>receive</td><td><span class="pill blue">Inventory</span></td><td>✅</td><td>✅</td><td><span class="pill green">✅</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="margin-top:24px;margin-bottom:10px;font-size:15px;color:var(--gray-800);">Full Screen Mode — 9 หน้า</h3>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>หน้า</th><th>ประเภท</th><th>Full Screen Grid</th><th>Unsaved Warning</th><th>สถานะ</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Issues</td><td>3-zone + wizard</td><td>✓ (5-6 cols)</td><td>✓</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>Receive</td><td>3-zone + wizard</td><td>✓ (5-6 cols)</td><td>✓</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>Receive to Warehouse</td><td>3-zone</td><td>✓ (5-6 cols)</td><td>✓</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>Ship Delivery</td><td>3-zone + wizard</td><td>✓ (5-6 cols)</td><td>✓</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>Ship Confirms</td><td>3-zone + wizard</td><td>✓ (5-6 cols)</td><td>✓</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>Products</td><td>Simple form</td><td>maximize only</td><td>✓</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>Stock Moves</td><td>Simple form</td><td>maximize only</td><td>✓</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>Warehouses</td><td>Simple form</td><td>maximize only</td><td>✓</td><td><span class="pill green">✅</span></td></tr>
+          <tr><td>Sale Order <em>(pilot)</em></td><td>3-zone + wizard</td><td>✓ (5-6 cols)</td><td>✓</td><td><span class="pill green">✅</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 4: BUG FIXES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--danger) 0%, #b91c1c 100%);">🐛</div>
+      <div>
+        <h2>Bug Fixes ในรอบนี้</h2>
+        <div class="section-subtitle">Issue Show More — 2 bugs ที่พบหลัง Pilot</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>#</th><th>Bug</th><th>Root Cause</th><th>Fix</th><th>สถานะ</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>กด checkbox แล้วเลือกสินค้าทันที</td>
+            <td><code>(onRowSelect)</code> fire ทั้ง checkbox + row click</td>
+            <td>เช็ค <code>event.originalEvent.target</code> ถ้าเป็น checkbox ให้ return</td>
+            <td><span class="pill green">✅</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Multi-select ข้ามบรรทัดว่าง</td>
+            <td>append ต่อท้ายเสมอ ไม่แทนที่ row ว่าง</td>
+            <td>เช็ค focused row ถ้าว่างแทนที่ด้วยสินค้าตัวแรก</td>
+            <td><span class="pill green">✅</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 5: UX RULES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">📋</div>
+      <div>
+        <h2>UX Rules ใหม่ในรอบนี้</h2>
+        <div class="section-subtitle">มาตรฐานพฤติกรรมที่ Apply ทั่วระบบ</div>
+      </div>
+    </div>
+    <div class="update-grid">
+      <div class="update-card teal">
+        <div class="update-card-title">🔍 Show More Popup Behavior</div>
+        <div class="update-card-desc">เมื่อ dropdown ของ AutocompleteCellEditor มีรายการเยอะ ผู้ใช้กด "แสดงเพิ่มเติม..." เพื่อเปิด popup ค้นหาแบบละเอียด</div>
+        <ul class="update-card-list">
+          <li>Product Popup: multi-select (checkbox + ปุ่มตกลง)</li>
+          <li>UOM Popup: single-select (checkbox disabled, ใช้ row click)</li>
+          <li>คอลัมน์ "หน่วย" ใน Product Popup ดึงจาก batch m_uom</li>
+          <li>Insert หลายแถว → default qty=1 (ใบเบิก/ใบส่ง ฯลฯ)</li>
+        </ul>
+      </div>
+
+      <div class="update-card success">
+        <div class="update-card-title">🧩 Multi-Select Row Empty Replace</div>
+        <div class="update-card-desc">เมื่อ focused row เป็น row ว่าง ให้แทนที่ด้วยสินค้าตัวแรก แทน append ต่อท้ายเสมอ</div>
+        <ul class="update-card-list">
+          <li>เช็ค focused row ก่อน insert</li>
+          <li>ถ้า row ว่าง → แทนที่ด้วยสินค้าตัวแรก</li>
+          <li>ถ้ามีข้อมูลแล้ว → append ต่อท้าย</li>
+        </ul>
+      </div>
+
+      <div class="update-card primary">
+        <div class="update-card-title">🪟 Maximize / Restore Pattern</div>
+        <div class="update-card-desc">ทุก dialog ที่ใหญ่ (3-zone + wizard) มีปุ่ม Maximize/Restore ใน topbar</div>
+        <ul class="update-card-list">
+          <li>Normal: popup 95vw, 3 columns</li>
+          <li>Full Screen: 5-6 columns/row (responsive)</li>
+          <li>Save/Confirm ใน Full Screen → ไม่ปิด dialog, reload data</li>
+          <li>Back button มุมซ้ายบน (เฉพาะ fullscreen)</li>
+        </ul>
+      </div>
+
+      <div class="update-card orange">
+        <div class="update-card-title">⌨️ Unsaved Changes Guard (มาตรฐาน)</div>
+        <div class="update-card-desc">กดปิด/Escape ถ้ายังไม่บันทึก → แสดง warning dialog ทุกหน้า</div>
+        <ul class="update-card-list">
+          <li><code>isDirty</code> getter ครอบคลุม new + existing</li>
+          <li><code>attemptClose()</code> เป็น single source of truth</li>
+          <li>Escape key bind ผ่าน dirty check</li>
+          <li>ปุ่ม "ปิด" ใน footer → attemptClose()</li>
+          <li><code>[closable]="false"</code> ปิด default close ของ p-dialog</li>
+        </ul>
+      </div>
+
+      <div class="update-card purple">
+        <div class="update-card-title">⭐ Required Field Indicator</div>
+        <div class="update-card-desc">เครื่องหมาย * สีแดงบน label ของฟิลด์ที่บังคับ (เริ่มที่ Sale Order — ลูกค้า)</div>
+        <ul class="update-card-list">
+          <li>วาง * แดงไว้หลัง label</li>
+          <li>ใช้กับฟิลด์ที่ทำให้ Save/Confirm ไม่ผ่าน</li>
+          <li>ต่อยอด apply ทุกหน้าได้</li>
+        </ul>
+      </div>
+
+      <div class="update-card warning">
+        <div class="update-card-title">🔄 Reload After Save in Full Screen</div>
+        <div class="update-card-desc">กด Save/Confirm ใน Full Screen → ไม่ปิด dialog, reload data ทับ form (สอดคล้องกับ Section 34 Global Save)</div>
+        <ul class="update-card-list">
+          <li>Full Screen — โหมดทำงานต่อเนื่อง</li>
+          <li>Normal Save behavior ยังคงเดิม</li>
+          <li>Sync กับเอกสารใหม่ที่เพิ่งสร้างทันที</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6: SECTIONS ADDED -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-900) 100%);">📁</div>
+      <div>
+        <h2>หมวดที่เพิ่มใน Checklist (Section 55-56)</h2>
+        <div class="section-subtitle">2 หมวดใหม่ — Show More Popup + Full Screen Mode</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="clean-table">
+        <thead>
+          <tr><th>#</th><th>หมวด</th><th>ประเภท</th><th>โมดูลที่เกี่ยวข้อง</th><th>สถานะ</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>55</td>
+            <td>AG Grid Show More Popup — Product + UOM (Multi-Select)</td>
+            <td><span class="pill teal">UX / Component</span></td>
+            <td>AutocompleteCellEditor + 11 หน้า (Sales/Purchase/Ship/Inventory)</td>
+            <td><span class="pill green">✅</span></td>
+          </tr>
+          <tr>
+            <td>56</td>
+            <td>Full Screen Mode (Maximize Dialog) — Apply ทุกหน้า</td>
+            <td><span class="pill purple">UX / Dialog</span></td>
+            <td>Inventory (8) + Ship (Confirm, Delivery) + Sale Order (Pilot)</td>
+            <td><span class="pill green">✅</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SECTION 7: SUMMARY -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon-wrap" style="background: linear-gradient(135deg, var(--gray-700) 0%, var(--gray-900) 100%);">📊</div>
+      <div>
+        <h2>ภาพรวมรอบนี้</h2>
+        <div class="section-subtitle">รวม Components, Pages, UX Patterns</div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card teal">
+        <div class="stat-icon teal">🧩</div>
+        <div class="stat-label">Shared Components</div>
+        <div class="stat-value">3</div>
+        <div class="stat-sub">mixin + ProductPopup + UomPopup</div>
+      </div>
+      <div class="stat-card success">
+        <div class="stat-icon success">🅰️</div>
+        <div class="stat-label">Pages with Show More</div>
+        <div class="stat-value">11</div>
+        <div class="stat-sub">Sales (5) · Ship (2) · Purchase (2) · Inventory (2)</div>
+      </div>
+      <div class="stat-card primary">
+        <div class="stat-icon primary">🪟</div>
+        <div class="stat-label">Pages with Full Screen</div>
+        <div class="stat-value">9</div>
+        <div class="stat-sub">Inventory + Ship + Sale Order (pilot)</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-icon orange">⌨️</div>
+        <div class="stat-label">isDirty Pattern Coverage</div>
+        <div class="stat-value">9/9</div>
+        <div class="stat-sub">ครบทุกหน้าที่ apply Full Screen</div>
+      </div>
+      <div class="stat-card warning">
+        <div class="stat-icon warning">🐛</div>
+        <div class="stat-label">Bug Fixes</div>
+        <div class="stat-value">2</div>
+        <div class="stat-sub">Checkbox guard + Empty row replace</div>
+      </div>
+      <div class="stat-card purple">
+        <div class="stat-icon purple">📐</div>
+        <div class="stat-label">Sections Added</div>
+        <div class="stat-value">55-56</div>
+        <div class="stat-sub">2 หมวดใหม่ใน Checklist</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <strong>Xcellence POS — Progress Update #10</strong><br>
+    สรุปงาน 12-21 พฤษภาคม 2026 · อ้างอิงจาก FEATURES_UPDATE.md และ ERP_Flow_Checklist.md (Section 55-56)<br>
+    <em>Generated 2026-05-21 · Focus: Show More Popup (Pilot → All) + Full Screen Mode (Pilot → All)</em>
+  </div>
+
+</div>
+</body>
+</html>

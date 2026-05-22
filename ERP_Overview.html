@@ -474,17 +474,18 @@
 
   <!-- HERO -->
   <div class="hero">
-    <span class="hero-badge">Project Overview · Updated 2026-05-12</span>
+    <span class="hero-badge">Project Overview · Updated 2026-05-21</span>
     <h1>Xcellence POS — ERP System</h1>
-    <p>ระบบ Enterprise Resource Planning ครบวงจร ครอบคลุมตั้งแต่ Sale Flow, Purchase Flow, Inventory, Payment, GL พร้อมระบบ Audit Log แบบ Field-level, Optimistic Locking, Outstanding Balance ทั้ง pipeline, Contact Master, Sale Invoice V2 (TSaleInv), Receive Module (ใบรับสินค้า), Supplier Invoice V2 (TSupInv), Set Sale Price (กำหนดราคาขาย) และ Auto PO Settlement</p>
+    <p>ระบบ Enterprise Resource Planning ครบวงจร ครอบคลุมตั้งแต่ Sale Flow, Purchase Flow, Inventory, Payment, GL พร้อมระบบ Audit Log แบบ Field-level, Optimistic Locking, Outstanding Balance ทั้ง pipeline, Contact Master, Sale Invoice V2 (TSaleInv), Receive Module (ใบรับสินค้า), Supplier Invoice V2 (TSupInv), Set Sale Price (กำหนดราคาขาย), Auto PO Settlement พร้อม UX มาตรฐานใหม่ — AG Grid Show More Popup (multi-select) และ Full Screen Mode (maximize + unsaved warning) ทุกหน้า</p>
     <div class="hero-meta">
       <div class="hero-meta-item">📦 <strong>55+</strong> Modules</div>
       <div class="hero-meta-item">🔧 <strong>8</strong> Implementation Phases</div>
       <div class="hero-meta-item">✅ <strong>859</strong> Tests Passing</div>
-      <div class="hero-meta-item">📐 <strong>54</strong> Major Sections</div>
+      <div class="hero-meta-item">📐 <strong>56</strong> Major Sections</div>
     </div>
     <div style="margin-top:18px;position:relative;display:flex;gap:10px;flex-wrap:wrap;">
-      <a href="ProgressUpdate9.html" style="display:inline-block;background:rgba(255,255,255,0.28);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.4);">🚀 Progress Update #9 (9-11 พ.ค.) →</a>
+      <a href="ProgressUpdate10.html" style="display:inline-block;background:rgba(255,255,255,0.28);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.4);">🚀 Progress Update #10 (Show More + Full Screen, 12-21 พ.ค.) →</a>
+      <a href="ProgressUpdate9.html" style="display:inline-block;background:rgba(255,255,255,0.22);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.35);">📦 Progress Update #9 (9-11 พ.ค.)</a>
       <a href="ProgressUpdate8.html" style="display:inline-block;background:rgba(255,255,255,0.18);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.3);">📦 Progress Update #8</a>
       <a href="ProgressUpdate7.html" style="display:inline-block;background:rgba(255,255,255,0.12);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.25);">📦 #7</a>
       <a href="ERP_Progress_Overview.html" style="display:inline-block;background:rgba(255,255,255,0.18);color:white;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,0.3);">📊 Progress Overview →</a>
@@ -629,6 +630,18 @@
       <div class="highlight warning">
         <div class="highlight-title">📅 DateTime (Issue/Receive) 🆕</div>
         <div class="highlight-desc">DB column isu_date/rcv_date จาก DATE → TIMESTAMP + Datepicker 24h format (บันทึกวันที่ + เวลาในใบเบิก/ใบรับ)</div>
+      </div>
+      <div class="highlight" style="border-left-color: var(--info);background: linear-gradient(135deg, var(--info-light) 0%, #ecfeff 100%);">
+        <div class="highlight-title">🔍 AG Grid Show More Popup 🆕</div>
+        <div class="highlight-desc">ปุ่ม "แสดงเพิ่มเติม..." ใต้ dropdown ของ AutocompleteCellEditor → เปิด popup ค้นหาแบบละเอียด — Product (multi-select + ตกลง) / UOM (single-select) — Apply 11 หน้า (Sales/Purchase/Ship/Inventory) + Shared mixin/popup components</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">🪟 Full Screen Mode (Maximize Dialog) 🆕</div>
+        <div class="highlight-desc">ปุ่ม Maximize/Restore ใน topbar — สลับ Normal (95vw, 3 cols) ↔ Full Screen (5-6 cols) + Save/Confirm ไม่ปิด dialog + Back button + Required field indicator (*) + Unsaved Warning + Escape guard — Apply 9 หน้า (Inventory + Ship + Sale Order pilot)</div>
+      </div>
+      <div class="highlight" style="border-left-color: #ea580c;background: linear-gradient(135deg, #fed7aa 0%, #ffedd5 100%);">
+        <div class="highlight-title">⌨️ Unsaved Changes Guard (มาตรฐาน) 🆕</div>
+        <div class="highlight-desc">isDirty getter + attemptClose() + Escape key + ปุ่มปิดใน footer + [closable]="false" ครอบคลุม 9 หน้าที่ apply Full Screen — ไม่ให้สูญเสียข้อมูลโดยไม่ตั้งใจ</div>
       </div>
     </div>
   </div>
@@ -1289,12 +1302,20 @@
         <div class="highlight-title">🔧 PO Settlement UI Fixes (11 พ.ค.)</div>
         <div class="highlight-desc">supInvOptions load จาก listTSupInv อย่างเดียว + form หัว read-only + ลบ remark header (เหลือ footer rich text)</div>
       </div>
+      <div class="highlight" style="border-left-color: var(--info);background: linear-gradient(135deg, var(--info-light) 0%, #ecfeff 100%);">
+        <div class="highlight-title">🔍 AG Grid Show More Popup — Apply 11 หน้า (12-21 พ.ค.)</div>
+        <div class="highlight-desc">Pilot ที่หน้า Issue → roll out ทุกหน้าที่มี detail สินค้า — Shared show-more-popup.mixin.ts + ShowMoreProductPopupComponent (multi-select) + ShowMoreUomPopupComponent (single-select) + 2 bug fixes (checkbox guard, empty row replace)</div>
+      </div>
+      <div class="highlight success">
+        <div class="highlight-title">🪟 Full Screen Mode — Apply 9 หน้า (12-21 พ.ค.)</div>
+        <div class="highlight-desc">Pilot Sale Order → roll out ทั้ง Inventory + Ship (Issues, Receive, Receive to Warehouse, Ship Delivery, Ship Confirms, Products, Stock Moves, Warehouses) — Maximize/Restore + 5-6 cols + isDirty + attemptClose + Escape guard + Required field *</div>
+      </div>
     </div>
   </div>
 
   <div class="footer">
     <strong>Xcellence POS — ERP System</strong><br>
-    อ้างอิงจาก ERP_Flow_Checklist.md (Section 1-54) · <a href="ProgressUpdate9.html">Progress Update #9</a> · <a href="ProgressUpdate8.html">Progress Update #8</a> · <a href="ProgressUpdate7.html">Progress Update #7</a> · Updated 2026-05-12
+    อ้างอิงจาก ERP_Flow_Checklist.md (Section 1-56) · <a href="ProgressUpdate10.html">Progress Update #10 (Show More + Full Screen)</a> · <a href="ProgressUpdate9.html">Progress Update #9</a> · <a href="ProgressUpdate8.html">Progress Update #8</a> · <a href="ProgressUpdate7.html">Progress Update #7</a> · Updated 2026-05-21
   </div>
 
 </div>
